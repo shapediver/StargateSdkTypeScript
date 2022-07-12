@@ -1,0 +1,39 @@
+{
+  "name": "@shapediver/sdk.stargate-sdk-core",
+  "version": "0.1.0",
+  "description": "",
+  "keywords": [],
+  "author": "Matthias Reisacher <matt@shapediver.com>",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "directories": {
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shapediver/StargateSdkTypeScript.git"
+  },
+  "scripts": {
+    "test": "bash ../../scripts/test.sh",
+    "check": "tsc --noEmit",
+    "build": "bash ../../scripts/build.sh",
+    "build-dep": "bash ../../scripts/build-dep.sh"
+  },
+  "bugs": {
+    "url": "https://github.com/shapediver/StargateSdkTypeScript/issues"
+  },
+  "homepage": "https://github.com/shapediver/StargateSdkTypeScript#readme",
+  "typings": "dist/index.d.ts",
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "jest": "^28.1.2",
+    "lerna": "^3.22.1",
+    "typescript": "^4.7.4"
+  }
+}
