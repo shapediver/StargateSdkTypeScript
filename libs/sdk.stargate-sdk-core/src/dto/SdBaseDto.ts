@@ -24,7 +24,7 @@ export function isOkResponseDto (res: unknown): res is ISdOkResponseDto {
 export interface ISdErrorResponseDto {
     requestId?: string,
 
-    errorType: string,
+    errorType?: string,
 
     errorMessage: string,
 }
@@ -32,6 +32,5 @@ export interface ISdErrorResponseDto {
 export function isErrorResponseDto (res: unknown): res is ISdErrorResponseDto {
     return typeof res === "object" &&
         res !== null &&
-        "errorType" in res &&
         "errorMessage" in res
 }

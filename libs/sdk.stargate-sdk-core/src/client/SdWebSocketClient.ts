@@ -135,7 +135,8 @@ export class SdWebSocketClient implements ISdStargateClient {
         if (isOkResponseDto(res)) this.processOkMessage(res)
         else if (isErrorResponseDto(res)) this.processErrorMessage(res)
         else {
-            this.errHandler("Received data in invalid format: Unknown DTO.")
+            // This should not happen, but we must make sure that open requests are closed!
+            this.processErrorMessage({ errorMessage: "Received data in invalid format: Unknown DTO." })
             return
         }
     }
@@ -167,7 +168,9 @@ export class SdWebSocketClient implements ISdStargateClient {
      * @private
      */
     processErrorMessage (res: ISdErrorResponseDto): void {
-        const msg = `${ res.errorType }: ${ res.errorMessage }`
+        // An error without any type comes directly from API Gateway.
+        // Thus, we categorize it as a critical error.
+        const msg = `${ res.errorType ?? "CriticalError" }: ${ res.errorMessage }`
 
         // An error response without a requestId property is seen as a general system error.
         // In this case, we want to reject all open requests.
