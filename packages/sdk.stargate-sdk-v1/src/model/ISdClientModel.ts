@@ -3,7 +3,7 @@ export interface ISdClientModel {
     id: string,
 
     // The type of the registered client
-    client_type: "Frontend" | "Backend",
+    clientType: "frontend" | "backend",
 
     // The name of the client software
     name: string,
