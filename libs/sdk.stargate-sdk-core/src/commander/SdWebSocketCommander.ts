@@ -19,7 +19,8 @@ export class SdWebSocketCommander implements ISdStargateCommander {
         try {
             return await this.client.connect(url)
         } catch (e) {
-            throw new SdStargateError(`Could not establish a connection to server: ${ e.message }`)
+            const msg = (e.message) ? `: ${ e.message }` : ""
+            throw new SdStargateError("Could not establish a connection to server" + msg)
         }
     }
 
@@ -27,7 +28,8 @@ export class SdWebSocketCommander implements ISdStargateCommander {
         try {
             return await this.client.disconnect()
         } catch (e) {
-            throw new SdStargateError(`Error when disconnecting client: ${ e.message }`)
+            const msg = (e.message) ? `: ${ e.message }` : ""
+            throw new SdStargateError("Error when disconnecting client" + msg)
         }
     }
 

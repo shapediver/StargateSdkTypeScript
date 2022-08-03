@@ -63,12 +63,23 @@ export async function register (): Promise<ISdStargateSdk> {
     const authToken = await generateAuthToken(prvKey, user, appId)
 
     // Instantiate Starget SDK
-    const sdk: ISdStargateSdk = await createSdk()
-        .setBaseUrl(url)
-        .build()
+    let sdk: ISdStargateSdk
+    try {
+        sdk = await createSdk()
+            .setBaseUrl(url)
+            .build()
+    } catch (e) {
+        console.error(chalk.red(`${ chalk.bold("Could not instantiate Stargate client - stopping CLI!") }\n${ e.message }`))
+        process.exit(1)
+    }
 
     // Register client
-    await sdk.register(authToken, name, "local")
+    try {
+        await sdk.register(authToken, name, "local")
+    } catch (e) {
+        console.error(chalk.red(`${ chalk.bold("Could not register client - stopping CLI!") }\n${ e.message }`))
+        process.exit(1)
+    }
 
     printResults(clientType)
 
