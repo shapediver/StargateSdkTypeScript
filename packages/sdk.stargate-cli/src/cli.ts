@@ -2,6 +2,7 @@
 
 import chalk from "chalk"
 import inquirer from "inquirer"
+import { disconnectClients } from "./command/disconnectClients"
 import { listBackendClients, listFrontendClients } from "./command/listClients"
 import { register } from "./command/register"
 import { assertUnreachable } from "./utils"
@@ -21,6 +22,8 @@ const init = () => {
 }
 
 enum Command {
+    DISCONNECT_CLIENTS = "Deregister and disconnect selected clients from Stargate (backend only!)",
+    EXIT = "Disconnect from Stargate and close CLI",
     LIST_BACKEND_CLIENTS = "List all registered backend clients",
     LIST_FRONTEND_CLIENTS = "List all registered frontend clients",
 }
@@ -34,6 +37,8 @@ function askCommand () {
             choices: [
                 Command.LIST_BACKEND_CLIENTS,
                 Command.LIST_FRONTEND_CLIENTS,
+                Command.DISCONNECT_CLIENTS,
+                Command.EXIT,
             ],
         },
     ]
@@ -49,6 +54,13 @@ function askCommand () {
         const { command } = await askCommand()
         const cmd: Command = command
         switch (cmd) {
+            case Command.DISCONNECT_CLIENTS:
+                await disconnectClients(sdk)
+                break
+            case Command.EXIT:
+                await sdk.close()
+                process.exit()
+                return
             case Command.LIST_BACKEND_CLIENTS:
                 await listBackendClients(sdk)
                 break

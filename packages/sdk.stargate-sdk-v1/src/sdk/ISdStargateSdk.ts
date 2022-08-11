@@ -1,10 +1,11 @@
 import { ISdListClientsResponseDto } from "../dto/ListClientsCommand"
 import { ISdRegisterResponseDto } from "../dto/RegisterCommand"
+import { ISdClientModel } from "../model/ISdClientModel"
 
 export interface ISdStargateSdk {
 
     /** Closes the open connection to the Stargate service. */
-    disconnect (): Promise<void>
+    close (): Promise<void>
 
     /**
      * Registers this client for the authenticated user in Stargate.
@@ -32,5 +33,12 @@ export interface ISdStargateSdk {
      * @throws {@link SdStargateError}
      */
     listFrontendClients (): Promise<ISdListClientsResponseDto>
+
+    /**
+     * De-registers the specified clients and disconnects them from the Stargate service.
+     * @param clients The clients that should be disconnected.
+     * @throws {@link SdStargateError}
+     */
+    disconnectClients (clients: ISdClientModel[]): Promise<void>
 
 }

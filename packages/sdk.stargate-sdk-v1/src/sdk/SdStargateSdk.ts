@@ -1,6 +1,8 @@
 import { createStargateCommander, ISdStargateCommander, SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
+import { ISdDisconnectClientsRequestDto } from "../dto/DisconnectClientsCommand"
 import { ISdListClientsRequestDto, ISdListClientsResponseDto } from "../dto/ListClientsCommand"
 import { ISdRegisterRequestDto, ISdRegisterResponseDto } from "../dto/RegisterCommand"
+import { ISdClientModel } from "../model/ISdClientModel"
 import { ISdStargateSdk } from "./ISdStargateSdk"
 
 export class SdStargateSdk implements ISdStargateSdk {
@@ -40,7 +42,8 @@ export class SdStargateSdk implements ISdStargateSdk {
         this.userErrHandler(msg)
     }
 
-    async disconnect (): Promise<void> {
+    async close (): Promise<void> {
+        // We can just close the connection. The Stargate service will clean up the data by itself.
         return this.commander!.disconnect()
     }
 
@@ -81,6 +84,22 @@ export class SdStargateSdk implements ISdStargateSdk {
         try {
             const res = await this.commander!.sendCommand(req)
             return res as ISdListClientsResponseDto
+        } catch (e) {
+            throw new SdStargateError(e)
+        }
+    }
+
+    async disconnectClients (clients: ISdClientModel[]): Promise<void> {
+        const req: ISdDisconnectClientsRequestDto = {
+            header: {
+                command: "DISCONNECT_CLIENTS",
+                targets: clients.map(c => c.id),
+            },
+            payload: undefined,
+        }
+
+        try {
+            await this.commander!.sendCommand(req)
         } catch (e) {
             throw new SdStargateError(e)
         }
