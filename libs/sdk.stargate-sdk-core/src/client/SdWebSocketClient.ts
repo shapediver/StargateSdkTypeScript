@@ -1,4 +1,5 @@
 import { Data, ErrorEvent, WebSocket } from "isomorphic-ws"
+import { clearTimeout } from "timers"
 import { v4 as uuidv4 } from "uuid"
 import {
     ISdErrorResponseDto,
@@ -7,7 +8,7 @@ import {
     isErrorResponseDto,
     isOkResponseDto,
 } from "../dto/SdBaseDto"
-import { ISdStargateClient } from "./ISdStargateClient"
+import { ISdStargateClient, ISdStargateClientOptionKeepAlive } from "./ISdStargateClient"
 
 /** Holds the promise functions of a single open request */
 type OpenRequest = {
@@ -20,12 +21,14 @@ export class SdWebSocketClient implements ISdStargateClient {
     _ws: WebSocket | undefined
 
     /**
+     * Custom message handler.
      * This handler is called whenever a server message is received that is not a direct response to a previously sent
      * request.
      */
     readonly msgHandler: (payload: unknown) => void
 
     /**
+     * Custom error handler.
      * This handler is called for every WebSocket related errors. It covers the following situations:
      *  * Unexpected WebSocket errors.
      *  * Invalid server messages.
@@ -34,22 +37,37 @@ export class SdWebSocketClient implements ISdStargateClient {
     readonly errHandler: (msg: string) => void
 
     /**
+     * Custom disconnect handler.
      * This handler is called when the WebSocket connection is closed by an external factor. However, it is not called
      * when the {@link disconnect} function is called.
      */
     readonly dcnHandler: (msg: string) => void
 
+    /**
+     * When this property is defined, the client sends data periodically to keep the Websocket
+     * session active. This process is started when the {@link connect} method was called and
+     * stopped when the established connection has been closed. The {@link send} method updates
+     * the time when a keep alive message is sent.
+     */
+    readonly keepAlive?: ISdStargateClientOptionKeepAlive
+
     /** Holds all open requests that are waiting for a response. */
     readonly openRequests: Record<string, OpenRequest> = {}
+
+    /** Holds the timeout-ID of the next keep alive send message call */
+    keepAliveTimeout?: ReturnType<typeof setTimeout>
 
     constructor (
         msgHandler: (payload: unknown) => void,
         errHandler: (msg: string) => void,
         dcnHandler: (msg: string) => void,
+        keepAlive?: ISdStargateClientOptionKeepAlive,
     ) {
         this.msgHandler = msgHandler
         this.errHandler = errHandler
         this.dcnHandler = dcnHandler
+
+        this.keepAlive = keepAlive
     }
 
     /**
@@ -61,6 +79,10 @@ export class SdWebSocketClient implements ISdStargateClient {
         return this._ws
     }
 
+    /**
+     * Configures the handling of all WebSocket events that are required by this client.
+     * @private
+     */
     init (ws: WebSocket): void {
         ws.onopen = () => {
             // Reset to empty function
@@ -82,7 +104,8 @@ export class SdWebSocketClient implements ISdStargateClient {
         return new Promise((resolve, reject) => {
             const ws = new WebSocket(`wss://${ url }`)  // NOTE no support for the constructor options argument in browsers!!!
             ws.onopen = () => {
-                this.init(ws)
+                this.init(ws)   // Configure WebSocket events
+                this.updateKeepAlive()  // Start keep alive process
                 resolve()
             }
             ws.onerror = (event: ErrorEvent) => reject(event.message)
@@ -109,6 +132,7 @@ export class SdWebSocketClient implements ISdStargateClient {
             msg.requestId = reqId
             this.openRequests[reqId] = { resolve, reject }
             this.ws().send(JSON.stringify(msg))
+            this.updateKeepAlive()  // Update keep alive timeout
         })
     }
 
@@ -200,6 +224,30 @@ export class SdWebSocketClient implements ISdStargateClient {
 
         // Reject the open request
         req.reject(msg)
+    }
+
+    /**
+     * Creates a new delayed keep-alive send message call and clears the previous one. This
+     * makes sure that keep-alive messages are only sent when no user action was executed within
+     * the specified keep-alive interval.
+     * @private
+     */
+    updateKeepAlive (): void {
+        // Stop when keep alive is not configured
+        if (!this.keepAlive) return
+
+        // Cancel the previous keep alive timeout
+        if (this.keepAliveTimeout) clearTimeout(this.keepAliveTimeout)
+
+        // Create new keep alive
+        this.keepAliveTimeout = setTimeout(async () => {
+            try {
+                // `send` runs `updateKeepAlive` again
+                await this.send(this.keepAlive!.reqCreator())
+            } catch (e) {
+                this.errHandler(`Failed to send keep alive message: ${ e.message }`)
+            }
+        }, this.keepAlive.interval)
     }
 
 }

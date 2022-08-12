@@ -1,11 +1,14 @@
 import {
     createStargateCommander,
+    ISdStargateClientOptionKeepAlive,
+    ISdStargateCommandDto,
     ISdStargateCommander,
     SdStargateError,
 } from "@shapediver/sdk.stargate-sdk-core"
 import { ISdDisconnectClientsRequestDto } from "../dto/DisconnectClientsCommand"
 import { ISdForwardMessageRequestDto } from "../dto/ForwardMessageCommand"
 import { ISdListClientsRequestDto, ISdListClientsResponseDto } from "../dto/ListClientsCommand"
+import { ISdPingRequestDto } from "../dto/PingCommand"
 import { ISdRegisterRequestDto, ISdRegisterResponseDto } from "../dto/RegisterCommand"
 import { ISdClientModel } from "../model/ISdClientModel"
 import { ISdStargateSdk } from "./ISdStargateSdk"
@@ -35,11 +38,17 @@ export class SdStargateSdk implements ISdStargateSdk {
     async init (): Promise<void> {
         const url = `${ this.baseUrl }/v1`
 
+        const keepAlive: ISdStargateClientOptionKeepAlive = {
+            interval: 585000,   // in ms (9 min and 45 sec)
+            reqCreator: this.keepAliveReqBuilder.bind(this),
+        }
+
         // Initialize commander and connect to Stargate
         this.commander = createStargateCommander(
             this.msgHandler.bind(this),
             this.errHandler.bind(this),
             this.dcnHandler.bind(this),
+            keepAlive,
         )
         await this.commander.connect(url)
     }
@@ -57,6 +66,16 @@ export class SdStargateSdk implements ISdStargateSdk {
     /** Wrapper around the user disconnect handler. */
     dcnHandler (msg: string): void {
         this.userDcnHandler(msg)
+    }
+
+    /** Creates the request body for the ping-command. */
+    keepAliveReqBuilder (): ISdStargateCommandDto {
+        const req: ISdPingRequestDto = {
+            header: { command: "PING" },
+            payload: undefined,
+        }
+
+        return req
     }
 
     async close (): Promise<void> {

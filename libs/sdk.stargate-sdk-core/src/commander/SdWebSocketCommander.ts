@@ -1,4 +1,4 @@
-import { ISdStargateClient } from "../client/ISdStargateClient"
+import { ISdStargateClient, ISdStargateClientOptionKeepAlive } from "../client/ISdStargateClient"
 import { SdWebSocketClient } from "../client/SdWebSocketClient"
 import { ISdStargateCommandDto } from "../dto/SdBaseDto"
 import { SdStargateError } from "../SdStargateError"
@@ -12,8 +12,9 @@ export class SdWebSocketCommander implements ISdStargateCommander {
         msgHandler: (payload: unknown) => void,
         errHandler: (msg: string) => void,
         dcnHandler: (msg: string) => void,
+        keepAlive?: ISdStargateClientOptionKeepAlive,
     ) {
-        this.client = new SdWebSocketClient(msgHandler, errHandler, dcnHandler)
+        this.client = new SdWebSocketClient(msgHandler, errHandler, dcnHandler, keepAlive)
     }
 
     async connect (url: string): Promise<void> {
