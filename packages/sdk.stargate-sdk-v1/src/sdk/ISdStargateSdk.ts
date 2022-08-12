@@ -35,6 +35,14 @@ export interface ISdStargateSdk {
     listFrontendClients (): Promise<ISdListClientsResponseDto>
 
     /**
+     * Sends the given message to the specified clients of this user (specified via {@link register}`-command).
+     * @param msg The message object that should be forwarded.
+     * @param clients The clients that should be disconnected.
+     * @throws {@link SdStargateError}
+     */
+    forwardMessage (msg: Record<string, any>, clients: ISdClientModel[]): Promise<void>
+
+    /**
      * De-registers the specified clients and disconnects them from the Stargate service.
      * @param clients The clients that should be disconnected.
      * @throws {@link SdStargateError}

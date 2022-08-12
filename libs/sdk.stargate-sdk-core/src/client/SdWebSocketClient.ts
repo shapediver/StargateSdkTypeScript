@@ -144,7 +144,9 @@ export class SdWebSocketClient implements ISdStargateClient {
         else if (isErrorResponseDto(res)) this.processErrorMessage(res)
         else {
             // This should not happen, but we must make sure that open requests are closed!
-            this.processErrorMessage({ errorMessage: "Received data in invalid format: Unknown DTO." })
+            this.processErrorMessage({
+                errorMessage: `Received data in invalid format: Unknown DTO.\n${ data }`,
+            })
             return
         }
     }

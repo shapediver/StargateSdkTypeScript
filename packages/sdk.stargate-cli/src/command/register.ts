@@ -55,7 +55,11 @@ function askQuestions () {
 }
 
 /** Generates a new JWT authentication token, instantiates the Stargate SDK and registeres the selected client app. */
-export async function register (): Promise<ISdStargateSdk> {
+export async function register (
+    msgHandler: (payload: unknown) => void,
+    errHandler: (msg: string) => void,
+    dcnHandler: (msg: string) => void,
+): Promise<ISdStargateSdk> {
     const { prvKey, user, clientType, url } = await askQuestions()
 
     // Extract client info and generate new JWT
@@ -67,6 +71,9 @@ export async function register (): Promise<ISdStargateSdk> {
     try {
         sdk = await createSdk()
             .setBaseUrl(url)
+            .setServerCommandHandler(msgHandler)
+            .setConnectionErrorHandler(errHandler)
+            .setDisconnectHandler(dcnHandler)
             .build()
     } catch (e) {
         console.error(chalk.red(`${ chalk.bold("Could not instantiate Stargate client - stopping CLI!") }\n${ e.message }`))

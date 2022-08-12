@@ -4,6 +4,7 @@ import {
     SdStargateError,
 } from "@shapediver/sdk.stargate-sdk-core"
 import { ISdDisconnectClientsRequestDto } from "../dto/DisconnectClientsCommand"
+import { ISdForwardMessageRequestDto } from "../dto/ForwardMessageCommand"
 import { ISdListClientsRequestDto, ISdListClientsResponseDto } from "../dto/ListClientsCommand"
 import { ISdRegisterRequestDto, ISdRegisterResponseDto } from "../dto/RegisterCommand"
 import { ISdClientModel } from "../model/ISdClientModel"
@@ -100,6 +101,24 @@ export class SdStargateSdk implements ISdStargateSdk {
         try {
             const res = await this.commander!.sendCommand(req)
             return res as ISdListClientsResponseDto
+        } catch (e) {
+            throw new SdStargateError(e)
+        }
+    }
+
+    async forwardMessage (msg: Record<string, any>, clients: ISdClientModel[]): Promise<void> {
+        const req: ISdForwardMessageRequestDto = {
+            header: {
+                command: "FORWARD_MESSAGE",
+                targets: clients.map(c => c.id),
+            },
+            payload: {
+                data: msg,
+            },
+        }
+
+        try {
+            await this.commander!.sendCommand(req)
         } catch (e) {
             throw new SdStargateError(e)
         }
