@@ -21,6 +21,16 @@ export interface ISdStargateSdkBuilder {
      */
     setConnectionErrorHandler (errHandler: (msg: string) => void): this
 
+    /**
+     * Sets the function handler that should be called when the established connection is closed by the Stargate server
+     * or other external circumstances. This function is __not__ called when the connection is closed by the client
+     * itself.
+     *
+     * ### Default
+     * When not set, the payload of the received command is printed to console with `warn`-level.
+     */
+    setDisconnectHandler (dcnHandler: (msg: string) => void): this
+
     /** Creates and initializes a new Stargate SDK instance. */
     build (): Promise<SdStargateSdk>
 

@@ -6,5 +6,5 @@ export interface ISdDisconnectClientsRequestDto extends ISdStargateCommandDto {
         targets: string[],
     }
 
-    payload: undefined
+    payload: undefined,
 }

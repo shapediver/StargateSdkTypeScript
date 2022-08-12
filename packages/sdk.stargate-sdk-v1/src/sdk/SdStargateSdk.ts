@@ -1,4 +1,8 @@
-import { createStargateCommander, ISdStargateCommander, SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
+import {
+    createStargateCommander,
+    ISdStargateCommander,
+    SdStargateError,
+} from "@shapediver/sdk.stargate-sdk-core"
 import { ISdDisconnectClientsRequestDto } from "../dto/DisconnectClientsCommand"
 import { ISdListClientsRequestDto, ISdListClientsResponseDto } from "../dto/ListClientsCommand"
 import { ISdRegisterRequestDto, ISdRegisterResponseDto } from "../dto/RegisterCommand"
@@ -10,6 +14,7 @@ export class SdStargateSdk implements ISdStargateSdk {
     readonly baseUrl: string
     readonly userMsgHandler: (payload: unknown) => void
     readonly userErrHandler: (msg: string) => void
+    readonly userDcnHandler: (msg: string) => void
 
     commander?: ISdStargateCommander
 
@@ -17,10 +22,12 @@ export class SdStargateSdk implements ISdStargateSdk {
         baseUrl: string,
         msgHandler: (payload: unknown) => void,
         errHandler: (msg: string) => void,
+        dcnHandler: (msg: string) => void,
     ) {
         this.baseUrl = baseUrl
         this.userMsgHandler = msgHandler
         this.userErrHandler = errHandler
+        this.userDcnHandler = dcnHandler
     }
 
     /** Instantiates a new Stargate commander and establishes a connection to the Stargate service. */
@@ -28,7 +35,11 @@ export class SdStargateSdk implements ISdStargateSdk {
         const url = `${ this.baseUrl }/v1`
 
         // Initialize commander and connect to Stargate
-        this.commander = createStargateCommander(this.msgHandler.bind(this), this.msgErrHandler.bind(this))
+        this.commander = createStargateCommander(
+            this.msgHandler.bind(this),
+            this.errHandler.bind(this),
+            this.dcnHandler.bind(this),
+        )
         await this.commander.connect(url)
     }
 
@@ -38,8 +49,13 @@ export class SdStargateSdk implements ISdStargateSdk {
     }
 
     /** Wrapper around the user message handler. */
-    msgErrHandler (msg: string): void {
+    errHandler (msg: string): void {
         this.userErrHandler(msg)
+    }
+
+    /** Wrapper around the user disconnect handler. */
+    dcnHandler (msg: string): void {
+        this.userDcnHandler(msg)
     }
 
     async close (): Promise<void> {

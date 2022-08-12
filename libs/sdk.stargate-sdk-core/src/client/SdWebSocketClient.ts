@@ -33,15 +33,23 @@ export class SdWebSocketClient implements ISdStargateClient {
      */
     readonly errHandler: (msg: string) => void
 
+    /**
+     * This handler is called when the WebSocket connection is closed by an external factor. However, it is not called
+     * when the {@link disconnect} function is called.
+     */
+    readonly dcnHandler: (msg: string) => void
+
     /** Holds all open requests that are waiting for a response. */
     readonly openRequests: Record<string, OpenRequest> = {}
 
     constructor (
         msgHandler: (payload: unknown) => void,
         errHandler: (msg: string) => void,
+        dcnHandler: (msg: string) => void,
     ) {
         this.msgHandler = msgHandler
         this.errHandler = errHandler
+        this.dcnHandler = dcnHandler
     }
 
     /**
@@ -59,7 +67,7 @@ export class SdWebSocketClient implements ISdStargateClient {
         }
         ws.onclose = () => {
             this._ws = undefined
-            this.errHandler("Connection was closed by the server.")
+            this.dcnHandler("Connection was closed.")
         }
         ws.onerror = (event) => {
             this.errHandler(event.message)

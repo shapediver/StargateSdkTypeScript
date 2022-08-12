@@ -11,8 +11,9 @@ export class SdWebSocketCommander implements ISdStargateCommander {
     constructor (
         msgHandler: (payload: unknown) => void,
         errHandler: (msg: string) => void,
+        dcnHandler: (msg: string) => void,
     ) {
-        this.client = new SdWebSocketClient(msgHandler, errHandler)
+        this.client = new SdWebSocketClient(msgHandler, errHandler, dcnHandler)
     }
 
     async connect (url: string): Promise<void> {
