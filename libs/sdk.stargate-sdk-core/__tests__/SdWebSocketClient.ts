@@ -8,7 +8,7 @@ class WebSocketMock {
     onmessage: ((event: WebSocket.MessageEvent) => void) | null = null
     onopen: ((event: WebSocket.Event) => void) | null = null
 
-    send (data: any, cb?: (err?: Error) => void): void {
+    send (_data: any, _cb?: (err?: Error) => void): void {
     }
 }
 
@@ -21,8 +21,9 @@ const unreachable = (msg: string): () => void => {
 const createWsClient = (
     msgHandler: (payload: unknown) => void = unreachable("called msg-handler"),
     errHandler: (msg: string) => void = unreachable("called err-handler"),
+    dscHandler: (msg: string) => void = unreachable("called dsc-handler"),
 ): [ SdWebSocketClient, WebSocketMock ] => {
-    const client = new SdWebSocketClient(msgHandler, errHandler)
+    const client = new SdWebSocketClient(msgHandler, errHandler, dscHandler, undefined)
     const ws = new WebSocketMock()
     client.init(ws as WebSocket)
     return [ client, ws ]
