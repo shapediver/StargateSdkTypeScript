@@ -7,7 +7,7 @@ import {
     ISdStargateCommandDto,
     isErrorResponseDto,
     isOkResponseDto,
-} from "../dto/SdBaseDto"
+} from "../dto/baseDto"
 import { ISdStargateClient, ISdStargateClientOptionKeepAlive } from "./ISdStargateClient"
 
 /** Holds the promise functions of a single open request */

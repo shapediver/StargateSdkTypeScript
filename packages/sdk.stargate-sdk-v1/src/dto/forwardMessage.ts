@@ -1,12 +1,10 @@
 import { ISdStargateCommandDto } from "@shapediver/sdk.stargate-sdk-core"
 
-export interface ISdForwardMessageRequestDto extends ISdStargateCommandDto {
+export interface ISdStargateForwardMessageRequestDto extends ISdStargateCommandDto {
     header: {
         command: "FORWARD_MESSAGE",
         targets: string[],
     }
 
-    payload: {
-        data: Record<string, any>,
-    },
+    payload: Record<string, any>,
 }

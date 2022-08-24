@@ -7,7 +7,13 @@ export interface ISdStargateCommandDto {
     payload?: Record<string, unknown>,
 }
 
-/** The structure of a successfully processed client request. */
+/**
+ * The OK-response is a wrapper around all non-error messages that are received from the
+ * Stargate backend. It can either be received as:
+ *  * a direct response to a previously sent client message ({@link requestId} exists).
+ *  * a new message that has been triggered by the Stargate backend itself or forwarded from
+ *    another client ({@link requestId} is `undefined`).
+ */
 export interface ISdOkResponseDto {
     requestId?: string,
 

@@ -1,4 +1,4 @@
-import { ISdStargateCommandDto } from "../dto/SdBaseDto"
+import { ISdStargateCommandDto } from "../dto/baseDto"
 
 export interface ISdStargateClientOptionKeepAlive {
     /**

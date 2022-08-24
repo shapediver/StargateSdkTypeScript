@@ -1,16 +1,16 @@
 import { SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
-import { ISdListClientsResponseDto } from "./dto/ListClientsCommand"
-import { ISdRegisterResponseDto } from "./dto/RegisterCommand"
-import { ISdClientModel } from "./model/ISdClientModel"
+import { ISdStargateListClientsResponseDto } from "./dto/listClients"
+import { ISdStargateRegisterResponseDto } from "./dto/register"
+import { ISdStargateClientModel } from "./models/ISdStargateClientModel"
 import { createSdk } from "./sdk/createSdk"
 import { ISdStargateSdk } from "./sdk/ISdStargateSdk"
 import { ISdStargateSdkBuilder } from "./sdk/ISdStargateSdkBuilder"
 
 export {
     createSdk,
-    ISdClientModel,
-    ISdListClientsResponseDto,
-    ISdRegisterResponseDto,
+    ISdStargateClientModel,
+    ISdStargateListClientsResponseDto,
+    ISdStargateRegisterResponseDto,
     ISdStargateSdk,
     ISdStargateSdkBuilder,
     SdStargateError,

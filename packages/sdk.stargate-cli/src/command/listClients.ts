@@ -1,4 +1,4 @@
-import { ISdListClientsResponseDto, ISdStargateSdk } from "@shapediver/sdk.stargate-sdk-v1"
+import { ISdStargateListClientsResponseDto, ISdStargateSdk } from "@shapediver/sdk.stargate-sdk-v1"
 import chalk from "chalk"
 import { table, TableUserConfig } from "table"
 
@@ -20,7 +20,7 @@ export async function listFrontendClients (sdk: ISdStargateSdk): Promise<void> {
     }
 }
 
-function printResults (clients: ISdListClientsResponseDto): void {
+function printResults (clients: ISdStargateListClientsResponseDto): void {
     const data: any[][] = [ [ "ID", "Type", "Name", "Version" ] ]
 
     clients.forEach(c => {

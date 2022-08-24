@@ -1,6 +1,6 @@
-import { ISdListClientsResponseDto } from "../dto/ListClientsCommand"
-import { ISdRegisterResponseDto } from "../dto/RegisterCommand"
-import { ISdClientModel } from "../model/ISdClientModel"
+import { ISdStargateListClientsResponseDto } from "../dto/listClients"
+import { ISdStargateRegisterResponseDto } from "../dto/register"
+import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
 
 export interface ISdStargateSdk {
 
@@ -18,21 +18,21 @@ export interface ISdStargateSdk {
         auth_token: string,
         name: string,
         version: string,
-    ): Promise<ISdRegisterResponseDto>
+    ): Promise<ISdStargateRegisterResponseDto>
 
     /**
      * Lists all backend clients of this user (specified via {@link register}`-command) that are currently registered
      * in Starlink.
      * @throws {@link SdStargateError}
      */
-    listBackendClients (): Promise<ISdListClientsResponseDto>
+    listBackendClients (): Promise<ISdStargateListClientsResponseDto>
 
     /**
      * Lists all frontend clients of this user (specified via {@link register}`-command) that are currently registered
      * in Starlink.
      * @throws {@link SdStargateError}
      */
-    listFrontendClients (): Promise<ISdListClientsResponseDto>
+    listFrontendClients (): Promise<ISdStargateListClientsResponseDto>
 
     /**
      * Sends the given message to the specified clients of this user (specified via {@link register}`-command).
@@ -40,13 +40,13 @@ export interface ISdStargateSdk {
      * @param clients The clients that should be disconnected.
      * @throws {@link SdStargateError}
      */
-    forwardMessage (msg: Record<string, any>, clients: ISdClientModel[]): Promise<void>
+    forwardMessage (msg: Record<string, any>, clients: ISdStargateClientModel[]): Promise<void>
 
     /**
      * De-registers the specified clients and disconnects them from the Stargate service.
      * @param clients The clients that should be disconnected.
      * @throws {@link SdStargateError}
      */
-    disconnectClients (clients: ISdClientModel[]): Promise<void>
+    disconnectClients (clients: ISdStargateClientModel[]): Promise<void>
 
 }

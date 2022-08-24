@@ -1,4 +1,4 @@
-import { ISdStargateCommandDto } from "../dto/SdBaseDto"
+import { ISdStargateCommandDto } from "../dto/baseDto"
 
 export interface ISdStargateCommander {
 
@@ -15,6 +15,6 @@ export interface ISdStargateCommander {
     disconnect (): Promise<void>
 
     /** Builds the request from the given data and sends the command to the server. */
-    sendCommand (cmd: ISdStargateCommandDto): Promise<unknown>
+    send (cmd: ISdStargateCommandDto): Promise<unknown>
 
 }

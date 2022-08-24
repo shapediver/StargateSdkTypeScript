@@ -1,6 +1,6 @@
 import { ISdStargateClient, ISdStargateClientOptionKeepAlive } from "../client/ISdStargateClient"
 import { SdWebSocketClient } from "../client/SdWebSocketClient"
-import { ISdStargateCommandDto } from "../dto/SdBaseDto"
+import { ISdStargateCommandDto } from "../dto/baseDto"
 import { SdStargateError } from "../SdStargateError"
 import { ISdStargateCommander } from "./ISdStargateCommander"
 
@@ -35,7 +35,7 @@ export class SdWebSocketCommander implements ISdStargateCommander {
         }
     }
 
-    async sendCommand (req: ISdStargateCommandDto): Promise<unknown> {
+    async send (req: ISdStargateCommandDto): Promise<unknown> {
         return this.client.send(req)
     }
 

@@ -1,4 +1,4 @@
-export interface ISdClientModel {
+export interface ISdStargateClientModel {
     // The ID of the registered client
     id: string,
 

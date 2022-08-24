@@ -1,6 +1,6 @@
 import WebSocket from "ws"
 import { SdWebSocketClient } from "../src/client/SdWebSocketClient"
-import { ISdErrorResponseDto, ISdOkResponseDto, ISdStargateCommandDto } from "../src/dto/SdBaseDto"
+import { ISdErrorResponseDto, ISdOkResponseDto, ISdStargateCommandDto } from "../src/dto/baseDto"
 
 class WebSocketMock {
     onclose: ((event: WebSocket.CloseEvent) => void) | null = null

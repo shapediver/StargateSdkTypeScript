@@ -1,8 +1,8 @@
-import { ISdClientModel, ISdStargateSdk } from "@shapediver/sdk.stargate-sdk-v1"
+import { ISdStargateClientModel, ISdStargateSdk } from "@shapediver/sdk.stargate-sdk-v1"
 import chalk from "chalk"
 import inquirer from "inquirer"
 
-function askQuestions (clients: ISdClientModel[]) {
+function askQuestions (clients: ISdStargateClientModel[]) {
     const questions = [
         {
             type: "checkbox",
