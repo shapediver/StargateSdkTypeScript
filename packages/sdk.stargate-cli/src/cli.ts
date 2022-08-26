@@ -3,10 +3,11 @@
 import chalk from "chalk"
 import inquirer from "inquirer"
 import { disconnectClients } from "./command/disconnectClients"
+import { dummyCommands, setupDummyCommandHandlers } from "./command/dummyCommands"
 import { forwardMessage } from "./command/forward"
 import { listBackendClients, listFrontendClients } from "./command/listClients"
 import { register } from "./command/register"
-import { assertUnreachable } from "./utils"
+import { assertUnreachable, prettifyMsg } from "./utils"
 
 const figlet = require("figlet")
 
@@ -24,6 +25,7 @@ const init = () => {
 
 enum Command {
     DISCONNECT_CLIENTS = "Deregister and disconnect selected clients from Stargate (backend only!)",
+    DUMMY_COMMANDS = "Send a dummy command",
     EXIT = "Disconnect from Stargate and close CLI",
     FORWARD_MESSAGE = "Forward a custom message to selected clients from Stargate",
     LIST_BACKEND_CLIENTS = "List all registered backend clients",
@@ -37,6 +39,7 @@ function askCommand () {
             name: "command",
             message: "What do you wanna do next?",
             choices: [
+                Command.DUMMY_COMMANDS,
                 Command.LIST_BACKEND_CLIENTS,
                 Command.LIST_FRONTEND_CLIENTS,
                 Command.FORWARD_MESSAGE,
@@ -49,13 +52,10 @@ function askCommand () {
 }
 
 /* Custom handler for all server messages. */
-function msgHandle (payload: unknown): void {
-    let pretty = payload
-    if (typeof payload === "object" && payload !== null)
-        pretty = require("util").inspect(pretty, false, null)
+function msgHandle (msg: unknown): void {
     console.log(
         "\n",
-        chalk.magenta(`${ chalk.bold("Received new message from Stargate:\n") }\n${ pretty }`),
+        chalk.blue(`${ chalk.bold("Received non-command message from Stargate:") }\n${ prettifyMsg(msg) }`),
         "\n",
     )
 }
@@ -64,7 +64,7 @@ function msgHandle (payload: unknown): void {
 function errHandler (msg: string): void {
     console.error(
         "\n",
-        chalk.red(`${ chalk.bold("Received new message from Stargate:\n") }\n${ msg }`),
+        chalk.red(`${ chalk.bold("Received new error message from Stargate:") }\n${ prettifyMsg(msg) }`),
         "\n",
     )
 }
@@ -80,12 +80,18 @@ function dcnHandler (msg: string): void {
 
     let sdk = await register(msgHandle, errHandler, dcnHandler)
 
+    // Register user-handlers for all commands
+    setupDummyCommandHandlers(sdk)
+
     while (true) {
         const { command } = await askCommand()
         const cmd: Command = command
         switch (cmd) {
             case Command.DISCONNECT_CLIENTS:
                 await disconnectClients(sdk)
+                break
+            case Command.DUMMY_COMMANDS:
+                await dummyCommands(sdk)
                 break
             case Command.EXIT:
                 await sdk.close()
