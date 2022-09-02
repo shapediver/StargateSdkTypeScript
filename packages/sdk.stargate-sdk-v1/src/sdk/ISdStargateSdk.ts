@@ -1,8 +1,15 @@
+import { ISdStargateDummyCommand } from "../commands/ISdStargateDummyCommand"
 import { ISdStargateListClientsResponseDto } from "../dto/listClients"
 import { ISdStargateRegisterResponseDto } from "../dto/register"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
 
 export interface ISdStargateSdk {
+
+    /**
+     * Returns the API for dummy commands that allows to send new client commands or handle
+     * incoming ones.
+     */
+    readonly cmdDummy: ISdStargateDummyCommand
 
     /** Closes the open connection to the Stargate service. */
     close (): Promise<void>

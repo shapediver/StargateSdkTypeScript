@@ -55,14 +55,14 @@ describe("ok message", function () {
         client.generateRequestId = () => "1"
         client
             .send(req)
-            .then(unreachable("resolved req 1"))
             .catch(unreachable("rejected req 1"))
+            .then(unreachable("resolved req 1"))
 
         client.generateRequestId = () => "2"
         client
             .send(req)
-            .then(() => done())
             .catch(unreachable("rejected req 2"))
+            .then(() => done())
 
         ws.onmessage!({
             data: JSON.stringify({
@@ -82,8 +82,8 @@ describe("ok message", function () {
         client.generateRequestId = () => "1"
         client
             .send(req)
-            .then(unreachable("resolved req"))
             .catch(unreachable("rejected req"))
+            .then(unreachable("resolved req"))
 
         ws.onmessage!({
             data: JSON.stringify({
@@ -124,14 +124,14 @@ describe("error message", function () {
         client.generateRequestId = () => "1"
         client
             .send(req)
-            .then(unreachable("resolved req 1"))
             .catch(unreachable("rejected req 1"))
+            .then(unreachable("resolved req 1"))
 
         client.generateRequestId = () => "2"
         client
             .send(req)
-            .then(unreachable("resolved req 2"))
             .catch(() => done())
+            .then(unreachable("resolved req 2"))
 
         ws.onmessage!({
             data: JSON.stringify({
@@ -155,14 +155,14 @@ describe("error message", function () {
         client.generateRequestId = () => "1"
         client
             .send(req)
-            .then(unreachable("resolved req 1"))
             .catch(() => reject())
+            .then(unreachable("resolved req 1"))
 
         client.generateRequestId = () => "2"
         client
             .send(req)
-            .then(unreachable("resolved req 2"))
             .catch(() => reject())
+            .then(unreachable("resolved req 2"))
 
         ws.onmessage!({
             data: JSON.stringify({

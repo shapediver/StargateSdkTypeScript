@@ -3,6 +3,7 @@ import { createStargateCommander } from "./commander/createCommander"
 import { ISdStargateCommander } from "./commander/ISdStargateCommander"
 import { ISdStargateCommandDto } from "./dto/baseDto"
 import { SdStargateError } from "./SdStargateError"
+import * as SdUtils from "./utils"
 
 export {
     createStargateCommander,
@@ -10,4 +11,5 @@ export {
     ISdStargateClientOptionKeepAlive,
     ISdStargateCommandDto,
     SdStargateError,
+    SdUtils,
 }
