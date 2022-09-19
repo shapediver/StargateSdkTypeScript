@@ -104,10 +104,24 @@ export class SdStargateSdk implements ISdStargateSdk {
         return this.commander!.disconnect()
     }
 
-    async register (authToken: string, name: string, version: string): Promise<ISdStargateRegisterResponseDto> {
+    async register (
+        authToken: string,
+        clientName: string,
+        clientVersion: string,
+        hostOs: string,
+        hostName: string,
+        hostUser: string,
+    ): Promise<ISdStargateRegisterResponseDto> {
         const req: ISdStargateRegisterRequestDto = {
             header: { command: "REGISTER" },
-            payload: { authToken, name, version },
+            payload: {
+                authToken,
+                clientName,
+                clientVersion,
+                hostOs,
+                hostName,
+                hostUser,
+            },
         }
 
         try {

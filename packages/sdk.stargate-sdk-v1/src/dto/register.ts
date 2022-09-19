@@ -9,10 +9,7 @@ export interface ISdStargateRegisterRequestDto extends ISdStargateCommandDto {
     payload: {
         authToken: string,
 
-        name: string,
-
-        version: string,
-    }
+    } & Pick<ISdStargateClientModel, "clientName" | "clientVersion" | "hostOs" | "hostName" | "hostUser">
 }
 
 export type ISdStargateRegisterResponseDto = Pick<ISdStargateClientModel, "id">[]
