@@ -21,10 +21,10 @@ export async function listFrontendClients (sdk: ISdStargateSdk): Promise<void> {
 }
 
 function printResults (clients: ISdStargateListClientsResponseDto): void {
-    const data: any[][] = [ [ "ID", "Type", "Name", "Version" ] ]
+    const data: any[][] = [ [ "ID", "Type", "Name", "Version", "Host" ] ]
 
     clients.forEach(c => {
-        data.push([ c.id, c.clientType, c.name, c.version ])
+        data.push([ c.id, c.clientType, c.clientName, c.clientVersion, `${ c.hostUser }@${ c.hostName } ${ c.hostOs }` ])
     })
 
     const config: TableUserConfig = {

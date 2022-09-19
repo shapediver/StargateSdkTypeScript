@@ -4,6 +4,8 @@ import inquirer from "inquirer"
 import * as jwt from "jwt-promisify"
 import { assertUnreachable } from "../utils"
 
+const os = require("os")
+
 /** All ShapeDiver client applications that are supported by Stargate. */
 enum ClientType {
     GRASSHOPPER_CLIENT = "Grasshopper Client",
@@ -82,7 +84,14 @@ export async function register (
 
     // Register client
     try {
-        await sdk.register(authToken, name, "local")
+        await sdk.register(
+            authToken,
+            name,
+            "local",
+            `${ os.type() } ${ os.release() }`,
+            os.hostname(),
+            os.userInfo().username,
+        )
     } catch (e) {
         console.error(chalk.red(`${ chalk.bold("Could not register client - stopping CLI!") }\n${ e.message }`))
         process.exit(1)
@@ -134,7 +143,10 @@ function getAppIdFromClientType (type: ClientType): { appId: string, name: strin
 /** Generates and returns a new JWT authentication token. */
 async function generateAuthToken (privateKey: string, sub: string, aud: string): Promise<string> {
     try {
-        return await jwt.sign({ sub, aud }, privateKey.trim(), { algorithm: "RS256", expiresIn: "1h" })
+        return await jwt.sign({ sub, aud }, privateKey.trim(), {
+            algorithm: "RS256",
+            expiresIn: "1h",
+        })
     } catch (e) {
         throw new Error("Something went wrong when creating the JWT. Something is probably wrong with the key string.\n" + e.message)
     }

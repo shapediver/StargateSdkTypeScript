@@ -16,15 +16,21 @@ export interface ISdStargateSdk {
 
     /**
      * Registers this client for the authenticated user in Stargate.
-     * @param auth_token JWT authentication token
-     * @param name Name of the client software
-     * @param version Version of the client software
+     * @param authToken JWT authentication token.
+     * @param clientName The name of the client software.
+     * @param clientVersion The version of the client software.
+     * @param hostOs The platform identifier and version number of the host system.
+     * @param hostName The name of the host system.
+     * @param hostUser Gets the username of the person who is associated with the host system.
      * @throws {@link SdStargateError}
      */
     register (
-        auth_token: string,
-        name: string,
-        version: string,
+        authToken: string,
+        clientName: string,
+        clientVersion: string,
+        hostOs: string,
+        hostName: string,
+        hostUser: string,
     ): Promise<ISdStargateRegisterResponseDto>
 
     /**

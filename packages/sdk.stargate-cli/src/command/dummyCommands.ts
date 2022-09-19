@@ -85,7 +85,7 @@ function askCommand (clients: ISdStargateClientModel[]) {
             message: "Select target clients:",
             choices: clients.map(client => {
                 return {
-                    name: `${ client.name } ${ client.version } (${ client.clientType })`,
+                    name: `${ client.clientName } ${ client.clientVersion } (${ client.clientType })`,
                     value: client.id,
                 }
             }),
