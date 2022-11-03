@@ -130,7 +130,16 @@ export class SdWebSocketClient implements ISdStargateClient {
         const reqId = this.generateRequestId()
         return new Promise<any>((resolve, reject) => {
             msg.requestId = reqId
-            this.openRequests[reqId] = { resolve, reject }
+            this.openRequests[reqId] = {
+                resolve: (value: any) => {
+                    delete this.openRequests[reqId]
+                    resolve(value)
+                },
+                reject: (value: any) => {
+                    delete this.openRequests[reqId]
+                    reject(value)
+                },
+            }
             this.ws().send(JSON.stringify(msg))
             this.updateKeepAlive()  // Update keep alive timeout
         })

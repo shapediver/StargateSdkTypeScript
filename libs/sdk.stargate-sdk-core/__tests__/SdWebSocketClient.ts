@@ -1,6 +1,7 @@
 import WebSocket from "ws"
 import { SdWebSocketClient } from "../src/client/SdWebSocketClient"
 import { ISdErrorResponseDto, ISdOkResponseDto, ISdStargateCommandDto } from "../src/dto/baseDto"
+import DoneCallback = jest.DoneCallback
 
 class WebSocketMock {
     onclose: ((event: WebSocket.CloseEvent) => void) | null = null
@@ -34,9 +35,9 @@ describe("ok message", function () {
     const req: ISdStargateCommandDto = { header: {}, payload: {} }
 
     test("with a request id and no respective open request should trigger err-handler", (done) => {
-        const [ _, ws ] = createWsClient(
+        const [ client, ws ] = createWsClient(
             undefined,
-            () => done(),
+            () => verify_n_open_connections(client.openRequests, 0, done),
         )
 
         ws.onmessage!({
@@ -62,7 +63,7 @@ describe("ok message", function () {
         client
             .send(req)
             .catch(unreachable("rejected req 2"))
-            .then(() => done())
+            .then(() => verify_n_open_connections(client.openRequests, 1, done))
 
         ws.onmessage!({
             data: JSON.stringify({
@@ -76,7 +77,7 @@ describe("ok message", function () {
 
     test("without a request id should trigger msg-handler", (done) => {
         const [ client, ws ] = createWsClient(
-            () => done(),
+            () => verify_n_open_connections(client.openRequests, 1, done),
         )
 
         client.generateRequestId = () => "1"
@@ -102,9 +103,9 @@ describe("error message", function () {
     const req: ISdStargateCommandDto = { header: {}, payload: {} }
 
     test("with a request id and no respective open request should trigger err-handler", (done) => {
-        const [ _, ws ] = createWsClient(
+        const [ client, ws ] = createWsClient(
             undefined,
-            () => done(),
+            () => verify_n_open_connections(client.openRequests, 0, done),
         )
 
         ws.onmessage!({
@@ -130,7 +131,7 @@ describe("error message", function () {
         client.generateRequestId = () => "2"
         client
             .send(req)
-            .catch(() => done())
+            .catch(() => verify_n_open_connections(client.openRequests, 1, done))
             .then(unreachable("resolved req 2"))
 
         ws.onmessage!({
@@ -147,7 +148,7 @@ describe("error message", function () {
     test("without a request id should reject all open requests", (done) => {
         let rejectCounter = 0
         const reject = () => {
-            if (++rejectCounter === 2) done()
+            if (++rejectCounter === 2) verify_n_open_connections(client.openRequests, 0, done)
         }
 
         const [ client, ws ] = createWsClient()
@@ -176,3 +177,12 @@ describe("error message", function () {
     })
 
 })
+
+/* Helper functions */
+
+// Check number of open requests in client. Calls the done-callback either way!
+function verify_n_open_connections (openRequests: Record<string, any>, expected: number, done: DoneCallback): void {
+    const n_openRequests = Object.keys(openRequests).length
+    if (n_openRequests == expected) done()
+    else done(`Found ${ n_openRequests } open client requests; should be ${ expected }.`)
+}
