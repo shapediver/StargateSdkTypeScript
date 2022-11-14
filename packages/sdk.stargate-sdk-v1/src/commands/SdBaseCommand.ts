@@ -40,6 +40,8 @@ export abstract class SdBaseCommand {
         command: string,
         responseType?: "ACK" | "BATCH",
     ): Promise<any[]> {
+        // We are omitting the `sender` property, because it is set by the Stargate backend service before the message
+        // is forwarded to the target clients.
         const payload: Omit<ISdCommandPayload, "sender"> = { command, data }
 
         // Add response object if specified

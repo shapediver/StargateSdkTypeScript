@@ -8,6 +8,7 @@ const ajv = new Ajv()
 const schemaCommandPayload = {
     type: "object",
     properties: {
+        /** This property is added by the Stargate backend service when a command is forwarded. */
         sender: { type: "string" },
         response: {
             type: "object",
