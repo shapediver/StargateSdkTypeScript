@@ -1,9 +1,11 @@
 import {
     ISdStargateClientModel,
     ISdStargateDummyAckReplyExampleCommandDto,
+    ISdStargateDummyAckReplyExampleReplyDto,
     ISdStargateDummyBatchReplyExampleCommandDto,
     ISdStargateDummyBatchReplyExampleReplyDto,
     ISdStargateDummyNoReplyExampleCommandDto,
+    ISdStargateDummyNoReplyExampleReplyDto,
     ISdStargateSdk,
 } from "@shapediver/sdk.stargate-sdk-v1"
 import chalk from "chalk"
@@ -11,7 +13,7 @@ import inquirer from "inquirer"
 import { assertUnreachable, nowTime, prettifyMsg, randomIntFromInterval, sleep } from "../utils"
 
 // User-handler for 'no-reply' command
-const noReplyExampleHandler = async (msg: ISdStargateDummyNoReplyExampleCommandDto): Promise<void> => {
+const noReplyExampleHandler = async (msg: ISdStargateDummyNoReplyExampleCommandDto): Promise<ISdStargateDummyNoReplyExampleReplyDto> => {
     console.info(
         "\n",
         chalk.magenta(chalk.bold("Received dummy-command message 'No-Reply' from Stargate:\n")),
@@ -20,10 +22,12 @@ const noReplyExampleHandler = async (msg: ISdStargateDummyNoReplyExampleCommandD
     )
 
     console.info(chalk.magenta(`[${ nowTime() }] Finished handling command 'No-Reply'!`))
+
+    return {}
 }
 
 // User-handler for 'ack-reply' command
-const ackReplyExampleHandler = async (msg: ISdStargateDummyAckReplyExampleCommandDto): Promise<void> => {
+const ackReplyExampleHandler = async (msg: ISdStargateDummyAckReplyExampleCommandDto): Promise<ISdStargateDummyAckReplyExampleReplyDto> => {
     console.info(
         "\n",
         chalk.magenta(chalk.bold("Received dummy-command message 'ACK-Reply' from Stargate:\n")),
@@ -32,6 +36,8 @@ const ackReplyExampleHandler = async (msg: ISdStargateDummyAckReplyExampleComman
     )
 
     console.info(chalk.magenta(`[${ nowTime() }] Finished handling command 'ACK-Reply'!`))
+
+    return {}
 }
 
 // User-handler for 'batch-reply' command

@@ -2,9 +2,11 @@ import { SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
 import { ISdCommandPayload } from "../dto/commands/commandPayload"
 import {
     ISdStargateDummyAckReplyExampleCommandDto,
+    ISdStargateDummyAckReplyExampleReplyDto,
     ISdStargateDummyBatchReplyExampleCommandDto,
     ISdStargateDummyBatchReplyExampleReplyDto,
     ISdStargateDummyNoReplyExampleCommandDto,
+    ISdStargateDummyNoReplyExampleReplyDto,
 } from "../dto/commands/dummyCommand"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
 import { SdStargateSdk } from "../sdk/SdStargateSdk"
@@ -21,8 +23,8 @@ export enum DummyPayloadCommand {
 
 export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargateDummyCommand {
 
-    private userNoReplyExampleHandler: undefined | ((msg: ISdStargateDummyAckReplyExampleCommandDto) => Promise<void>)
-    private userAckReplyExampleHandler: undefined | ((msg: ISdStargateDummyAckReplyExampleCommandDto) => Promise<void>)
+    private userNoReplyExampleHandler: undefined | ((msg: ISdStargateDummyAckReplyExampleCommandDto) => Promise<ISdStargateDummyNoReplyExampleReplyDto>)
+    private userAckReplyExampleHandler: undefined | ((msg: ISdStargateDummyAckReplyExampleCommandDto) => Promise<ISdStargateDummyAckReplyExampleReplyDto>)
     private userBatchReplyExampleHandler: undefined | ((msg: ISdStargateDummyBatchReplyExampleCommandDto) => Promise<ISdStargateDummyBatchReplyExampleReplyDto>)
 
     constructor (
@@ -38,15 +40,18 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
         switch (payload.command) {
             case DummyPayloadCommand.DUMMY_NO_REPLY_EXAMPLE:
                 SdDummyCommandValidator.isNoReplyExampleCommandDto(data)
-                await this.invokeHandler(payload, data, this.userNoReplyExampleHandler?.bind(this))
+                const noReplyHandler = (this.userNoReplyExampleHandler) ? this.userNoReplyExampleHandler.bind(this) : undefined
+                await this.invokeHandler(payload, data, noReplyHandler)
                 break
             case DummyPayloadCommand.DUMMY_ACK_REPLY_EXAMPLE:
                 SdDummyCommandValidator.isAckReplyExampleCommandDto(data)
-                await this.invokeHandler(payload, data, this.userAckReplyExampleHandler?.bind(this))
+                const ackReplyHandler = (this.userAckReplyExampleHandler) ? this.userAckReplyExampleHandler?.bind(this) : undefined
+                await this.invokeHandler(payload, data, ackReplyHandler)
                 break
             case DummyPayloadCommand.DUMMY_BATCH_REPLY_EXAMPLE:
                 SdDummyCommandValidator.isBatchReplyExampleCommandDto(data)
-                await this.invokeHandler(payload, data, this.userBatchReplyExampleHandler?.bind(this))
+                const batchReplyHandler = (this.userBatchReplyExampleHandler) ? this.userBatchReplyExampleHandler?.bind(this) : undefined
+                await this.invokeHandler(payload, data, batchReplyHandler)
                 break
             default:
                 throw new SdStargateError(`Invalid dummy client command '${ payload.command }'`)
@@ -84,7 +89,7 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
     }
 
     registerNoReplyExampleHandler (
-        handler: (msg: ISdStargateDummyNoReplyExampleCommandDto) => Promise<void>,
+        handler: (msg: ISdStargateDummyNoReplyExampleCommandDto) => Promise<ISdStargateDummyNoReplyExampleReplyDto>,
     ): void {
         this.userNoReplyExampleHandler = handler
     }
@@ -97,7 +102,7 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
     }
 
     registerAckReplyExampleHandler (
-        handler: (msg: ISdStargateDummyAckReplyExampleCommandDto) => Promise<void>,
+        handler: (msg: ISdStargateDummyAckReplyExampleCommandDto) => Promise<ISdStargateDummyAckReplyExampleReplyDto>,
     ): void {
         this.userAckReplyExampleHandler = handler
     }

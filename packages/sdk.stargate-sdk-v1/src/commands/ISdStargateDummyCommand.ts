@@ -1,8 +1,10 @@
 import {
     ISdStargateDummyAckReplyExampleCommandDto,
+    ISdStargateDummyAckReplyExampleReplyDto,
     ISdStargateDummyBatchReplyExampleCommandDto,
     ISdStargateDummyBatchReplyExampleReplyDto,
     ISdStargateDummyNoReplyExampleCommandDto,
+    ISdStargateDummyNoReplyExampleReplyDto,
 } from "../dto/commands/dummyCommand"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
 
@@ -22,7 +24,7 @@ export interface ISdStargateDummyCommand {
      * been received.
      */
     registerNoReplyExampleHandler (
-        handler: (msg: ISdStargateDummyNoReplyExampleCommandDto) => Promise<void>,
+        handler: (msg: ISdStargateDummyNoReplyExampleCommandDto) => Promise<ISdStargateDummyNoReplyExampleReplyDto>,
     ): void
 
     /**
@@ -41,7 +43,7 @@ export interface ISdStargateDummyCommand {
      * been received.
      */
     registerAckReplyExampleHandler (
-        handler: (msg: ISdStargateDummyAckReplyExampleCommandDto) => Promise<void>,
+        handler: (msg: ISdStargateDummyAckReplyExampleCommandDto) => Promise<ISdStargateDummyAckReplyExampleReplyDto>,
     ): void
 
     /**

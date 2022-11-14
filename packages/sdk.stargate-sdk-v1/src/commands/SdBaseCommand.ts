@@ -71,10 +71,10 @@ export abstract class SdBaseCommand {
      * to the received {@link payload.response.type} value.
      * @protected
      */
-    protected async invokeHandler<T, U> (
+    protected async invokeHandler<T> (
         payload: ISdCommandPayload,
         data: T,
-        handler?: ((msg: T) => Promise<U>),
+        handler?: ((msg: T) => Promise<Record<string, any>>),
     ): Promise<void> {
         // Stop when no user handler has been registered for the command
         if (!handler) return
@@ -105,7 +105,7 @@ export abstract class SdBaseCommand {
         const ackPayload: Omit<ISdCommandPayload, "sender"> = {
             command: payload.command,
             response: {
-                topic: payload.response?.topic,
+                topic: payload.response!.topic,
                 type: "REPLY",
             },
             data,
