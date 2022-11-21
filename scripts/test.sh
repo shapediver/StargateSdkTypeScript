@@ -1,1 +1,1 @@
-jest ./__tests__
+jest --runInBand --forceExit ./__tests__

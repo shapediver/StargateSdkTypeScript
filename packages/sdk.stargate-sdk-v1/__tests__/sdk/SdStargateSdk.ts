@@ -1,5 +1,10 @@
 import { ISdBaseCommand } from "../../src/commands/ISdBaseCommand"
-import { ISdCommandPayload } from "../../src/dto/commands/commandPayload"
+import {
+    ISdCommandErrorReplyPayload,
+    ISdCommandOkReplyPayload,
+    ISdCommandPayload,
+    ISdCommandRequestPayload,
+} from "../../src/dto/commands/commandPayload"
 import { SdStargateSdk } from "../../src/sdk/SdStargateSdk"
 
 let sdk: SdStargateSdk
@@ -15,16 +20,19 @@ beforeEach(() => {
     // @formatter:on
 })
 
-class DummyCommand implements ISdBaseCommand{
+class DummyCommand implements ISdBaseCommand {
     isSupported (payload: ISdCommandPayload): boolean {
         return false
     }
 
-    processCommandMessage (payload: ISdCommandPayload): Promise<void> {
+    processCommandMessage (payload: ISdCommandRequestPayload): Promise<void> {
         return Promise.resolve(undefined)
     }
 
-    processReplyMessage (payload: ISdCommandPayload): void {
+    processOkReplyMessage (payload: ISdCommandOkReplyPayload): void {
+    }
+
+    processErrorReplyMessage (payload: ISdCommandErrorReplyPayload): void {
     }
 }
 

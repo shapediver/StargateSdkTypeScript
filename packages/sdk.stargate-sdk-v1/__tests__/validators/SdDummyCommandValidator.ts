@@ -15,7 +15,7 @@ describe("validate no-reply example", function () {
             let data: Required<ISdStargateDummyNoReplyExampleCommandDto> = {
                 text: "foobar"
             }
-            SdDummyCommandValidator.isNoReplyExampleCommandDto(data)
+            SdDummyCommandValidator.assertNoReplyExampleCommandDto(data)
         })
 
     })
@@ -24,7 +24,7 @@ describe("validate no-reply example", function () {
 
         test("full", () => {
             let data: Required<ISdStargateDummyNoReplyExampleReplyDto> = {}
-            SdDummyCommandValidator.isNoReplyExampleReplyDto(data)
+            SdDummyCommandValidator.assertNoReplyExampleReplyDto(data)
         })
 
     })
@@ -39,7 +39,7 @@ describe("validate ack-reply example", function () {
             let data: Required<ISdStargateDummyAckReplyExampleCommandDto> = {
                 text: "foobar"
             }
-            SdDummyCommandValidator.isAckReplyExampleCommandDto(data)
+            SdDummyCommandValidator.assertAckReplyExampleCommandDto(data)
         })
 
     })
@@ -48,7 +48,7 @@ describe("validate ack-reply example", function () {
 
         test("full", () => {
             let data: Required<ISdStargateDummyAckReplyExampleReplyDto> = {}
-            SdDummyCommandValidator.isAckReplyExampleReplyDto(data)
+            SdDummyCommandValidator.assertAckReplyExampleReplyDto(data)
         })
 
     })
@@ -61,7 +61,7 @@ describe("validate batch-reply example", function () {
 
         test("full", () => {
             let data: Required<ISdStargateDummyBatchReplyExampleCommandDto> = {}
-            SdDummyCommandValidator.isBatchReplyExampleCommandDto(data)
+            SdDummyCommandValidator.assertBatchReplyExampleCommandDto(data)
         })
 
     })
@@ -73,7 +73,7 @@ describe("validate batch-reply example", function () {
                 mesh: "foobar",
                 visible: false,
             }
-            SdDummyCommandValidator.isBatchReplyExampleReplyDto(data)
+            SdDummyCommandValidator.assertBatchReplyExampleReplyDto(data)
         })
 
     })

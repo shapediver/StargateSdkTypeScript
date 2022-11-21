@@ -72,27 +72,27 @@ export abstract class SdDummyCommandValidator extends SdBaseValidator {
     private static validateBatchReplyExampleCommandDto = ajv.compile(schemaBatchReplyExampleCommandDto)
     private static validateBatchReplyExampleReplyDto = ajv.compile(schemaBatchReplyExampleReplyDto)
 
-    static isNoReplyExampleCommandDto (data: unknown): asserts data is ISdStargateDummyNoReplyExampleCommandDto {
+    static assertNoReplyExampleCommandDto (data: unknown): asserts data is ISdStargateDummyNoReplyExampleCommandDto {
         return this.validate(this.validateNoReplyExampleCommandDto, data)
     }
 
-    static isNoReplyExampleReplyDto (data: unknown): asserts data is ISdStargateDummyNoReplyExampleReplyDto {
+    static assertNoReplyExampleReplyDto (data: unknown): asserts data is ISdStargateDummyNoReplyExampleReplyDto {
         return this.validate(this.validateNoReplyExampleReplyDto, data)
     }
 
-    static isAckReplyExampleCommandDto (data: unknown): asserts data is ISdStargateDummyAckReplyExampleCommandDto {
+    static assertAckReplyExampleCommandDto (data: unknown): asserts data is ISdStargateDummyAckReplyExampleCommandDto {
         return this.validate(this.validateAckReplyExampleCommandDto, data)
     }
 
-    static isAckReplyExampleReplyDto (data: unknown): asserts data is ISdStargateDummyAckReplyExampleReplyDto {
+    static assertAckReplyExampleReplyDto (data: unknown): asserts data is ISdStargateDummyAckReplyExampleReplyDto {
         return this.validate(this.validateAckReplyExampleReplyDto, data)
     }
 
-    static isBatchReplyExampleCommandDto (data: unknown): asserts data is ISdStargateDummyBatchReplyExampleCommandDto {
+    static assertBatchReplyExampleCommandDto (data: unknown): asserts data is ISdStargateDummyBatchReplyExampleCommandDto {
         return this.validate(this.validateBatchReplyExampleCommandDto, data)
     }
 
-    static isBatchReplyExampleReplyDto (data: unknown): asserts data is ISdStargateDummyBatchReplyExampleReplyDto {
+    static assertBatchReplyExampleReplyDto (data: unknown): asserts data is ISdStargateDummyBatchReplyExampleReplyDto {
         return this.validate(this.validateBatchReplyExampleReplyDto, data)
     }
 

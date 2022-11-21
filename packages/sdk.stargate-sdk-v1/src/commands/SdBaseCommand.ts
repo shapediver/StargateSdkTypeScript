@@ -1,5 +1,10 @@
 import { v4 as uuidv4 } from "uuid"
-import { ISdCommandPayload } from "../dto/commands/commandPayload"
+import {
+    ISdCommandErrorReplyPayload,
+    ISdCommandOkReplyPayload,
+    ISdCommandPayload,
+    ISdCommandRequestPayload,
+} from "../dto/commands/commandPayload"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
 import { ISdStargateSdk } from "../sdk/ISdStargateSdk"
 import { ISdBaseCommand } from "./ISdBaseCommand"
@@ -16,11 +21,23 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
         this.register = sdk.commandRegister
     }
 
-    abstract processCommandMessage (payload: ISdCommandPayload): Promise<void>
-
-    abstract processReplyMessage (payload: ISdCommandPayload): void
-
     abstract isSupported (payload: ISdCommandPayload): boolean
+
+    abstract processCommandMessage (payload: ISdCommandRequestPayload): Promise<void>
+
+    abstract processOkReplyMessage (payload: ISdCommandOkReplyPayload): void
+
+    processErrorReplyMessage (payload: ISdCommandErrorReplyPayload): void {
+        // Enrich the error message by the ID of the client that sent the reply
+        const errMsg = `${ payload.error.message } [sent by client ${ payload.sender }]`
+
+        // NOTE:
+        //  The first error reply rejects the open command by the registry and thus forwards the
+        //  received error message to the user. However, all error replies that are received at a
+        //  later point in time are ignored and their error messages are currently NOT reported to
+        //  the user!
+        this.register.updateCommand(payload.response.topic, payload.sender, errMsg)
+    }
 
     /**
      * Builds the command payload and sends the client command via `FORWARD_MESSAGE` to the
@@ -37,7 +54,7 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
     ): Promise<any[]> {
         // We are omitting the `sender` property, because it is set by the Stargate backend service before the message
         // is forwarded to the target clients.
-        const payload: Omit<ISdCommandPayload, "sender"> = { command, data }
+        const payload: Omit<ISdCommandRequestPayload, "sender"> = { command, data }
 
         // Add response object if specified
         let res
@@ -67,16 +84,23 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
      * @protected
      */
     protected async invokeHandler<T> (
-        payload: ISdCommandPayload,
+        payload: ISdCommandRequestPayload,
         data: T,
         handler?: ((msg: T) => Promise<Record<string, any>>),
     ): Promise<void> {
         // Stop when no user handler has been registered for the command
-        if (!handler) return
+        if (!handler) {
+            // Notify the callee when a response is expected
+            if (payload.response) {
+                await this.sendReply(payload, "No handler has been registered for this command.")
+            }
+
+            return
+        }
 
         // Send ACK-reply if requested
         if (payload.response?.type === "ACK") {
-            await this.sendReply(payload as Required<ISdCommandPayload>, {})
+            await this.sendReply(payload, {})
         }
 
         // Call the user handler
@@ -84,7 +108,7 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
 
         // Send BATCH-reply if requested
         if (payload.response?.type === "BATCH") {
-            await this.sendReply(payload as Required<ISdCommandPayload>, res)
+            await this.sendReply(payload, res)
         }
     }
 
@@ -94,20 +118,24 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
      * @private
      */
     private async sendReply (
-        payload: Required<ISdCommandPayload>,
-        data: Record<string, any>,
+        request: ISdCommandRequestPayload,
+        result: Record<string, any> | string,
     ): Promise<void> {
-        const ackPayload: Omit<ISdCommandPayload, "sender"> = {
-            command: payload.command,
+        const template: Omit<ISdCommandOkReplyPayload | ISdCommandErrorReplyPayload, "sender" | "data" | "error"> = {
+            command: request.command,
             response: {
-                topic: payload.response!.topic,
+                topic: request.response!.topic,
                 type: "REPLY",
             },
-            data,
         }
 
+        // Set result
+        let ackPayload: Omit<ISdCommandOkReplyPayload, "sender"> | Omit<ISdCommandErrorReplyPayload, "sender">
+        if (typeof result === "object") ackPayload = { ...template, data: result }
+        else ackPayload = { ...template, error: { message: result } }
+
         // Send message to Stargate backend
-        await this.sdk.forwardMessage(ackPayload, [ payload.sender ])
+        await this.sdk.forwardMessage(ackPayload, [ request.sender ])
     }
 
 }

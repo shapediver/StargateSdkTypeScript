@@ -18,10 +18,9 @@ export interface ISdCommandRegister {
      * been returned by the previous {@link registerCommand} call is resolved.
      * @param topic The identifier of the command to update.
      * @param clientId The ID of the client to update.
-     * @param data The reply data of the client.
-     * @throws {@link SdStargateError} when no open request with the specified {@link topic}
-     * exists or when {@link clientId} is not part of the open request.
+     * @param data Either the data object of an ok-reply, or the message of an error-reply.
+     * @throws {@link SdStargateError} when {@link clientId} is not part of the open request.
      */
-    updateCommand (topic: string, clientId: string, data: any): void
+    updateCommand (topic: string, clientId: string, data: Record<string, any> | string): void
 
 }
