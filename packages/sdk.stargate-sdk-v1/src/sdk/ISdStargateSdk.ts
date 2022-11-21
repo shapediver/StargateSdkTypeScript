@@ -1,15 +1,15 @@
-import { ISdStargateDummyCommand } from "../commands/ISdStargateDummyCommand"
+import { ISdBaseCommand } from "../commands/ISdBaseCommand"
+import { ISdCommandRegister } from "../commands/ISdCommandRegister"
 import { ISdStargateListClientsResponseDto } from "../dto/listClients"
 import { ISdStargateRegisterResponseDto } from "../dto/register"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
 
 export interface ISdStargateSdk {
 
-    /**
-     * Returns the API for dummy commands that allows to send new client commands or handle
-     * incoming ones.
-     */
-    readonly cmdDummy: ISdStargateDummyCommand
+    readonly commandRegister: ISdCommandRegister
+
+    /** Add a command implementation to the client. */
+    addCommand (command: ISdBaseCommand): void
 
     /** Closes the open connection to the Stargate service. */
     close (): Promise<void>
@@ -49,11 +49,13 @@ export interface ISdStargateSdk {
 
     /**
      * Sends the given message to the specified clients of this user (specified via {@link register}`-command).
-     * @param msg The message object that should be forwarded.
+     * @param payload The message object that should be forwarded.
      * @param clients The clients that should be disconnected.
      * @throws {@link SdStargateError}
      */
-    forwardMessage (msg: Record<string, any>, clients: ISdStargateClientModel[]): Promise<void>
+    forwardMessage (payload: Record<string, any>, clients: ISdStargateClientModel[]): Promise<void>
+
+    forwardMessage (payload: Record<string, any>, clients: string[]): Promise<void>
 
     /**
      * De-registers the specified clients and disconnects them from the Stargate service.

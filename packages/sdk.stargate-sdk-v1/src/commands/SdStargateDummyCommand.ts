@@ -1,4 +1,4 @@
-import { SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
+import { SdStargateError, SdUtils } from "@shapediver/sdk.stargate-sdk-core"
 import { ISdCommandPayload } from "../dto/commands/commandPayload"
 import {
     ISdStargateDummyAckReplyExampleCommandDto,
@@ -9,11 +9,10 @@ import {
     ISdStargateDummyNoReplyExampleReplyDto,
 } from "../dto/commands/dummyCommand"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
-import { SdStargateSdk } from "../sdk/SdStargateSdk"
+import { ISdStargateSdk } from "../sdk/ISdStargateSdk"
 import { SdDummyCommandValidator } from "../validators/commands/SdDummyCommandValidator"
 import { ISdStargateDummyCommand } from "./ISdStargateDummyCommand"
 import { SdBaseCommand } from "./SdBaseCommand"
-import { SdCommandRegister } from "./SdCommandRegister"
 
 export enum DummyPayloadCommand {
     DUMMY_NO_REPLY_EXAMPLE = "DUMMY_NO_REPLY_EXAMPLE",
@@ -27,11 +26,12 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
     private userAckReplyExampleHandler: undefined | ((msg: ISdStargateDummyAckReplyExampleCommandDto) => Promise<ISdStargateDummyAckReplyExampleReplyDto>)
     private userBatchReplyExampleHandler: undefined | ((msg: ISdStargateDummyBatchReplyExampleCommandDto) => Promise<ISdStargateDummyBatchReplyExampleReplyDto>)
 
-    constructor (
-        sdk: SdStargateSdk,
-        register: SdCommandRegister,
-    ) {
-        super(sdk, register)
+    constructor (sdk: ISdStargateSdk) {
+        super(sdk)
+    }
+
+    isSupported (payload: ISdCommandPayload): boolean {
+        return SdUtils.enumValues(DummyPayloadCommand).includes(payload.command)
     }
 
     async processCommandMessage (payload: ISdCommandPayload) {

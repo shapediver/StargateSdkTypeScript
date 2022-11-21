@@ -4,10 +4,10 @@ import {
     ISdStargateCommandDto,
     ISdStargateCommander,
     SdStargateError,
-    SdUtils,
 } from "@shapediver/sdk.stargate-sdk-core"
+import { ISdBaseCommand } from "../commands/ISdBaseCommand"
+import { ISdCommandRegister } from "../commands/ISdCommandRegister"
 import { SdCommandRegister } from "../commands/SdCommandRegister"
-import { DummyPayloadCommand, SdStargateDummyCommand } from "../commands/SdStargateDummyCommand"
 import { ISdStargateDisconnectClientsRequestDto } from "../dto/disconnectClients"
 import { ISdStargateForwardMessageRequestDto } from "../dto/forwardMessage"
 import {
@@ -29,7 +29,10 @@ export class SdStargateSdk implements ISdStargateSdk {
 
     commander?: ISdStargateCommander
 
-    readonly cmdDummy: SdStargateDummyCommand
+    readonly commandRegister: ISdCommandRegister
+
+    // Holds all commands that have been registered by the user.
+    readonly commands: ISdBaseCommand[]
 
     constructor (
         baseUrl: string,
@@ -42,8 +45,8 @@ export class SdStargateSdk implements ISdStargateSdk {
         this.userErrHandler = errHandler
         this.userDcnHandler = dcnHandler
 
-        const cmdRegister = new SdCommandRegister()
-        this.cmdDummy = new SdStargateDummyCommand(this, cmdRegister)
+        this.commandRegister = new SdCommandRegister()
+        this.commands = []
     }
 
     /** Instantiates a new Stargate commander and establishes a connection to the Stargate service. */
@@ -97,6 +100,11 @@ export class SdStargateSdk implements ISdStargateSdk {
         }
 
         return req
+    }
+
+    addCommand (command: ISdBaseCommand): void {
+        if (this.commands.indexOf(command) >= 0) return
+        this.commands.push(command)
     }
 
     async close (): Promise<void> {
@@ -160,11 +168,13 @@ export class SdStargateSdk implements ISdStargateSdk {
         }
     }
 
-    async forwardMessage (payload: Record<string, any>, clients: ISdStargateClientModel[]): Promise<void> {
-        await this.forwardMessageToClients(payload, clients.map(c => c.id))
-    }
+    async forwardMessage (payload: Record<string, any>, clients: ISdStargateClientModel[]): Promise<void>
+    async forwardMessage (payload: Record<string, any>, clients: string[]): Promise<void>
+    async forwardMessage (payload: Record<string, any>, clients: ISdStargateClientModel[] | string[]): Promise<void> {
+        const clientIds = (clients.length > 0 && typeof clients[0] !== "string")
+            ? (clients as ISdStargateClientModel[]).map(c => c.id)
+            : clients as string[]
 
-    async forwardMessageToClients (payload: Record<string, any>, clientIds: string[]): Promise<void> {
         const req: ISdStargateForwardMessageRequestDto = {
             header: {
                 command: "FORWARD_MESSAGE",
@@ -197,22 +207,21 @@ export class SdStargateSdk implements ISdStargateSdk {
     }
 
     private async tryProcessClientCommand (payload: unknown): Promise<boolean> {
-        // Try parsing the basic structure of a command message
         try {
+            // Try parsing the basic structure of a command message
             SdCommandPayloadValidator.isCommandPayload(payload)
         } catch (e) {
             // Stop if the payload object is not in a basic command format
             return false
         }
 
-        // Try parse command data
-        if (SdUtils.enumValues(DummyPayloadCommand).includes(payload.command)) {
-            if (payload.response?.type === "REPLY") this.cmdDummy.processReplyMessage(payload)
-            else await this.cmdDummy.processCommandMessage(payload)
-        } else {
-            // Throw when the command is not known
-            throw new SdStargateError(`Unknown client command '${ payload.command }'`)
-        }
+        // Try to find a registered command implementation that supports this payload
+        const commandImpl = this.commands.find((c) => c.isSupported(payload))
+        if (!commandImpl) return false
+
+        // Is this a reply for a command initiated by us?
+        if (payload.response?.type === "REPLY") commandImpl.processReplyMessage(payload)
+        else await commandImpl.processCommandMessage(payload)
 
         return true
     }

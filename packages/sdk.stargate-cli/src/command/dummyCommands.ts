@@ -8,9 +8,18 @@ import {
     ISdStargateDummyNoReplyExampleReplyDto,
     ISdStargateSdk,
 } from "@shapediver/sdk.stargate-sdk-v1"
+import {
+    ISdStargateDummyCommand,
+} from "@shapediver/sdk.stargate-sdk-v1/dist/commands/ISdStargateDummyCommand"
+import {
+    SdStargateDummyCommand,
+} from "@shapediver/sdk.stargate-sdk-v1/dist/commands/SdStargateDummyCommand"
 import chalk from "chalk"
 import inquirer from "inquirer"
 import { assertUnreachable, nowTime, prettifyMsg, randomIntFromInterval, sleep } from "../utils"
+
+// Global dummy command instance
+let dummyCommand: ISdStargateDummyCommand | undefined
 
 // User-handler for 'no-reply' command
 const noReplyExampleHandler = async (msg: ISdStargateDummyNoReplyExampleCommandDto): Promise<ISdStargateDummyNoReplyExampleReplyDto> => {
@@ -67,10 +76,13 @@ enum DummyCommand {
     BATCH_REPLY = "Sends a dummy command that requests a BATCH reply",
 }
 
+/** Instantiate a new global dummy command object and register all handlers. */
 export function setupDummyCommandHandlers (sdk: ISdStargateSdk): void {
-    sdk.cmdDummy.registerNoReplyExampleHandler(noReplyExampleHandler)
-    sdk.cmdDummy.registerAckReplyExampleHandler(ackReplyExampleHandler)
-    sdk.cmdDummy.registerBatchReplyExampleHandler(batchReplyExampleHandler)
+    dummyCommand = new SdStargateDummyCommand(sdk)
+
+    dummyCommand.registerNoReplyExampleHandler(noReplyExampleHandler)
+    dummyCommand.registerAckReplyExampleHandler(ackReplyExampleHandler)
+    dummyCommand.registerBatchReplyExampleHandler(batchReplyExampleHandler)
 }
 
 function askCommand (clients: ISdStargateClientModel[]) {
@@ -101,6 +113,8 @@ function askCommand (clients: ISdStargateClientModel[]) {
 }
 
 export async function dummyCommands (sdk: ISdStargateSdk): Promise<void> {
+    if (!dummyCommand) throw new Error("Dummy commands have not been registered.")
+
     try {
         // Fetch all registered clients for own user
         const clients = [
@@ -115,13 +129,13 @@ export async function dummyCommands (sdk: ISdStargateSdk): Promise<void> {
 
         switch (cmd) {
             case DummyCommand.NO_REPLY:
-                await noReplyExampleCommand(sdk, selectedClients)
+                await noReplyExampleCommand(dummyCommand, selectedClients)
                 break
             case DummyCommand.ACK_REPLY:
-                await ackReplyExampleCommand(sdk, selectedClients)
+                await ackReplyExampleCommand(dummyCommand, selectedClients)
                 break
             case DummyCommand.BATCH_REPLY:
-                await batchReplyExampleCommand(sdk, selectedClients)
+                await batchReplyExampleCommand(dummyCommand, selectedClients)
                 break
             default:
                 assertUnreachable(cmd)
@@ -131,26 +145,26 @@ export async function dummyCommands (sdk: ISdStargateSdk): Promise<void> {
     }
 }
 
-async function noReplyExampleCommand (sdk: ISdStargateSdk, clients: ISdStargateClientModel[]): Promise<void> {
+async function noReplyExampleCommand (dummyCommand: ISdStargateDummyCommand, clients: ISdStargateClientModel[]): Promise<void> {
     const data: ISdStargateDummyNoReplyExampleCommandDto = {
         text: "Show this message!",
     }
 
-    await sdk.cmdDummy.sendNoReplyExampleCommand(data, clients)
+    await dummyCommand.sendNoReplyExampleCommand(data, clients)
     printResults("No-Reply", clients.length)
 }
 
-async function ackReplyExampleCommand (sdk: ISdStargateSdk, clients: ISdStargateClientModel[]): Promise<void> {
+async function ackReplyExampleCommand (dummyCommand: ISdStargateDummyCommand, clients: ISdStargateClientModel[]): Promise<void> {
     const data: ISdStargateDummyAckReplyExampleCommandDto = {
         text: "Show this message!",
     }
 
-    await sdk.cmdDummy.sendAckReplyExampleCommand(data, clients)
+    await dummyCommand.sendAckReplyExampleCommand(data, clients)
     printResults("ACK-Reply", clients.length)
 }
 
-async function batchReplyExampleCommand (sdk: ISdStargateSdk, clients: ISdStargateClientModel[]): Promise<void> {
-    const res = await sdk.cmdDummy.sendBatchReplyExampleCommand(clients)
+async function batchReplyExampleCommand (dummyCommand: ISdStargateDummyCommand, clients: ISdStargateClientModel[]): Promise<void> {
+    const res = await dummyCommand.sendBatchReplyExampleCommand(clients)
     printResults("BATCH-Reply", clients.length, res)
 }
 
