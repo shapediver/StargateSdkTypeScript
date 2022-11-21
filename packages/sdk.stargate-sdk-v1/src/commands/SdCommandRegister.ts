@@ -1,4 +1,5 @@
 import { SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
+import { ISdCommandRegister } from "./ISdCommandRegister"
 
 /** Holds reply data and the promise functions of a single open command's client */
 type OpenClientCommand = {
@@ -12,21 +13,11 @@ type OpenClientCommand = {
 }
 
 /** Stores all commands sent by this client which are still waiting for a reply. */
-export class SdCommandRegister {
+export class SdCommandRegister implements ISdCommandRegister {
 
     /** Stores information about open commands by topic. */
     readonly openCommands: { [topic: string]: OpenClientCommand[] } = {}
 
-    /**
-     * Registers a new command for bidirectional communication. The returned promise gets
-     * resolved when reply messages from all target clients have been received. However, when at
-     * least one client does not reply before {@link timeout} is reached, the promise is rejected.
-     * @param topic The identifier of this command.
-     * @param clientIds The IDs of the target clients for this command.
-     * @param timeout Delay in milliseconds until all clients must have responded, otherwise reject.
-     * @throws {@link SdStargateError} when an open request with the specified {@link topic} has
-     * already been registered.
-     */
     registerCommand (
         topic: string,
         clientIds: string[],
@@ -62,16 +53,6 @@ export class SdCommandRegister {
         })
     }
 
-    /**
-     * Updates the previously registered command of this {@link topic} with the received client
-     * reply. When this client reply is the last missing reply message, the promise that has
-     * been returned by the previous {@link registerCommand} call is resolved.
-     * @param topic The identifier of the command to update.
-     * @param clientId The ID of the client to update.
-     * @param data The reply data of the client.
-     * @throws {@link SdStargateError} when no open request with the specified {@link topic}
-     * exists or when {@link clientId} is not part of the open request.
-     */
     updateCommand (topic: string, clientId: string, data: any): void {
         const openCommand = this.openCommands[topic]
         if (openCommand === undefined) {

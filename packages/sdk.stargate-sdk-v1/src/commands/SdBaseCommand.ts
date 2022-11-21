@@ -1,32 +1,26 @@
 import { v4 as uuidv4 } from "uuid"
 import { ISdCommandPayload } from "../dto/commands/commandPayload"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
-import { SdStargateSdk } from "../sdk/SdStargateSdk"
-import { SdCommandRegister } from "./SdCommandRegister"
+import { ISdStargateSdk } from "../sdk/ISdStargateSdk"
+import { ISdBaseCommand } from "./ISdBaseCommand"
+import { ISdCommandRegister } from "./ISdCommandRegister"
 
-const COMMAND_TIMEOUT = 60000 // in ms (1 min)
+export abstract class SdBaseCommand implements ISdBaseCommand {
 
-export abstract class SdBaseCommand {
+    static DEFAULT_COMMAND_TIMEOUT = 60000 // in ms (1 min)
 
-    protected constructor (
-        protected sdk: SdStargateSdk,
-        protected register: SdCommandRegister,
-    ) {
+    protected register: ISdCommandRegister
+
+    protected constructor (protected sdk: ISdStargateSdk) {
+        sdk.addCommand(this)
+        this.register = sdk.commandRegister
     }
 
-    /**
-     * Validates {@link payload.data} according to {@link payload.command} and invokes the
-     * respective user command handler function.
-     * @throws {@link SdStargateError} when {@link payload.command} is unknown.
-     */
     abstract processCommandMessage (payload: ISdCommandPayload): Promise<void>
 
-    /**
-     * Validates the reply in {@link payload.data} according to {@link payload.command} and
-     * updates the respective registered open request.
-     * @throws {@link SdStargateError} when {@link payload.command} is unknown.
-     */
     abstract processReplyMessage (payload: ISdCommandPayload): void
+
+    abstract isSupported (payload: ISdCommandPayload): boolean
 
     /**
      * Builds the command payload and sends the client command via `FORWARD_MESSAGE` to the
@@ -39,6 +33,7 @@ export abstract class SdBaseCommand {
         clients: ISdStargateClientModel[],
         command: string,
         responseType?: "ACK" | "BATCH",
+        timeout?: number,
     ): Promise<any[]> {
         // We are omitting the `sender` property, because it is set by the Stargate backend service before the message
         // is forwarded to the target clients.
@@ -56,7 +51,7 @@ export abstract class SdBaseCommand {
             res = this.register.registerCommand(
                 payload.response.topic,
                 clients.map(c => c.id),
-                COMMAND_TIMEOUT,
+                timeout ?? SdBaseCommand.DEFAULT_COMMAND_TIMEOUT,
             )
         }
 
@@ -112,7 +107,7 @@ export abstract class SdBaseCommand {
         }
 
         // Send message to Stargate backend
-        await this.sdk.forwardMessageToClients(ackPayload, [ payload.sender ])
+        await this.sdk.forwardMessage(ackPayload, [ payload.sender ])
     }
 
 }
