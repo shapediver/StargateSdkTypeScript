@@ -13,16 +13,14 @@ class WebSocketMock {
     }
 }
 
-const unreachable = (msg: string): () => void => {
-    return () => {
-        throw Error(`This must not happen: ${ msg }`)
-    }
+const emptyHandler = () => {
 }
 
 const createWsClient = (
-    msgHandler: (payload: unknown) => void = unreachable("called msg-handler"),
-    errHandler: (msg: string) => void = unreachable("called err-handler"),
-    dscHandler: (msg: string) => void = unreachable("called dsc-handler"),
+    done: DoneCallback,
+    msgHandler: (payload: unknown) => void = emptyHandler,
+    errHandler: (msg: string) => void = (msg: string) => done(`called err-handler: '${ msg }'`),
+    dscHandler: (msg: string) => void = emptyHandler,
 ): [ SdWebSocketClient, WebSocketMock ] => {
     const client = new SdWebSocketClient(msgHandler, errHandler, dscHandler, undefined)
     const ws = new WebSocketMock()
@@ -36,6 +34,7 @@ describe("ok message", function () {
 
     test("with a request id and no respective open request should trigger err-handler", (done) => {
         const [ client, ws ] = createWsClient(
+            done,
             undefined,
             () => verify_n_open_connections(client.openRequests, 0, done),
         )
@@ -51,19 +50,27 @@ describe("ok message", function () {
     })
 
     test("with a request id and respective open request should resolve request", (done) => {
-        const [ client, ws ] = createWsClient()
+        const [ client, ws ] = createWsClient(done)
+        const promises: Promise<void>[] = []
 
-        client.generateRequestId = () => "1"
-        client
-            .send(req)
-            .catch(unreachable("rejected req 1"))
-            .then(unreachable("resolved req 1"))
+        promises.push(new Promise<void>(async (resolve, reject) => {
+            client.generateRequestId = () => "1"
+            client
+                .send(req)
+                .then(() => reject("resolved req 1"))
+                .catch(() => reject("rejected req 1"))
 
-        client.generateRequestId = () => "2"
-        client
-            .send(req)
-            .catch(unreachable("rejected req 2"))
-            .then(() => verify_n_open_connections(client.openRequests, 1, done))
+            // After 1 seconds we assume that the promise is not gonna get resolved or rejected
+            setTimeout(resolve, 1000)
+        }))
+
+        promises.push(new Promise<void>(async (resolve, reject) => {
+            client.generateRequestId = () => "2"
+            client
+                .send(req)
+                .then(resolve)
+                .catch(() => reject("rejected req 2"))
+        }))
 
         ws.onmessage!({
             data: JSON.stringify({
@@ -73,18 +80,24 @@ describe("ok message", function () {
             type: "some type",
             target: ws as WebSocket,
         })
+
+        Promise
+            .all(promises)
+            .then(() => verify_n_open_connections(client.openRequests, 1, done))
+            .catch((msg: string) => done(msg))
     })
 
     test("without a request id should trigger msg-handler", (done) => {
         const [ client, ws ] = createWsClient(
+            done,
             () => verify_n_open_connections(client.openRequests, 1, done),
         )
 
         client.generateRequestId = () => "1"
         client
             .send(req)
-            .catch(unreachable("rejected req"))
-            .then(unreachable("resolved req"))
+            .catch(() => done("rejected req"))
+            .then(() => done("resolved req"))
 
         ws.onmessage!({
             data: JSON.stringify({
@@ -104,6 +117,7 @@ describe("error message", function () {
 
     test("with a request id and no respective open request should trigger err-handler", (done) => {
         const [ client, ws ] = createWsClient(
+            done,
             undefined,
             () => verify_n_open_connections(client.openRequests, 0, done),
         )
@@ -120,19 +134,27 @@ describe("error message", function () {
     })
 
     test("with a request id and respective open request should reject request", (done) => {
-        const [ client, ws ] = createWsClient()
+        const [ client, ws ] = createWsClient(done)
+        const promises: Promise<void>[] = []
 
-        client.generateRequestId = () => "1"
-        client
-            .send(req)
-            .catch(unreachable("rejected req 1"))
-            .then(unreachable("resolved req 1"))
+        promises.push(new Promise<void>(async (resolve, reject) => {
+            client.generateRequestId = () => "1"
+            client
+                .send(req)
+                .then(() => reject("resolved req 1"))
+                .catch(() => reject("rejected req 1"))
 
-        client.generateRequestId = () => "2"
-        client
-            .send(req)
-            .catch(() => verify_n_open_connections(client.openRequests, 1, done))
-            .then(unreachable("resolved req 2"))
+            // After 1 seconds we assume that the promise is not gonna get resolved or rejected
+            setTimeout(resolve, 1000)
+        }))
+
+        promises.push(new Promise<void>(async (resolve, reject) => {
+            client.generateRequestId = () => "2"
+            client
+                .send(req)
+                .then(() => reject("resolved req 2"))
+                .catch(resolve)
+        }))
 
         ws.onmessage!({
             data: JSON.stringify({
@@ -143,27 +165,32 @@ describe("error message", function () {
             type: "some type",
             target: ws as WebSocket,
         })
+
+        Promise
+            .all(promises)
+            .then(() => verify_n_open_connections(client.openRequests, 1, done))
+            .catch((msg: string) => done(msg))
     })
 
     test("without a request id should reject all open requests", (done) => {
-        let rejectCounter = 0
-        const reject = () => {
-            if (++rejectCounter === 2) verify_n_open_connections(client.openRequests, 0, done)
-        }
+        const [ client, ws ] = createWsClient(done)
+        const promises: Promise<void>[] = []
 
-        const [ client, ws ] = createWsClient()
+        promises.push(new Promise<void>(async (resolve, reject) => {
+            client.generateRequestId = () => "1"
+            client
+                .send(req)
+                .then(() => reject("resolved req 1"))
+                .catch(resolve)
+        }))
 
-        client.generateRequestId = () => "1"
-        client
-            .send(req)
-            .catch(() => reject())
-            .then(unreachable("resolved req 1"))
-
-        client.generateRequestId = () => "2"
-        client
-            .send(req)
-            .catch(() => reject())
-            .then(unreachable("resolved req 2"))
+        promises.push(new Promise<void>(async (resolve, reject) => {
+            client.generateRequestId = () => "2"
+            client
+                .send(req)
+                .then(() => reject("resolved req 2"))
+                .catch(resolve)
+        }))
 
         ws.onmessage!({
             data: JSON.stringify({
@@ -174,6 +201,11 @@ describe("error message", function () {
             type: "some type",
             target: ws as WebSocket,
         })
+
+        Promise
+            .all(promises)
+            .then(() => verify_n_open_connections(client.openRequests, 0, done))
+            .catch((msg: string) => done(msg))
     })
 
 })
