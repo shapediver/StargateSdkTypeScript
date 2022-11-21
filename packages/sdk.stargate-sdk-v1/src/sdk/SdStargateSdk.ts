@@ -10,10 +10,7 @@ import { ISdCommandRegister } from "../commands/ISdCommandRegister"
 import { SdCommandRegister } from "../commands/SdCommandRegister"
 import { ISdStargateDisconnectClientsRequestDto } from "../dto/disconnectClients"
 import { ISdStargateForwardMessageRequestDto } from "../dto/forwardMessage"
-import {
-    ISdStargateListClientsRequestDto,
-    ISdStargateListClientsResponseDto,
-} from "../dto/listClients"
+import { ISdStargateListClientsRequestDto, ISdStargateListClientsResponseDto } from "../dto/listClients"
 import { ISdStargatePingRequestDto } from "../dto/ping"
 import { ISdStargateRegisterRequestDto, ISdStargateRegisterResponseDto } from "../dto/register"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
@@ -207,21 +204,17 @@ export class SdStargateSdk implements ISdStargateSdk {
     }
 
     private async tryProcessClientCommand (payload: unknown): Promise<boolean> {
-        try {
-            // Try parsing the basic structure of a command message
-            SdCommandPayloadValidator.isCommandPayload(payload)
-        } catch (e) {
-            // Stop if the payload object is not in a basic command format
-            return false
-        }
+        // Stop if the payload object is not in a basic command format
+        if (!SdCommandPayloadValidator.isCommandPayload(payload)) return false
 
         // Try to find a registered command implementation that supports this payload
         const commandImpl = this.commands.find((c) => c.isSupported(payload))
         if (!commandImpl) return false
 
         // Is this a reply for a command initiated by us?
-        if (payload.response?.type === "REPLY") commandImpl.processReplyMessage(payload)
-        else await commandImpl.processCommandMessage(payload)
+        if (SdCommandPayloadValidator.isCommandRequestPayload(payload)) await commandImpl.processCommandMessage(payload)
+        else if (SdCommandPayloadValidator.isCommandOkReplyPayload(payload)) commandImpl.processOkReplyMessage(payload)
+        else commandImpl.processErrorReplyMessage(payload)
 
         return true
     }

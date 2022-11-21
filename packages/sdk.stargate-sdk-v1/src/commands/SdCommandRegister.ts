@@ -53,10 +53,13 @@ export class SdCommandRegister implements ISdCommandRegister {
         })
     }
 
-    updateCommand (topic: string, clientId: string, data: any): void {
+    updateCommand (topic: string, clientId: string, result: Record<string, any> | string): void {
         const openCommand = this.openCommands[topic]
         if (openCommand === undefined) {
-            throw new SdStargateError(`Cannot update registered command: Topic '${ topic }' was not found.`)
+            // A registered command is rejected as soon as an error-reply is received. In this case, no open command
+            // can be found for responses of all other clients that are received at a later time. Therefore, we just
+            // ignore reply messages that have no open request.
+            return
         }
 
         // Find client and update the data property
@@ -65,7 +68,9 @@ export class SdCommandRegister implements ISdCommandRegister {
             throw new SdStargateError(`Cannot update registered command: Client '${ clientId }' was not found.`)
         }
 
-        client.resolve(data)
+        // Resolve a successfully processed command or reject with the returned error message
+        if (typeof result === "object") client.resolve(result)
+        else client.reject(result)
     }
 
 }

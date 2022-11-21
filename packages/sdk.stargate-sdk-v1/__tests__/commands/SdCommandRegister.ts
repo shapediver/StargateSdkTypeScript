@@ -32,7 +32,7 @@ test("command with two client, both reply; should resolve and return data", asyn
         clientData1 = { client: "foo" },
         clientData2 = { client: "bar" }
 
-    const promise = register.registerCommand(topic, [ "foo", "bar" ], Number.MAX_VALUE)
+    const promise = register.registerCommand(topic, [ "foo", "bar" ], 60000)
 
     // Update replies
     register.updateCommand(topic, "foo", clientData1)
@@ -42,4 +42,52 @@ test("command with two client, both reply; should resolve and return data", asyn
 
     await SdUtils.sleep(0)  // Required to wait for `.finally` call
     expect(Object.keys(register.openCommands).length).toBe(0)
+})
+
+test("command with two client, one sends error reply; should reject and return message", async () => {
+    const register = new SdCommandRegister(),
+        topic = "test",
+        errMsg = "something went wrong"
+
+    const promise = register.registerCommand(topic, [ "foo", "bar" ], 60000)
+
+    // Update reply - first error triggers reject!
+    register.updateCommand(topic, "bar", errMsg)
+
+    await expect(promise).rejects.toBe(errMsg)
+
+    await SdUtils.sleep(0)  // Required to wait for `.finally` call
+    expect(Object.keys(register.openCommands).length).toBe(0)
+})
+
+test("command that already has been rejected receives success response; should ignore response", async () => {
+    const register = new SdCommandRegister(),
+        topic = "test"
+
+    const promise = register.registerCommand(topic, [ "foo", "bar" ], 60000)
+
+    // First client sends error reply - triggers reject!
+    register.updateCommand(topic, "foo", "something went wrong")
+    await expect(promise).rejects.toBeDefined()
+
+    // Second client sends reply
+    register.updateCommand(topic, "bar", { client: "bar" })
+
+    // Nothing should happen
+})
+
+test("command that already has been rejected receives error response; should ignore response", async () => {
+    const register = new SdCommandRegister(),
+        topic = "test"
+
+    const promise = register.registerCommand(topic, [ "foo", "bar" ], 60000)
+
+    // First client sends error reply - triggers reject!
+    register.updateCommand(topic, "foo", "something went wrong")
+    await expect(promise).rejects.toBeDefined()
+
+    // Second client sends reply
+    register.updateCommand(topic, "bar", "something else wrong")
+
+    // Nothing should happen
 })

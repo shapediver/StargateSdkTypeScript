@@ -2,6 +2,11 @@ import { SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
 
 export abstract class SdBaseValidator {
 
+    /**
+     * Type guard of custom command payload DTOs.
+     * @protected
+     * @throws {@link SdStargateError} when the validation fails.
+     */
     protected static validate<T> (
         fn: (data: any) => data is T,
         data: unknown,

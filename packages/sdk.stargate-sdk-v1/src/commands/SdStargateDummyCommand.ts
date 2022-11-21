@@ -1,5 +1,5 @@
 import { SdStargateError, SdUtils } from "@shapediver/sdk.stargate-sdk-core"
-import { ISdCommandPayload } from "../dto/commands/commandPayload"
+import { ISdCommandOkReplyPayload, ISdCommandPayload, ISdCommandRequestPayload } from "../dto/commands/commandPayload"
 import {
     ISdStargateDummyAckReplyExampleCommandDto,
     ISdStargateDummyAckReplyExampleReplyDto,
@@ -34,22 +34,22 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
         return SdUtils.enumValues(DummyPayloadCommand).includes(payload.command)
     }
 
-    async processCommandMessage (payload: ISdCommandPayload) {
+    async processCommandMessage (payload: ISdCommandRequestPayload) {
         let data = payload.data
 
         switch (payload.command) {
             case DummyPayloadCommand.DUMMY_NO_REPLY_EXAMPLE:
-                SdDummyCommandValidator.isNoReplyExampleCommandDto(data)
+                SdDummyCommandValidator.assertNoReplyExampleCommandDto(data)
                 const noReplyHandler = (this.userNoReplyExampleHandler) ? this.userNoReplyExampleHandler.bind(this) : undefined
                 await this.invokeHandler(payload, data, noReplyHandler)
                 break
             case DummyPayloadCommand.DUMMY_ACK_REPLY_EXAMPLE:
-                SdDummyCommandValidator.isAckReplyExampleCommandDto(data)
+                SdDummyCommandValidator.assertAckReplyExampleCommandDto(data)
                 const ackReplyHandler = (this.userAckReplyExampleHandler) ? this.userAckReplyExampleHandler?.bind(this) : undefined
                 await this.invokeHandler(payload, data, ackReplyHandler)
                 break
             case DummyPayloadCommand.DUMMY_BATCH_REPLY_EXAMPLE:
-                SdDummyCommandValidator.isBatchReplyExampleCommandDto(data)
+                SdDummyCommandValidator.assertBatchReplyExampleCommandDto(data)
                 const batchReplyHandler = (this.userBatchReplyExampleHandler) ? this.userBatchReplyExampleHandler?.bind(this) : undefined
                 await this.invokeHandler(payload, data, batchReplyHandler)
                 break
@@ -58,20 +58,17 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
         }
     }
 
-    processReplyMessage (payload: ISdCommandPayload) {
-        // This should be checked before calling this function
-        if (!payload.response) throw new SdStargateError("Cannot process reply-message without response-payload")
-
+    processOkReplyMessage (payload: ISdCommandOkReplyPayload) {
         // Validate reply-message
         switch (payload.command) {
             case DummyPayloadCommand.DUMMY_NO_REPLY_EXAMPLE:
-                SdDummyCommandValidator.isNoReplyExampleReplyDto(payload.data)
+                SdDummyCommandValidator.assertNoReplyExampleReplyDto(payload.data)
                 break
             case DummyPayloadCommand.DUMMY_ACK_REPLY_EXAMPLE:
-                SdDummyCommandValidator.isAckReplyExampleReplyDto(payload.data)
+                SdDummyCommandValidator.assertAckReplyExampleReplyDto(payload.data)
                 break
             case DummyPayloadCommand.DUMMY_BATCH_REPLY_EXAMPLE:
-                SdDummyCommandValidator.isBatchReplyExampleReplyDto(payload.data)
+                SdDummyCommandValidator.assertBatchReplyExampleReplyDto(payload.data)
                 break
             default:
                 throw new SdStargateError(`Invalid dummy client command '${ payload.command }'`)
