@@ -141,7 +141,7 @@ export async function dummyCommands (sdk: ISdStargateSdk): Promise<void> {
                 assertUnreachable(cmd)
         }
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold("Could not send dummy-command.") }\n${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold("Could not send dummy-command.") }\n${ e.type }: ${ e.message }`))
     }
 }
 

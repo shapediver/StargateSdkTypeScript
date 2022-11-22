@@ -1,4 +1,4 @@
-import { SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
+import { SdStargateError, SdStargateErrorTypes } from "../SdStargateError"
 
 export abstract class SdBaseValidator {
 
@@ -19,7 +19,7 @@ export abstract class SdBaseValidator {
                 `${ errors[0]?.instancePath } ${ errors[0]?.message }` :
                 `Unknown validation error`
 
-            throw new SdStargateError(msg)
+            throw new SdStargateError(SdStargateErrorTypes.InvalidCommandPayload, msg)
         }
     }
 

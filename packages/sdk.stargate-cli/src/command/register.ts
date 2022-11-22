@@ -56,7 +56,7 @@ function askQuestions () {
     return inquirer.prompt?.(questions)
 }
 
-/** Generates a new JWT authentication token, instantiates the Stargate SDK and registeres the selected client app. */
+/** Generates a new JWT authentication token, instantiates the Stargate SDK and registers the selected client app. */
 export async function register (
     msgHandler: (payload: unknown) => void,
     errHandler: (msg: string) => void,
@@ -68,7 +68,7 @@ export async function register (
     const { appId, name } = getAppIdFromClientType(clientType)
     const authToken = await generateAuthToken(prvKey, user, appId)
 
-    // Instantiate Starget SDK
+    // Instantiate Stargate SDK
     let sdk: ISdStargateSdk
     try {
         sdk = await createSdk()
@@ -78,7 +78,7 @@ export async function register (
             .setDisconnectHandler(dcnHandler)
             .build()
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold("Could not instantiate Stargate client - stopping CLI!") }\n${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold("Could not instantiate Stargate client - stopping CLI!") }\n${ e.type }: ${ e.message }`))
         process.exit(1)
     }
 
@@ -93,7 +93,7 @@ export async function register (
             os.userInfo().username,
         )
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold("Could not register client - stopping CLI!") }\n${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold("Could not register client - stopping CLI!") }\n${ e.type }: ${ e.message }`))
         process.exit(1)
     }
 

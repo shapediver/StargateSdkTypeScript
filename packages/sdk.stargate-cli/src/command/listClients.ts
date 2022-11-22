@@ -7,7 +7,7 @@ export async function listBackendClients (sdk: ISdStargateSdk): Promise<void> {
         const clients = await sdk.listBackendClients()
         printResults(clients)
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold("Could not list backend clients.") }\n${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold("Could not list backend clients.") }\n${ e.type }: ${ e.message }`))
     }
 }
 
@@ -16,7 +16,7 @@ export async function listFrontendClients (sdk: ISdStargateSdk): Promise<void> {
         const clients = await sdk.listFrontendClients()
         printResults(clients)
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold("Could not list frontend clients.") }\n${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold("Could not list frontend clients.") }\n${ e.type }: ${ e.message }`))
     }
 }
 

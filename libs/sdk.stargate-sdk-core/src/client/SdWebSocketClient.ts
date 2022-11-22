@@ -8,6 +8,7 @@ import {
     isErrorResponseDto,
     isOkResponseDto,
 } from "../dto/baseDto"
+import { SdStargateCoreErrorTypes } from "../SdStargateCoreErrorTypes"
 import { ISdStargateClient, ISdStargateClientOptionKeepAlive } from "./ISdStargateClient"
 
 /** Holds the promise functions of a single open request */
@@ -87,9 +88,9 @@ export class SdWebSocketClient implements ISdStargateClient {
         ws.onopen = () => {
             // Reset to empty function
         }
-        ws.onclose = () => {
+        ws.onclose = (event) => {
             this._ws = undefined
-            this.dcnHandler("Connection was closed.")
+            this.dcnHandler(event.reason)
         }
         ws.onerror = (event) => {
             this.errHandler(event.message)
@@ -108,7 +109,7 @@ export class SdWebSocketClient implements ISdStargateClient {
                 this.updateKeepAlive()  // Start keep alive process
                 resolve()
             }
-            ws.onerror = (event: ErrorEvent) => reject(event.message)
+            ws.onerror = (event: ErrorEvent) => reject([ SdStargateCoreErrorTypes.GenericClientError, event.message ])
         })
     }
 
@@ -121,7 +122,7 @@ export class SdWebSocketClient implements ISdStargateClient {
         return new Promise((resolve, reject) => {
             this._ws = undefined
             ws.onclose = () => resolve()
-            ws.onerror = (event: ErrorEvent) => reject(event.message)
+            ws.onerror = (event: ErrorEvent) => reject([ SdStargateCoreErrorTypes.GenericClientError, event.message ])
             ws.close()   // close connection
         })
     }
@@ -137,7 +138,10 @@ export class SdWebSocketClient implements ISdStargateClient {
                 },
                 reject: (value: any) => {
                     delete this.openRequests[reqId]
-                    reject(value)
+                    reject((Array.isArray(value))
+                        ? value
+                        : [ SdStargateCoreErrorTypes.GenericClientError, value ],
+                    )
                 },
             }
             this.ws().send(JSON.stringify(msg))
@@ -211,15 +215,18 @@ export class SdWebSocketClient implements ISdStargateClient {
      * @private
      */
     processErrorMessage (res: ISdErrorResponseDto): void {
-        // An error without any type comes directly from API Gateway.
-        // Thus, we categorize it as a critical error.
-        const msg = `${ res.errorType ?? "CriticalError" }: ${ res.errorMessage }`
+        // API Gateway errors are of type `Runtime.*` (e.g. `Runtime.ExitError`), which is wrapped
+        // by our default type `SdStargateDefaultErrorType`.
+        const mappedErrorType = (res.errorType && String(res.errorType).startsWith("Runtime."))
+            ? SdStargateCoreErrorTypes.ServiceUnavailable
+            : res.errorType
+        const rejectReason = [ mappedErrorType, res.errorMessage ]
 
         // An error response without a requestId property is seen as a general system error.
         // In this case, we want to reject all open requests.
         if (!res.requestId) {
             for (const id in this.openRequests) {
-                this.openRequests[id].reject(msg)
+                this.openRequests[id].reject(rejectReason)
             }
             return
         }
@@ -232,7 +239,7 @@ export class SdWebSocketClient implements ISdStargateClient {
         }
 
         // Reject the open request
-        req.reject(msg)
+        req.reject(rejectReason)
     }
 
     /**
