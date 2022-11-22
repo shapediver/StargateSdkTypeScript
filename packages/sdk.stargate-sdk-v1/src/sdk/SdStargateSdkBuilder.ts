@@ -1,4 +1,4 @@
-import { SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
+import { SdStargateError, SdStargateErrorTypes } from "../SdStargateError"
 import { ISdStargateSdkBuilder } from "./ISdStargateSdkBuilder"
 import { SdStargateSdk } from "./SdStargateSdk"
 
@@ -38,7 +38,12 @@ export class SdStargateSdkBuilder implements ISdStargateSdkBuilder {
 
     async build (): Promise<SdStargateSdk> {
         // Validate build parameters
-        if (!this.baseUrl) throw new SdStargateError("Cannot build Stargate SDK: Base URL is not set")
+        if (!this.baseUrl) {
+            throw new SdStargateError(
+                SdStargateErrorTypes.GenericClientError,
+                "Cannot build Stargate SDK: Base URL is not set",
+            )
+        }
 
         // Create and initialize sdk
         const sdk = new SdStargateSdk(this.baseUrl, this.msgHandler, this.errHandler, this.dcnHandler)

@@ -1,4 +1,3 @@
-import { SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
 import { ISdCommandRegister } from "./commands/ISdCommandRegister"
 import {
     ISdStargateDummyAckReplyExampleCommandDto,
@@ -14,6 +13,7 @@ import { ISdStargateClientModel } from "./models/ISdStargateClientModel"
 import { createSdk } from "./sdk/createSdk"
 import { ISdStargateSdk } from "./sdk/ISdStargateSdk"
 import { ISdStargateSdkBuilder } from "./sdk/ISdStargateSdkBuilder"
+import { SdStargateError, SdStargateErrorTypes } from "./SdStargateError"
 
 export {
     createSdk,
@@ -30,4 +30,5 @@ export {
     ISdStargateSdk,
     ISdStargateSdkBuilder,
     SdStargateError,
+    SdStargateErrorTypes,
 }

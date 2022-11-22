@@ -1,4 +1,5 @@
 import { SdUtils } from "@shapediver/sdk.stargate-sdk-core"
+import { SdStargateError, SdStargateErrorTypes } from "../../src"
 import { SdCommandRegister } from "../../src/commands/SdCommandRegister"
 
 test("command with single client times out; should reject", async () => {
@@ -11,8 +12,17 @@ test("command with single client times out; should reject", async () => {
     expect(register.openCommands["test"].length).toBe(1)
     expect(register.openCommands["test"][0].clientId).toStrictEqual("foo")
 
-    await expect(promise).rejects.toBeDefined()
-    expect(Object.keys(register.openCommands).length).toBe(0)
+    try {
+        await promise
+        expect(true).toBeFalsy()
+    } catch (e) {
+        expect(e instanceof SdStargateError).toBeTruthy()
+        expect((<SdStargateError>e).type).toBe(SdStargateErrorTypes.CommandTimeoutError)
+        expect((<SdStargateError>e).message).toBe("Command timed out.")
+
+        await SdUtils.sleep(0)  // Required to wait for `.finally` call
+        expect(Object.keys(register.openCommands).length).toBe(0)
+    }
 })
 
 test("command with two client, one replies, one times out; should reject", async () => {
@@ -22,8 +32,17 @@ test("command with two client, one replies, one times out; should reject", async
     const promise = register.registerCommand(topic, [ "foo", "bar" ], 100)
     register.updateCommand(topic, "foo", { data: "some data" })
 
-    await expect(promise).rejects.toBeDefined()
-    expect(Object.keys(register.openCommands).length).toBe(0)
+    try {
+        await promise
+        expect(true).toBeFalsy()
+    } catch (e) {
+        expect(e instanceof SdStargateError).toBeTruthy()
+        expect((<SdStargateError>e).type).toBe(SdStargateErrorTypes.CommandTimeoutError)
+        expect((<SdStargateError>e).message).toBe("Command timed out.")
+
+        await SdUtils.sleep(0)  // Required to wait for `.finally` call
+        expect(Object.keys(register.openCommands).length).toBe(0)
+    }
 })
 
 test("command with two client, both reply; should resolve and return data", async () => {
@@ -54,10 +73,19 @@ test("command with two client, one sends error reply; should reject and return m
     // Update reply - first error triggers reject!
     register.updateCommand(topic, "bar", errMsg)
 
-    await expect(promise).rejects.toBe(errMsg)
+    // await SdUtils.sleep(0)  // Required to wait for `.finally` call
 
-    await SdUtils.sleep(0)  // Required to wait for `.finally` call
-    expect(Object.keys(register.openCommands).length).toBe(0)
+    try {
+        await promise
+        expect(true).toBeFalsy()
+    } catch (e) {
+        expect(e instanceof SdStargateError).toBeTruthy()
+        expect((<SdStargateError>e).type).toBe(SdStargateErrorTypes.CommandClientError)
+        expect((<SdStargateError>e).message).toBe(errMsg)
+
+        await SdUtils.sleep(0)  // Required to wait for `.finally` call
+        expect(Object.keys(register.openCommands).length).toBe(0)
+    }
 })
 
 test("command that already has been rejected receives success response; should ignore response", async () => {

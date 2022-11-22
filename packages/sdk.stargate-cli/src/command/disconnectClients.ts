@@ -35,7 +35,7 @@ export async function disconnectClients (sdk: ISdStargateSdk): Promise<void> {
         await sdk.disconnectClients(selectedClients)
         printResults(selectedClients.length)
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold("Could not disconnect all clients from Stargate.") }\n${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold("Could not disconnect all clients from Stargate.") }\n${ e.type }: ${ e.message }`))
     }
 }
 

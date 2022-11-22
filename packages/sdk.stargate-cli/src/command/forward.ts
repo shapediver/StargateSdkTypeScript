@@ -46,7 +46,7 @@ export async function forwardMessage (sdk: ISdStargateSdk): Promise<void> {
         await sdk.forwardMessage(json, selectedClients)
         printResults(selectedClients.length)
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold("Could not send message to clients via Stargate.") }\n${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold("Could not send message to clients via Stargate.") }\n${ e.type ?? "JS-Error" }: ${ e.message }`))
     }
 }
 

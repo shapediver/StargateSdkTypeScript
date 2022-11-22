@@ -1,4 +1,4 @@
-import { SdStargateError, SdUtils } from "@shapediver/sdk.stargate-sdk-core"
+import { SdUtils } from "@shapediver/sdk.stargate-sdk-core"
 import { ISdCommandOkReplyPayload, ISdCommandPayload, ISdCommandRequestPayload } from "../dto/commands/commandPayload"
 import {
     ISdStargateDummyAckReplyExampleCommandDto,
@@ -10,6 +10,7 @@ import {
 } from "../dto/commands/dummyCommand"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
 import { ISdStargateSdk } from "../sdk/ISdStargateSdk"
+import { SdStargateError, SdStargateErrorTypes } from "../SdStargateError"
 import { SdDummyCommandValidator } from "../validators/commands/SdDummyCommandValidator"
 import { ISdStargateDummyCommand } from "./ISdStargateDummyCommand"
 import { SdBaseCommand } from "./SdBaseCommand"
@@ -54,7 +55,7 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
                 await this.invokeHandler(payload, data, batchReplyHandler)
                 break
             default:
-                throw new SdStargateError(`Invalid dummy client command '${ payload.command }'`)
+                throw new SdStargateError(SdStargateErrorTypes.GenericClientError, `Invalid dummy client command '${ payload.command }'`)
         }
     }
 
@@ -71,7 +72,7 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
                 SdDummyCommandValidator.assertBatchReplyExampleReplyDto(payload.data)
                 break
             default:
-                throw new SdStargateError(`Invalid dummy client command '${ payload.command }'`)
+                throw new SdStargateError(SdStargateErrorTypes.GenericClientError, `Invalid dummy client command '${ payload.command }'`)
         }
 
         // Update the open command with the clients reply-message

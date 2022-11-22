@@ -1,15 +1,14 @@
-import { ISdStargateClientOptionKeepAlive } from "./client/ISdStargateClient"
-import { createStargateCommander } from "./commander/createCommander"
-import { ISdStargateCommander } from "./commander/ISdStargateCommander"
+import { createStargateClient } from "./client/createClient"
+import { ISdStargateClient, ISdStargateClientOptionKeepAlive } from "./client/ISdStargateClient"
 import { ISdStargateCommandDto } from "./dto/baseDto"
-import { SdStargateError } from "./SdStargateError"
+import { SdStargateCoreErrorTypes } from "./SdStargateCoreErrorTypes"
 import * as SdUtils from "./utils"
 
 export {
-    createStargateCommander,
-    ISdStargateCommander,
+    createStargateClient,
+    ISdStargateClient,
     ISdStargateClientOptionKeepAlive,
     ISdStargateCommandDto,
-    SdStargateError,
+    SdStargateCoreErrorTypes,
     SdUtils,
 }

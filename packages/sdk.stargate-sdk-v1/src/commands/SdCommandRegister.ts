@@ -1,4 +1,4 @@
-import { SdStargateError } from "@shapediver/sdk.stargate-sdk-core"
+import { SdStargateError, SdStargateErrorTypes } from "../SdStargateError"
 import { ISdCommandRegister } from "./ISdCommandRegister"
 
 /** Holds reply data and the promise functions of a single open command's client */
@@ -9,7 +9,7 @@ type OpenClientCommand = {
      */
     clientId: string,
     resolve: (value: (any)) => void,
-    reject: (reason: string) => void,
+    reject: (reason: SdStargateError) => void,
 }
 
 /** Stores all commands sent by this client which are still waiting for a reply. */
@@ -24,14 +24,21 @@ export class SdCommandRegister implements ISdCommandRegister {
         timeout: number,
     ): Promise<any[]> {
         if (this.openCommands[topic] !== undefined) {
-            throw new SdStargateError(`Cannot register command: Topic '${ topic }' already exists.`)
+            throw new SdStargateError(
+                SdStargateErrorTypes.GenericClientError,
+                `Cannot register command: Topic '${ topic }' already exists.`,
+            )
         }
 
         let commands: OpenClientCommand[] = []
         let promises = clientIds.map(clientId => {
             return new Promise<any>((resolve, reject) => {
                 // Reject the promise when the client has not responded within the given timeframe
-                setTimeout(reject, timeout, "Command timed out.")
+                setTimeout(
+                    reject,
+                    timeout,
+                    new SdStargateError(SdStargateErrorTypes.CommandTimeoutError, "Command timed out."),
+                )
 
                 // Store new open command in register
                 commands.push({
@@ -48,7 +55,11 @@ export class SdCommandRegister implements ISdCommandRegister {
         return new Promise<any[]>(async (resolve, reject) => {
             Promise.all(promises)
                 .then(res => resolve(res))
-                .catch(e => reject(e))
+                .catch(e => reject(
+                    (e instanceof SdStargateError)
+                        ? e
+                        : new SdStargateError(SdStargateErrorTypes.GenericClientError, String(e)),
+                ))
                 .finally(() => delete this.openCommands[topic])
         })
     }
@@ -65,12 +76,15 @@ export class SdCommandRegister implements ISdCommandRegister {
         // Find client and update the data property
         const client = openCommand.find(c => c.clientId === clientId)
         if (client === undefined) {
-            throw new SdStargateError(`Cannot update registered command: Client '${ clientId }' was not found.`)
+            throw new SdStargateError(
+                SdStargateErrorTypes.GenericClientError,
+                `Cannot update registered command: Client '${ clientId }' was not found.`,
+            )
         }
 
         // Resolve a successfully processed command or reject with the returned error message
         if (typeof result === "object") client.resolve(result)
-        else client.reject(result)
+        else client.reject(new SdStargateError(SdStargateErrorTypes.CommandClientError, result))
     }
 
 }

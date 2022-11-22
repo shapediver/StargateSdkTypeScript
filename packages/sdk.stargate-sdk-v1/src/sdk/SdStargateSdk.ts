@@ -1,19 +1,14 @@
-import {
-    createStargateCommander,
-    ISdStargateClientOptionKeepAlive,
-    ISdStargateCommandDto,
-    ISdStargateCommander,
-    SdStargateError,
-} from "@shapediver/sdk.stargate-sdk-core"
+import { ISdStargateCommander } from "../commander/ISdStargateCommander"
+import { SdWebSocketCommander } from "../commander/SdWebSocketCommander"
 import { ISdBaseCommand } from "../commands/ISdBaseCommand"
 import { ISdCommandRegister } from "../commands/ISdCommandRegister"
 import { SdCommandRegister } from "../commands/SdCommandRegister"
 import { ISdStargateDisconnectClientsRequestDto } from "../dto/disconnectClients"
 import { ISdStargateForwardMessageRequestDto } from "../dto/forwardMessage"
 import { ISdStargateListClientsRequestDto, ISdStargateListClientsResponseDto } from "../dto/listClients"
-import { ISdStargatePingRequestDto } from "../dto/ping"
 import { ISdStargateRegisterRequestDto, ISdStargateRegisterResponseDto } from "../dto/register"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
+import { SdStargateError } from "../SdStargateError"
 import { SdCommandPayloadValidator } from "../validators/commands/SdCommandPayloadValidator"
 import { ISdStargateSdk } from "./ISdStargateSdk"
 
@@ -50,17 +45,11 @@ export class SdStargateSdk implements ISdStargateSdk {
     async init (): Promise<void> {
         const url = `${ this.baseUrl }/v1`
 
-        const keepAlive: ISdStargateClientOptionKeepAlive = {
-            interval: 585000,   // in ms (9 min and 45 sec)
-            reqCreator: this.keepAliveReqBuilder.bind(this),
-        }
-
         // Initialize commander and connect to Stargate
-        this.commander = createStargateCommander(
+        this.commander = new SdWebSocketCommander(
             this.msgHandler.bind(this),
             this.errHandler.bind(this),
             this.dcnHandler.bind(this),
-            keepAlive,
         )
         await this.commander.connect(url)
     }
@@ -73,8 +62,11 @@ export class SdStargateSdk implements ISdStargateSdk {
                 // Invoke the general user message handler when the message is not a client command
                 if (!res) this.userMsgHandler(payload)
             })
-            .catch(v => {
-                const msg = (v instanceof Error) ? v.message : v
+            .catch(e => {
+                let msg
+                if (e instanceof SdStargateError) msg = `${ e.type }: ${ e.message }`
+                else if (e instanceof Error) msg = e.message
+                else msg = String(e)
                 this.errHandler(msg)
             })
     }
@@ -87,16 +79,6 @@ export class SdStargateSdk implements ISdStargateSdk {
     /** Wrapper around the user disconnect handler. */
     dcnHandler (msg: string): void {
         this.userDcnHandler(msg)
-    }
-
-    /** Creates the request body for the ping-command. */
-    keepAliveReqBuilder (): ISdStargateCommandDto {
-        const req: ISdStargatePingRequestDto = {
-            header: { command: "PING" },
-            payload: undefined,
-        }
-
-        return req
     }
 
     addCommand (command: ISdBaseCommand): void {
@@ -129,12 +111,8 @@ export class SdStargateSdk implements ISdStargateSdk {
             },
         }
 
-        try {
-            const res = await this.commander!.send(req)
-            return res as ISdStargateRegisterResponseDto
-        } catch (e) {
-            throw new SdStargateError(e)
-        }
+        const res = await this.commander!.send(req)
+        return res as ISdStargateRegisterResponseDto
     }
 
     async listBackendClients (): Promise<ISdStargateListClientsResponseDto> {
@@ -143,12 +121,8 @@ export class SdStargateSdk implements ISdStargateSdk {
             payload: undefined,
         }
 
-        try {
-            const res = await this.commander!.send(req)
-            return res as ISdStargateListClientsResponseDto
-        } catch (e) {
-            throw new SdStargateError(e)
-        }
+        const res = await this.commander!.send(req)
+        return res as ISdStargateListClientsResponseDto
     }
 
     async listFrontendClients (): Promise<ISdStargateListClientsResponseDto> {
@@ -157,12 +131,8 @@ export class SdStargateSdk implements ISdStargateSdk {
             payload: undefined,
         }
 
-        try {
-            const res = await this.commander!.send(req)
-            return res as ISdStargateListClientsResponseDto
-        } catch (e) {
-            throw new SdStargateError(e)
-        }
+        const res = await this.commander!.send(req)
+        return res as ISdStargateListClientsResponseDto
     }
 
     async forwardMessage (payload: Record<string, any>, clients: ISdStargateClientModel[]): Promise<void>
@@ -180,11 +150,7 @@ export class SdStargateSdk implements ISdStargateSdk {
             payload,
         }
 
-        try {
-            await this.commander!.send(req)
-        } catch (e) {
-            throw new SdStargateError(e)
-        }
+        await this.commander!.send(req)
     }
 
     async disconnectClients (clients: ISdStargateClientModel[]): Promise<void> {
@@ -196,11 +162,7 @@ export class SdStargateSdk implements ISdStargateSdk {
             payload: undefined,
         }
 
-        try {
-            await this.commander!.send(req)
-        } catch (e) {
-            throw new SdStargateError(e)
-        }
+        await this.commander!.send(req)
     }
 
     private async tryProcessClientCommand (payload: unknown): Promise<boolean> {

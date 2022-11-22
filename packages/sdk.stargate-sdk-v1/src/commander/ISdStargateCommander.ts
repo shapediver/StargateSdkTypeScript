@@ -1,5 +1,10 @@
-import { ISdStargateCommandDto } from "../dto/baseDto"
+import { ISdStargateClient, ISdStargateCommandDto } from "@shapediver/sdk.stargate-sdk-core"
+import { SdStargateError } from "../SdStargateError"
 
+/**
+ * Wrapper around the {@link ISdStargateClient}.
+ * Maps rejected errors from the core-package format into {@link SdStargateError}.
+ */
 export interface ISdStargateCommander {
 
     /**
