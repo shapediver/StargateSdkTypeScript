@@ -8,7 +8,7 @@ import { ISdStargateForwardMessageRequestDto } from "../dto/forwardMessage"
 import { ISdStargateListClientsRequestDto, ISdStargateListClientsResponseDto } from "../dto/listClients"
 import { ISdStargateRegisterRequestDto, ISdStargateRegisterResponseDto } from "../dto/register"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
-import { SdStargateError } from "../SdStargateError"
+import { SdStargateError, SdStargateErrorTypes } from "../SdStargateError"
 import { SdCommandPayloadValidator } from "../validators/commands/SdCommandPayloadValidator"
 import { ISdStargateSdk } from "./ISdStargateSdk"
 
@@ -82,7 +82,12 @@ export class SdStargateSdk implements ISdStargateSdk {
     }
 
     addCommand (command: ISdBaseCommand): void {
-        if (this.commands.indexOf(command) >= 0) return
+        if (this.commands.find(c => c.constructor.name === command.constructor.name)) {
+            throw new SdStargateError(
+                SdStargateErrorTypes.GenericClientError,
+                `Command implementation of type ${ command.constructor.name } has already been added.`,
+            )
+        }
         this.commands.push(command)
     }
 
