@@ -8,7 +8,10 @@ export interface ISdStargateSdk {
 
     readonly commandRegister: ISdCommandRegister
 
-    /** Add a command implementation to the client. */
+    /**
+     * Add a command implementation to the client.
+     * @throws {@link SdStargateError} when a command of the same type has already been added.
+     */
     addCommand (command: ISdBaseCommand): void
 
     /** Closes the open connection to the Stargate service. */

@@ -43,11 +43,15 @@ describe("addCommand", function () {
         expect(sdk.commands.length).toBe(1)
     })
 
-    test("adding an instance of a command multiple times; should not extend command-list", () => {
+    test("adding an instance of a command multiple times; should add only once", () => {
         const cmd = new DummyCommand()
         sdk.addCommand(cmd)
-        sdk.addCommand(cmd)
-        expect(sdk.commands.length).toBe(1)
+        expect(() => sdk.addCommand(cmd)).toThrow()
+    })
+
+    test("adding command instances of the same type multiple times; should add only once", () => {
+        sdk.addCommand(new DummyCommand())
+        expect(() => sdk.addCommand(new DummyCommand())).toThrow()
     })
 
 })
