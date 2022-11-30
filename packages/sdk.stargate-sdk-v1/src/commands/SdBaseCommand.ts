@@ -103,8 +103,14 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
             await this.sendReply(payload, {})
         }
 
-        // Call the user handler
-        const res = await handler(data)
+        // Call the user handler.
+        // This way, the user handler can just throw to propagate error messages.
+        let res
+        try {
+            res = await handler(data)
+        } catch (e) {
+            res = `Error in handler-function: ${ e.message }`
+        }
 
         // Send BATCH-reply if requested
         if (payload.response?.type === "BATCH") {
