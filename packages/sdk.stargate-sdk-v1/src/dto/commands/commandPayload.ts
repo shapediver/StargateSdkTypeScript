@@ -4,9 +4,17 @@ export type ISdCommandPayload =
     | ISdCommandOkReplyPayload
     | ISdCommandErrorReplyPayload
 
-/** Describes the payload of a received client command. */
+/**
+ * The payload of a command that a client application like the ShapeDiver Platform Frontend sends to
+ * one or several client application instances.
+ * Examples of a command would be "Select mesh and upload as sdTF", "Bake output version", etc.
+ */
 export interface ISdCommandRequestPayload {
-    /** The client ID that sent the command request. */
+    /**
+     * The client ID that sent the command request.
+     * Note that it is not necessary to set this property when sending a command message.
+     * The Stargate service will set this property when forwarding the message to the target clients.
+     */
     sender: string
 
     /**
@@ -39,7 +47,7 @@ export interface ISdCommandRequestPayload {
     data: Record<string, any>
 }
 
-/** Describes the payload of a received client command */
+/** Describes the payload of a reply to a client command. */
 interface ISdCommandReplyPayload {
     /**
      * The client ID that sent the command reply.
