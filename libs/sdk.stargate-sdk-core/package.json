@@ -20,7 +20,9 @@
     "test": "bash ../../scripts/test.sh",
     "check": "tsc --noEmit",
     "build": "bash ../../scripts/build.sh",
-    "build-dep": "bash ../../scripts/build-dep.sh"
+    "build-dep": "bash ../../scripts/build-dep.sh",
+    "pre-publish": "bash ../../scripts/pre-publish.sh",
+    "post-publish": "bash ../../scripts/post-publish.sh"
   },
   "bugs": {
     "url": "https://github.com/shapediver/StargateSdkTypeScript/issues"
