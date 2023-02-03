@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
 # We try to use the same Node.js (LTS) and NPM versions for all TypeScript ShapeDiver projects.
 target_node_version="v16"
 target_npm_version="8"
