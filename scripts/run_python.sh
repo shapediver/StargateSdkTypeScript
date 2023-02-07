@@ -1,4 +1,4 @@
-                     #!/usr/bin/env bash
+#!/usr/bin/env bash
 # Validates the Python version and activates the virtual environment of this repository before
 # running the specified Python script.
 #
@@ -38,7 +38,7 @@ else
 fi
 
 # Run Python command
-exec_python "${path}" "${@:2}"
+exec_python "${path}" "${@:2}" || exit $?
 
 # Deactivate virtual environment
 deactivate
