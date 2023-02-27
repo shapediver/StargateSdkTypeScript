@@ -1,10 +1,13 @@
 import { createSdk, ISdStargateSdk } from "@shapediver/sdk.stargate-sdk-v1"
+import { createWithAwsProfile } from "@shapediver/sdk.token-generator-sdk-v1"
 import chalk from "chalk"
 import inquirer from "inquirer"
-import * as jwt from "jwt-promisify"
-import { assertUnreachable } from "../utils"
+import { v4 as uuidv4 } from "uuid"
+import { assertUnreachable, sleep } from "../utils"
 
 const os = require("os")
+
+const REQUEST_CUSTOM_INPUT = "Enter name manually."
 
 /** All ShapeDiver client applications that are supported by Stargate. */
 enum ClientType {
@@ -18,19 +21,6 @@ enum ClientType {
 
 function askQuestions () {
     const questions = [
-        {
-            type: "editor",
-            name: "prvKey",
-            message: "Enter the private key for JWT authentication",
-        },
-        {
-            type: "input",
-            name: "user",
-            message: "Whats the ID of the user?",
-            default () {
-                return "Test-User"
-            },
-        },
         {
             type: "list",
             name: "clientType",
@@ -62,11 +52,29 @@ export async function register (
     errHandler: (msg: string) => void,
     dcnHandler: (msg: string) => void,
 ): Promise<ISdStargateSdk> {
-    const { prvKey, user, clientType, url } = await askQuestions()
+    // The AWS-SDK sometimes produces some messages, so we want to log them first before we start
+    // with the user interactions to prevent our console from being broken.
+    await sleep(0)
 
-    // Extract client info and generate new JWT
+    const { clientType, url } = await askQuestions()
+
+    // Ask user for client info
     const { appId, name } = getAppIdFromClientType(clientType)
-    const authToken = await generateAuthToken(prvKey, user, appId)
+
+    // Usually, the user would get the JWT from the ShapeDiver Platform Backend. For these kind of
+    // requests, the Platform always uses the ShapeDiver user ID as the JWT subject claim (and not
+    // the optional `sd_user_name` property!). Since we do not have the ShapeDiver user ID, we
+    // generate a random UUID instead.
+    const userId = uuidv4()
+
+    // Create new JWT
+    let authToken
+    try {
+        authToken = await fetchAuthToken(appId, userId)
+    } catch (e) {
+        console.error(chalk.red(`${ chalk.bold("Could not create a JWT - stopping CLI!") }\n${ e.message }`))
+        process.exit(1)
+    }
 
     // Instantiate Stargate SDK
     let sdk: ISdStargateSdk
@@ -97,7 +105,7 @@ export async function register (
         process.exit(1)
     }
 
-    printResults(clientType)
+    printResults(clientType, userId)
 
     return sdk
 }
@@ -140,18 +148,95 @@ function getAppIdFromClientType (type: ClientType): { appId: string, name: strin
     }
 }
 
-/** Generates and returns a new JWT authentication token. */
-async function generateAuthToken (privateKey: string, sub: string, aud: string): Promise<string> {
+/** Calls the ShapeDiver Token Generator service to create a new JWT authentication token. */
+async function fetchAuthToken (aud: string, sub: string): Promise<string> {
+    // Ask user which AWS credentials and region to use for the JWT creation.
+    let { awsProfile, awsRegion } = await inquirer.prompt?.([
+        {
+            type: "input",
+            name: "awsProfile",
+            message: "What is the name of your AWS profile that is used to create a JWT?",
+            default () {
+                return "default"
+            },
+        },
+        {
+            type: "list",
+            name: "awsRegion",
+            message: "Which AWS region should be used to create the JWT?",
+            choices: [
+                "us-east-1",
+                "eu-central-1",
+                REQUEST_CUSTOM_INPUT,
+            ],
+        },
+    ])
+    if (awsRegion === REQUEST_CUSTOM_INPUT) {
+        const { custom } = await inquirer.prompt?.([ {
+            type: "input",
+            name: "custom",
+            message: "AWS region:",
+        } ])
+        awsRegion = custom
+    }
+
+    const tokenGenerator = createWithAwsProfile(awsRegion, awsProfile)
+
+    let fn, fnNames: string[] | undefined
     try {
-        return await jwt.sign({ sub, aud }, privateKey.trim(), {
-            algorithm: "RS256",
-            expiresIn: "1h",
-        })
+        // Try to fetch all token generator lambda function names of the region if possible.
+        // However, this fails when the AWS account does ot have sufficient permissions.
+        const lambdas = await tokenGenerator.client.listFunctions().promise()
+        fnNames = (lambdas.Functions ?? [])
+            .map(l => l.FunctionName ?? "")
+            .filter(name => name && name.toLowerCase().includes("platformtokengenerator"))
+
+        if (fnNames.length > 0) {
+            // Ask user to select lambda function
+            const { fnName } = await inquirer.prompt?.([ {
+                type: "list",
+                name: "fnName",
+                message: "What is the Lambda function name of the Token Generator service?",
+                choices: fnNames.concat([ REQUEST_CUSTOM_INPUT ]),
+            } ])
+
+            if (fnName !== REQUEST_CUSTOM_INPUT) {
+                fn = fnName
+            } else {
+                const { custom } = await inquirer.prompt?.([ {
+                    type: "input",
+                    name: "custom",
+                    message: "Lambda function name:",
+                } ])
+                fn = custom
+            }
+        } else
+            console.log(chalk.yellow(`Could not find any Platform Token Generator Lambda service in region '${ awsRegion }' by name.`))
+    } catch
+        (e) {
+        // Account has not the necessary permissions to list lambda functions in this region.
+        console.warn(chalk.yellow(`Could not list existing Lambda services in region '${ awsRegion }'.\n${ e.message }`))
+    }
+
+    // Fallback - Ask the user to input the Token Generator function name.
+    if (fn === undefined) {
+        const { custom } = await inquirer.prompt?.([ {
+            type: "input",
+            name: "custom",
+            message: "Fallback: What is the Lambda function name of the Token Generator service?",
+        } ])
+        fn = custom
+    }
+
+    try {
+        // Stargate does not require any scopes, so we keep it empty.
+        const res = await tokenGenerator.call(String(fn), { jwt: { aud, scope: "", sub } })
+        return res.jwt
     } catch (e) {
-        throw new Error("Something went wrong when creating the JWT. Something is probably wrong with the key string.\n" + e.message)
+        throw new Error("Error when calling ShapeDiver TokenGenerator to create a new JWT.\n" + e.message)
     }
 }
 
-function printResults (type: ClientType): void {
-    console.log(chalk.green(`Successfully registered ${ type } and ready to go!`))
+function printResults (type: ClientType, uid: string): void {
+    console.log("\n", chalk.green(`Successfully registered ${ chalk.bold(type) } for user ${ chalk.bold(uid) }!`), "\n")
 }
