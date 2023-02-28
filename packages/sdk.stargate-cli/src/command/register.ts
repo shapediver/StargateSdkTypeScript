@@ -3,6 +3,7 @@ import { createWithAwsProfile } from "@shapediver/sdk.token-generator-sdk-v1"
 import chalk from "chalk"
 import inquirer from "inquirer"
 import { v4 as uuidv4 } from "uuid"
+import { readCliMemory, updateCliMemory } from "../memory"
 import { assertUnreachable, sleep } from "../utils"
 
 const os = require("os")
@@ -19,14 +20,14 @@ enum ClientType {
     STANDALONE_CLIENT = "Standalone Client",
 }
 
-function askQuestions () {
+function askQuestions (defaultUserId: string = uuidv4(), defaultUrl: string = "") {
     const questions = [
         {
             type: "input",
             name: "userId",
             message: "Whats the ID of the user (UUIDv4)?",
             default () {
-                return uuidv4()
+                return defaultUserId
             },
         },
         {
@@ -47,7 +48,7 @@ function askQuestions () {
             name: "url",
             message: "Whats the URL of the Stargate service?",
             default () {
-                return ""  // TODO specify this after deployment
+                return defaultUrl
             },
         },
     ]
@@ -64,10 +65,18 @@ export async function register (
     // with the user interactions to prevent our console from being broken.
     await sleep(0)
 
+    // Load CLI memory of previous user inputs.
+    const memory = await readCliMemory()
+
     // Usually, the user would get the JWT from the ShapeDiver Platform Backend. For these kind of
     // requests, the Platform always uses the ShapeDiver user ID as the JWT subject claim (and not
     // the optional `sd_user_name` property!).
-    const { userId, clientType, url } = await askQuestions()
+    const { userId, clientType, url } = await askQuestions(memory.userId, memory.stargateUrl)
+
+    // Update CLI memory with user inputs.
+    memory.userId = userId
+    memory.stargateUrl = url
+    await updateCliMemory(memory)
 
     // Ask user for client info
     const { appId, name } = getAppIdFromClientType(clientType)

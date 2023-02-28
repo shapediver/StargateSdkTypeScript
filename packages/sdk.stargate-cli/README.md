@@ -5,5 +5,5 @@ A simple CLI testing tool based on the TypeScript SDK of the ShapeDiver Stargate
 ## Usage
 
 ```
-$ node dist/cli.js
+$ npm run start
 ```
