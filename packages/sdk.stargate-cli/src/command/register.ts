@@ -22,6 +22,14 @@ enum ClientType {
 function askQuestions () {
     const questions = [
         {
+            type: "input",
+            name: "userId",
+            message: "Whats the ID of the user (UUIDv4)?",
+            default () {
+                return uuidv4()
+            },
+        },
+        {
             type: "list",
             name: "clientType",
             message: "Whats the type of this client?",
@@ -56,16 +64,13 @@ export async function register (
     // with the user interactions to prevent our console from being broken.
     await sleep(0)
 
-    const { clientType, url } = await askQuestions()
+    // Usually, the user would get the JWT from the ShapeDiver Platform Backend. For these kind of
+    // requests, the Platform always uses the ShapeDiver user ID as the JWT subject claim (and not
+    // the optional `sd_user_name` property!).
+    const { userId, clientType, url } = await askQuestions()
 
     // Ask user for client info
     const { appId, name } = getAppIdFromClientType(clientType)
-
-    // Usually, the user would get the JWT from the ShapeDiver Platform Backend. For these kind of
-    // requests, the Platform always uses the ShapeDiver user ID as the JWT subject claim (and not
-    // the optional `sd_user_name` property!). Since we do not have the ShapeDiver user ID, we
-    // generate a random UUID instead.
-    const userId = uuidv4()
 
     // Create new JWT
     let authToken
