@@ -1,4 +1,8 @@
 import { ISdCommandRegister } from "./commands/ISdCommandRegister"
+import { ISdStargateGetDataCommand } from "./commands/ISdStargateGetDataCommand"
+import { ISdStargateGetSupportedDataCommand } from "./commands/ISdStargateGetSupportedDataCommand"
+import { SdStargateGetDataCommand } from "./commands/SdStargateGetDataCommand"
+import { SdStargateGetSupportedDataCommand } from "./commands/SdStargateGetSupportedDataCommand"
 import {
     ISdStargateDummyAckReplyExampleCommandDto,
     ISdStargateDummyAckReplyExampleReplyDto,
@@ -7,6 +11,14 @@ import {
     ISdStargateDummyNoReplyExampleCommandDto,
     ISdStargateDummyNoReplyExampleReplyDto,
 } from "./dto/commands/dummyCommand"
+import {
+    ISdStargateGetDataCommandDto,
+    ISdStargateGetDataReplyDto,
+} from "./dto/commands/getDataCommand"
+import {
+    ISdStargateGetSupportedDataCommandDto,
+    ISdStargateGetSupportedDataReplyDto,
+} from "./dto/commands/getSupportedDataCommand"
 import { ISdStargateListClientsResponseDto } from "./dto/listClients"
 import { ISdStargateRegisterResponseDto } from "./dto/register"
 import { ISdStargateClientModel } from "./models/ISdStargateClientModel"
@@ -25,10 +37,18 @@ export {
     ISdStargateDummyBatchReplyExampleReplyDto,
     ISdStargateDummyNoReplyExampleCommandDto,
     ISdStargateDummyNoReplyExampleReplyDto,
+    ISdStargateGetDataCommandDto,
+    ISdStargateGetDataReplyDto,
+    ISdStargateGetDataCommand,
+    ISdStargateGetSupportedDataCommand,
+    ISdStargateGetSupportedDataCommandDto,
+    ISdStargateGetSupportedDataReplyDto,
     ISdStargateListClientsResponseDto,
     ISdStargateRegisterResponseDto,
     ISdStargateSdk,
     ISdStargateSdkBuilder,
     SdStargateError,
     SdStargateErrorTypes,
+    SdStargateGetDataCommand,
+    SdStargateGetSupportedDataCommand,
 }
