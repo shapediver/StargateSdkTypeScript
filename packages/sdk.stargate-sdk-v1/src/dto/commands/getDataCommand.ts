@@ -30,7 +30,7 @@ export interface ISdStargateGetDataParameterCommandDto {
  */
 export interface ISdStargateGetDataReplyDto {
     /** Information about the asset which was created and uploaded to the geometry backend. */
-    asset: ISdStargateGetDataAssetReplyDto
+    asset?: ISdStargateGetDataAssetReplyDto
     /** General information about the result. */
     info: ISdStargateGetDataInfoReplyDto
 }
@@ -62,6 +62,19 @@ export interface ISdStargateGetDataAssetChunkReplyDto {
     name?: string
 }
 
+/** Enum describing possible outcomes of the data input by the user. */
+export enum ISdStargateGetDataResultEnum
+{
+    /** The user input was successful. */
+    SUCCESS = 'success',
+    /** The user cancelled the data input. */
+    CANCEL = 'cancel',
+    /** The user did nothing. */
+    NOTHING = 'nothing',
+    /** The data input failed. */
+    FAILURE = 'failure',
+}
+
 /**
  * Info specification for ISdStargateGetDataReplyDto
  */
@@ -70,4 +83,9 @@ export interface ISdStargateGetDataInfoReplyDto {
      * Total number of objects returned as part of the asset.
      */
     count: number
+
+    /** 
+     * Result of the data input by the user. 
+     */
+    result: ISdStargateGetDataResultEnum 
 }

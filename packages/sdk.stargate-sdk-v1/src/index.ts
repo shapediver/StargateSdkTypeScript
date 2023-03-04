@@ -14,6 +14,7 @@ import {
 import {
     ISdStargateGetDataCommandDto,
     ISdStargateGetDataReplyDto,
+    ISdStargateGetDataResultEnum,
 } from "./dto/commands/getDataCommand"
 import {
     ISdStargateGetSupportedDataCommandDto,
@@ -39,6 +40,7 @@ export {
     ISdStargateDummyNoReplyExampleReplyDto,
     ISdStargateGetDataCommandDto,
     ISdStargateGetDataReplyDto,
+    ISdStargateGetDataResultEnum,
     ISdStargateGetDataCommand,
     ISdStargateGetSupportedDataCommand,
     ISdStargateGetSupportedDataCommandDto,

@@ -3,6 +3,7 @@ import {
     ISdStargateGetDataCommandDto,
     ISdStargateGetDataReplyDto,
     ISdStargateGetDataCommand,
+    ISdStargateGetDataResultEnum,
     ISdStargateSdk,
     SdStargateGetDataCommand,
 } from "@shapediver/sdk.stargate-sdk-v1"
@@ -39,7 +40,8 @@ const handler = async (msg: ISdStargateGetDataCommandDto): Promise<ISdStargateGe
             }
         },
         info: {
-            count: 1
+            count: 1,
+            result: ISdStargateGetDataResultEnum.SUCCESS
         }
     }
 }

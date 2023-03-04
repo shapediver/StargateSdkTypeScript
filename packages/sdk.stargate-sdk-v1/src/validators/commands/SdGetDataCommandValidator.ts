@@ -53,14 +53,15 @@ const schemaGetDataReplyDto = {
         },
         info: {
             type: 'object', 
-            required: ['count'],
+            required: ['count', 'result'],
             properties: {
                 count: { type: 'number' },
+                result: { enum: ['success', 'cancel', 'nothing', 'failure'] },
             },
             additionalProperties: true,
         }
     },
-    required: ['asset', 'info'],
+    required: ['info'],
     additionalProperties: true,
 }
 

@@ -3,6 +3,7 @@ import {
     ISdStargateGetDataReplyDto,
     SdStargateError,
 } from "../../src"
+import { ISdStargateGetDataResultEnum } from "../../src/dto/commands/getDataCommand"
 import { SdGetDataCommandValidator } from "../../src/validators/commands/SdGetDataCommandValidator"
 
 describe("validate get data command", function () {
@@ -80,19 +81,31 @@ describe("validate get data command", function () {
                     }
                 },
                 info: {
-                    count: 1
+                    count: 1,
+                    result: ISdStargateGetDataResultEnum.SUCCESS
+                }
+            }
+            SdGetDataCommandValidator.assertGetDataReplyDto(data)
+        })
+
+        test("min asset", () => {
+            let data: Required<ISdStargateGetDataReplyDto> = {
+                asset: {
+                    id: "1"  
+                },
+                info: {
+                    count: 1,
+                    result: ISdStargateGetDataResultEnum.SUCCESS
                 }
             }
             SdGetDataCommandValidator.assertGetDataReplyDto(data)
         })
 
         test("required", () => {
-            let data: Required<ISdStargateGetDataReplyDto> = {
-                asset: {
-                    id: "1"  
-                },
+            let data: ISdStargateGetDataReplyDto = {
                 info: {
-                    count: 1
+                    count: 1,
+                    result: ISdStargateGetDataResultEnum.SUCCESS
                 }
             }
             SdGetDataCommandValidator.assertGetDataReplyDto(data)
@@ -105,7 +118,8 @@ describe("validate get data command", function () {
                         foo: "1"  
                     },
                     info: {
-                        count: 1
+                        count: 1,
+                        result: ISdStargateGetDataResultEnum.SUCCESS
                     }
                 }
                 SdGetDataCommandValidator.assertGetDataReplyDto(data)
@@ -123,7 +137,8 @@ describe("validate get data command", function () {
                         chunk: { "id": false }
                     },
                     info: {
-                        count: 1
+                        count: 1,
+                        result: ISdStargateGetDataResultEnum.SUCCESS
                     }
                 }
                 SdGetDataCommandValidator.assertGetDataReplyDto(data)
@@ -154,7 +169,26 @@ describe("validate get data command", function () {
                         id: "1",
                     },
                     info: {
-                        count: 'x'
+                        count: 'x',
+                        result: ISdStargateGetDataResultEnum.SUCCESS
+                    }
+                }
+                SdGetDataCommandValidator.assertGetDataReplyDto(data)
+                expect(true).toBeFalsy()
+            } catch (e) {
+                expect(e instanceof SdStargateError).toBeTruthy()
+            }
+        })
+
+        test("info result wrong", () => {
+            try {
+                let data = {
+                    asset: {
+                        id: "1",
+                    },
+                    info: {
+                        count: 1,
+                        result: 'x'
                     }
                 }
                 SdGetDataCommandValidator.assertGetDataReplyDto(data)
