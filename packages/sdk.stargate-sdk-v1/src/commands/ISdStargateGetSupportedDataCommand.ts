@@ -16,8 +16,7 @@ export interface ISdStargateGetSupportedDataCommand {
     ): Promise<ISdStargateGetSupportedDataReplyDto[]>
 
     /**
-     * Sets the function handler that should be called when a "no-reply example" command has
-     * been received.
+     * Sets the function handler.
      */
     registerHandler (
         handler: (msg: ISdStargateGetSupportedDataCommandDto) => Promise<ISdStargateGetSupportedDataReplyDto>,

@@ -15,7 +15,7 @@ describe("validate get data command", function () {
                 model: { id: "123"},
                 parameter: { id: "xyz"}
             }
-            SdGetDataCommandValidator.assertGetDataCommandDto(data)
+            SdGetDataCommandValidator.assertCommandDto(data)
         })
 
         test("model id missing", () => {
@@ -24,7 +24,7 @@ describe("validate get data command", function () {
                     model: { foo: "123"},
                     parameter: { id: "xyz"}
                 }
-                SdGetDataCommandValidator.assertGetDataCommandDto(data)
+                SdGetDataCommandValidator.assertCommandDto(data)
                 expect(true).toBeFalsy()
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()
@@ -37,7 +37,7 @@ describe("validate get data command", function () {
                     model: { id: "123"},
                     parameter: { foo: "xyz"}
                 }
-                SdGetDataCommandValidator.assertGetDataCommandDto(data)
+                SdGetDataCommandValidator.assertCommandDto(data)
                 expect(true).toBeFalsy()
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()
@@ -49,7 +49,7 @@ describe("validate get data command", function () {
                 let data = {
                     parameter: { id: "xyz"}
                 }
-                SdGetDataCommandValidator.assertGetDataCommandDto(data)
+                SdGetDataCommandValidator.assertCommandDto(data)
                 expect(true).toBeFalsy()
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()
@@ -61,7 +61,7 @@ describe("validate get data command", function () {
                 let data = {
                     model: { id: "123"}
                 }
-                SdGetDataCommandValidator.assertGetDataCommandDto(data)
+                SdGetDataCommandValidator.assertCommandDto(data)
                 expect(true).toBeFalsy()
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()
@@ -85,7 +85,7 @@ describe("validate get data command", function () {
                     result: ISdStargateGetDataResultEnum.SUCCESS
                 }
             }
-            SdGetDataCommandValidator.assertGetDataReplyDto(data)
+            SdGetDataCommandValidator.assertReplyDto(data)
         })
 
         test("min asset", () => {
@@ -98,7 +98,7 @@ describe("validate get data command", function () {
                     result: ISdStargateGetDataResultEnum.SUCCESS
                 }
             }
-            SdGetDataCommandValidator.assertGetDataReplyDto(data)
+            SdGetDataCommandValidator.assertReplyDto(data)
         })
 
         test("required", () => {
@@ -108,7 +108,7 @@ describe("validate get data command", function () {
                     result: ISdStargateGetDataResultEnum.SUCCESS
                 }
             }
-            SdGetDataCommandValidator.assertGetDataReplyDto(data)
+            SdGetDataCommandValidator.assertReplyDto(data)
         })
 
         test("asset id missing", () => {
@@ -122,7 +122,7 @@ describe("validate get data command", function () {
                         result: ISdStargateGetDataResultEnum.SUCCESS
                     }
                 }
-                SdGetDataCommandValidator.assertGetDataReplyDto(data)
+                SdGetDataCommandValidator.assertReplyDto(data)
                 expect(true).toBeFalsy()
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()
@@ -141,7 +141,7 @@ describe("validate get data command", function () {
                         result: ISdStargateGetDataResultEnum.SUCCESS
                     }
                 }
-                SdGetDataCommandValidator.assertGetDataReplyDto(data)
+                SdGetDataCommandValidator.assertReplyDto(data)
                 expect(true).toBeFalsy()
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()
@@ -155,7 +155,7 @@ describe("validate get data command", function () {
                         id: "1",
                     }
                 }
-                SdGetDataCommandValidator.assertGetDataReplyDto(data)
+                SdGetDataCommandValidator.assertReplyDto(data)
                 expect(true).toBeFalsy()
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()
@@ -173,7 +173,7 @@ describe("validate get data command", function () {
                         result: ISdStargateGetDataResultEnum.SUCCESS
                     }
                 }
-                SdGetDataCommandValidator.assertGetDataReplyDto(data)
+                SdGetDataCommandValidator.assertReplyDto(data)
                 expect(true).toBeFalsy()
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()
@@ -191,7 +191,7 @@ describe("validate get data command", function () {
                         result: 'x'
                     }
                 }
-                SdGetDataCommandValidator.assertGetDataReplyDto(data)
+                SdGetDataCommandValidator.assertReplyDto(data)
                 expect(true).toBeFalsy()
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()

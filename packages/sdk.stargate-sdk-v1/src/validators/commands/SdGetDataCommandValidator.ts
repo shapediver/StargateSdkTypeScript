@@ -8,7 +8,7 @@ import { SdBaseValidator } from "../SdBaseValidator"
 const ajv = new Ajv()
 
 /** Schema for {@link ISdStargateGetDataCommandDto} */
-const schemaGetDataCommandDto = {
+const schemaCommandDto = {
     type: 'object',
     properties: {
         model: { 
@@ -32,7 +32,7 @@ const schemaGetDataCommandDto = {
     additionalProperties: true,
 }
 /** Schema for {@link ISdStargateGetDataReplyDto} */
-const schemaGetDataReplyDto = {
+const schemaReplyDto = {
     type: 'object',
     properties: {
         asset: { 
@@ -67,14 +67,14 @@ const schemaGetDataReplyDto = {
 
 export abstract class SdGetDataCommandValidator extends SdBaseValidator {
 
-    private static validateGetDataCommandDto = ajv.compile(schemaGetDataCommandDto)
-    private static validateGetDataReplyDto = ajv.compile(schemaGetDataReplyDto)
+    private static validateGetDataCommandDto = ajv.compile(schemaCommandDto)
+    private static validateGetDataReplyDto = ajv.compile(schemaReplyDto)
 
-    static assertGetDataCommandDto (data: unknown): asserts data is ISdStargateGetDataCommandDto {
+    static assertCommandDto (data: unknown): asserts data is ISdStargateGetDataCommandDto {
         return this.validate(this.validateGetDataCommandDto, data)
     }
 
-    static assertGetDataReplyDto (data: unknown): asserts data is ISdStargateGetDataReplyDto {
+    static assertReplyDto (data: unknown): asserts data is ISdStargateGetDataReplyDto {
         return this.validate(this.validateGetDataReplyDto, data)
     }
 

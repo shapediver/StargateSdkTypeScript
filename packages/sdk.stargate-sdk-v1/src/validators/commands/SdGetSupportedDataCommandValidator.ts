@@ -8,14 +8,14 @@ import { SdBaseValidator } from "../SdBaseValidator"
 const ajv = new Ajv()
 
 /** Schema for {@link ISdStargateGetSupportedDataCommandDto} */
-const schemaGetSupportedDataCommandDto = {
+const schemaCommandDto = {
     type: 'object',
     properties: {
     },
     additionalProperties: true,
 }
 /** Schema for {@link ISdStargateGetSupportedDataReplyDto} */
-const schemaGetSupportedDataReplyDto = {
+const schemaReplyDto = {
     type: 'object',
     properties: {
         parameterTypes: { 
@@ -31,14 +31,14 @@ const schemaGetSupportedDataReplyDto = {
 
 export abstract class SdGetSupportedDataCommandValidator extends SdBaseValidator {
 
-    private static validateGetSupportedDataCommandDto = ajv.compile(schemaGetSupportedDataCommandDto)
-    private static validateGetSupportedDataReplyDto = ajv.compile(schemaGetSupportedDataReplyDto)
+    private static validateGetSupportedDataCommandDto = ajv.compile(schemaCommandDto)
+    private static validateGetSupportedDataReplyDto = ajv.compile(schemaReplyDto)
 
-    static assertGetSupportedDataCommandDto (data: unknown): asserts data is ISdStargateGetSupportedDataCommandDto {
+    static assertCommandDto (data: unknown): asserts data is ISdStargateGetSupportedDataCommandDto {
         return this.validate(this.validateGetSupportedDataCommandDto, data)
     }
 
-    static assertGetSupportedDataReplyDto (data: unknown): asserts data is ISdStargateGetSupportedDataReplyDto {
+    static assertReplyDto (data: unknown): asserts data is ISdStargateGetSupportedDataReplyDto {
         return this.validate(this.validateGetSupportedDataReplyDto, data)
     }
 

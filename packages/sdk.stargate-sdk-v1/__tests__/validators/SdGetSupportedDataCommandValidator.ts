@@ -13,7 +13,7 @@ describe("validate get supported data command", function () {
             let data: Required<ISdStargateGetSupportedDataCommandDto> = {
                 
             }
-            SdGetSupportedDataCommandValidator.assertGetSupportedDataCommandDto(data)
+            SdGetSupportedDataCommandValidator.assertCommandDto(data)
         })
      
     })
@@ -24,7 +24,7 @@ describe("validate get supported data command", function () {
             let data: Required<ISdStargateGetSupportedDataReplyDto> = {
                 parameterTypes: ['foo', 'bar']
             }
-            SdGetSupportedDataCommandValidator.assertGetSupportedDataReplyDto(data)
+            SdGetSupportedDataCommandValidator.assertReplyDto(data)
         })
 
         test("invalid parameter type", () => {
@@ -32,7 +32,7 @@ describe("validate get supported data command", function () {
                 let data = {
                     parameterTypes: [ 1 ]
                 }
-                SdGetSupportedDataCommandValidator.assertGetSupportedDataReplyDto(data)
+                SdGetSupportedDataCommandValidator.assertReplyDto(data)
                 expect(true).toBeFalsy()
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()
