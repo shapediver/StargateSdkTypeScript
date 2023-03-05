@@ -9,6 +9,7 @@ import { getDataCommand, setupGetDataCommandHandlers } from "./command/getDataCo
 import { getSupportedDataCommand, setupGetSupportedDataCommandHandlers } from "./command/getSupportedDataCommand"
 import { listBackendClients, listFrontendClients } from "./command/listClients"
 import { register } from "./command/register"
+import { setupStatusCommandHandlers, statusCommand } from "./command/statusCommand"
 import { assertUnreachable, prettifyMsg } from "./utils"
 
 const figlet = require("figlet")
@@ -34,6 +35,7 @@ enum Command {
     LIST_FRONTEND_CLIENTS = "List all registered frontend clients",
     GET_DATA_COMMAND = "Get data for model and parameter",
     GET_SUPPORTED_DATA_COMMAND = "Get supported parameter types",
+    STATUS_COMMAND = "Get status of client",
 }
 
 function askCommand () {
@@ -48,6 +50,7 @@ function askCommand () {
                 Command.LIST_FRONTEND_CLIENTS,
                 Command.GET_SUPPORTED_DATA_COMMAND,
                 Command.GET_DATA_COMMAND,
+                Command.STATUS_COMMAND,
                 Command.FORWARD_MESSAGE,
                 Command.DISCONNECT_CLIENTS,
                 Command.EXIT,
@@ -90,6 +93,7 @@ function dcnHandler (msg: string): void {
     setupDummyCommandHandlers(sdk)
     setupGetDataCommandHandlers(sdk)
     setupGetSupportedDataCommandHandlers(sdk)
+    setupStatusCommandHandlers(sdk)
 
     while (true) {
         const { command } = await askCommand()
@@ -119,6 +123,9 @@ function dcnHandler (msg: string): void {
                 break
             case Command.GET_SUPPORTED_DATA_COMMAND:
                 await getSupportedDataCommand(sdk)
+                break
+            case Command.STATUS_COMMAND:
+                await statusCommand(sdk)
                 break
             default:
                 assertUnreachable(cmd)

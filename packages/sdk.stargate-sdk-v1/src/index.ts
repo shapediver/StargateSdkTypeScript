@@ -1,7 +1,9 @@
 import { ISdCommandRegister } from "./commands/ISdCommandRegister"
 import { ISdStargateGetDataCommand } from "./commands/ISdStargateGetDataCommand"
+import { ISdStargateStatusCommand } from "./commands/ISdStargateStatusCommand"
 import { ISdStargateGetSupportedDataCommand } from "./commands/ISdStargateGetSupportedDataCommand"
 import { SdStargateGetDataCommand } from "./commands/SdStargateGetDataCommand"
+import { SdStargateStatusCommand } from "./commands/SdStargateStatusCommand"
 import { SdStargateGetSupportedDataCommand } from "./commands/SdStargateGetSupportedDataCommand"
 import {
     ISdStargateDummyAckReplyExampleCommandDto,
@@ -16,6 +18,10 @@ import {
     ISdStargateGetDataReplyDto,
     ISdStargateGetDataResultEnum,
 } from "./dto/commands/getDataCommand"
+import {
+    ISdStargateStatusCommandDto,
+    ISdStargateStatusReplyDto,
+} from "./dto/commands/statusCommand"
 import {
     ISdStargateGetSupportedDataCommandDto,
     ISdStargateGetSupportedDataReplyDto,
@@ -41,6 +47,9 @@ export {
     ISdStargateGetDataCommandDto,
     ISdStargateGetDataReplyDto,
     ISdStargateGetDataResultEnum,
+    ISdStargateStatusCommand,
+    ISdStargateStatusCommandDto,
+    ISdStargateStatusReplyDto,
     ISdStargateGetDataCommand,
     ISdStargateGetSupportedDataCommand,
     ISdStargateGetSupportedDataCommandDto,
@@ -52,5 +61,6 @@ export {
     SdStargateError,
     SdStargateErrorTypes,
     SdStargateGetDataCommand,
+    SdStargateStatusCommand,
     SdStargateGetSupportedDataCommand,
 }

@@ -1,22 +1,24 @@
 import {
     ISdStargateClientModel,
-    ISdStargateGetSupportedDataCommandDto,
-    ISdStargateGetSupportedDataReplyDto,
-    ISdStargateGetSupportedDataCommand,
+    ISdStargateStatusCommandDto,
+    ISdStargateStatusReplyDto,
+    ISdStargateStatusCommand,
     ISdStargateSdk,
-    SdStargateGetSupportedDataCommand,
+    SdStargateStatusCommand,
 } from "@shapediver/sdk.stargate-sdk-v1"
 import chalk from "chalk"
 import inquirer from "inquirer"
 import { nowTime, prettifyMsg, randomIntFromInterval, sleep } from "../utils"
 
 // Global command instance
-let command: ISdStargateGetSupportedDataCommand | undefined
+let command: ISdStargateStatusCommand | undefined
 
-const identifier = "GET_SUPPORTED_DATA";
+const identifier = "STATUS";
+
+const firstActivity = Math.floor(Date.now() / 1000)
 
 // User-handler for 'batch-reply' command
-const handler = async (msg: ISdStargateGetSupportedDataCommandDto): Promise<ISdStargateGetSupportedDataReplyDto> => {
+const handler = async (msg: ISdStargateStatusCommandDto): Promise<ISdStargateStatusReplyDto> => {
     console.info(
         "\n",
         chalk.magenta(chalk.bold(`Received command message '${identifier}' from Stargate:\n`)),
@@ -28,13 +30,14 @@ const handler = async (msg: ISdStargateGetSupportedDataCommandDto): Promise<ISdS
 
     // send dummy reply using some of the request data
     return {
-        parameterTypes: ['sBrep', 'sMesh']
+        firstActivity,
+        latestActivity: Math.floor(Date.now() / 1000)
     }
 }
 
 /** Instantiate a new command object and register all handlers. */
-export function setupGetSupportedDataCommandHandlers (sdk: ISdStargateSdk): void {
-    command = new SdStargateGetSupportedDataCommand(sdk)
+export function setupStatusCommandHandlers (sdk: ISdStargateSdk): void {
+    command = new SdStargateStatusCommand(sdk)
 
     command.registerHandler(handler)
 }
@@ -56,7 +59,7 @@ function askCommand (clients: ISdStargateClientModel[]) {
     return inquirer.prompt?.(questions)
 }
 
-export async function getSupportedDataCommand (sdk: ISdStargateSdk): Promise<void> {
+export async function statusCommand (sdk: ISdStargateSdk): Promise<void> {
     if (!command) throw new Error("Commands have not been registered.")
 
     try {
@@ -68,7 +71,7 @@ export async function getSupportedDataCommand (sdk: ISdStargateSdk): Promise<voi
 
         const { clientIds } = await askCommand(clients)
         
-        const dto: ISdStargateGetSupportedDataCommandDto = {
+        const dto: ISdStargateStatusCommandDto = {
         }
 
         const selectedClients = clients.filter(c => (<string[]>clientIds).includes(c.id))
