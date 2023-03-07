@@ -42,9 +42,9 @@ export class SdStargateGetDataCommand extends SdBaseCommand implements ISdStarga
     async send (
         data: ISdStargateGetDataCommandDto,
         clients: ISdStargateClientModel[],
-        timeout?: number,
+        timeout: number = 60000,
     ): Promise<ISdStargateGetDataReplyDto[]> {
-        return await this.sendCommand(data, clients, this.identifier, "BATCH", timeout ?? 60000)
+        return await this.sendCommand(data, clients, this.identifier, "BATCH", timeout)
     }
 
     registerHandler (
