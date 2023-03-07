@@ -1,7 +1,9 @@
 import { ISdCommandRegister } from "./commands/ISdCommandRegister"
+import { ISdStargateBakeDataCommand } from "./commands/ISdStargateBakeDataCommand"
 import { ISdStargateGetDataCommand } from "./commands/ISdStargateGetDataCommand"
 import { ISdStargateStatusCommand } from "./commands/ISdStargateStatusCommand"
 import { ISdStargateGetSupportedDataCommand } from "./commands/ISdStargateGetSupportedDataCommand"
+import { SdStargateBakeDataCommand } from "./commands/SdStargateBakeDataCommand"
 import { SdStargateGetDataCommand } from "./commands/SdStargateGetDataCommand"
 import { SdStargateStatusCommand } from "./commands/SdStargateStatusCommand"
 import { SdStargateGetSupportedDataCommand } from "./commands/SdStargateGetSupportedDataCommand"
@@ -13,6 +15,11 @@ import {
     ISdStargateDummyNoReplyExampleCommandDto,
     ISdStargateDummyNoReplyExampleReplyDto,
 } from "./dto/commands/dummyCommand"
+import {
+    ISdStargateBakeDataCommandDto,
+    ISdStargateBakeDataReplyDto,
+    ISdStargateBakeDataResultEnum,
+} from "./dto/commands/bakeDataCommand"
 import {
     ISdStargateGetDataCommandDto,
     ISdStargateGetDataReplyDto,
@@ -44,12 +51,16 @@ export {
     ISdStargateDummyBatchReplyExampleReplyDto,
     ISdStargateDummyNoReplyExampleCommandDto,
     ISdStargateDummyNoReplyExampleReplyDto,
+    ISdStargateBakeDataCommandDto,
+    ISdStargateBakeDataReplyDto,
+    ISdStargateBakeDataResultEnum,
     ISdStargateGetDataCommandDto,
     ISdStargateGetDataReplyDto,
     ISdStargateGetDataResultEnum,
     ISdStargateStatusCommand,
     ISdStargateStatusCommandDto,
     ISdStargateStatusReplyDto,
+    ISdStargateBakeDataCommand,
     ISdStargateGetDataCommand,
     ISdStargateGetSupportedDataCommand,
     ISdStargateGetSupportedDataCommandDto,
@@ -60,6 +71,7 @@ export {
     ISdStargateSdkBuilder,
     SdStargateError,
     SdStargateErrorTypes,
+    SdStargateBakeDataCommand,
     SdStargateGetDataCommand,
     SdStargateStatusCommand,
     SdStargateGetSupportedDataCommand,

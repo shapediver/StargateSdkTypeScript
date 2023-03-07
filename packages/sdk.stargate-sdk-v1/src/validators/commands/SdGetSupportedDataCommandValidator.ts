@@ -31,15 +31,15 @@ const schemaReplyDto = {
 
 export abstract class SdGetSupportedDataCommandValidator extends SdBaseValidator {
 
-    private static validateGetSupportedDataCommandDto = ajv.compile(schemaCommandDto)
-    private static validateGetSupportedDataReplyDto = ajv.compile(schemaReplyDto)
+    private static validateCommandDto = ajv.compile(schemaCommandDto)
+    private static validateReplyDto = ajv.compile(schemaReplyDto)
 
     static assertCommandDto (data: unknown): asserts data is ISdStargateGetSupportedDataCommandDto {
-        return this.validate(this.validateGetSupportedDataCommandDto, data)
+        return this.validate(this.validateCommandDto, data)
     }
 
     static assertReplyDto (data: unknown): asserts data is ISdStargateGetSupportedDataReplyDto {
-        return this.validate(this.validateGetSupportedDataReplyDto, data)
+        return this.validate(this.validateReplyDto, data)
     }
 
 }

@@ -1,13 +1,13 @@
 import Ajv from "ajv"
 import {
-    ISdStargateGetDataCommandDto,
-    ISdStargateGetDataReplyDto,
-} from "../../dto/commands/getDataCommand"
+    ISdStargateBakeDataCommandDto,
+    ISdStargateBakeDataReplyDto,
+} from "../../dto/commands/bakeDataCommand"
 import { SdBaseValidator } from "../SdBaseValidator"
 
 const ajv = new Ajv()
 
-/** Schema for {@link ISdStargateGetDataCommandDto} */
+/** Schema for {@link ISdStargateBakeDataCommandDto} */
 const schemaCommandDto = {
     type: 'object',
     properties: {
@@ -19,23 +19,7 @@ const schemaCommandDto = {
             },
             additionalProperties: true,
         },
-        parameter: {
-            type: 'object', 
-            required: ['id'],
-            properties: {
-                id: { type: 'string' },
-            },
-            additionalProperties: true,
-        }
-    },
-    required: ['model', 'parameter'],
-    additionalProperties: true,
-}
-/** Schema for {@link ISdStargateGetDataReplyDto} */
-const schemaReplyDto = {
-    type: 'object',
-    properties: {
-        asset: { 
+        output: {
             type: 'object', 
             required: ['id'],
             properties: {
@@ -51,6 +35,20 @@ const schemaReplyDto = {
             },
             additionalProperties: true,
         },
+        parameters: {
+            type: 'object', 
+            patternProperties: {
+                '.*': { type: 'string' },
+            },
+       }
+    },
+    required: ['model', 'output', 'parameters'],
+    additionalProperties: true,
+}
+/** Schema for {@link ISdStargateBakeDataReplyDto} */
+const schemaReplyDto = {
+    type: 'object',
+    properties: {
         info: {
             type: 'object', 
             required: ['count', 'result'],
@@ -65,16 +63,16 @@ const schemaReplyDto = {
     additionalProperties: true,
 }
 
-export abstract class SdGetDataCommandValidator extends SdBaseValidator {
+export abstract class SdBakeDataCommandValidator extends SdBaseValidator {
 
     private static validateCommandDto = ajv.compile(schemaCommandDto)
     private static validateReplyDto = ajv.compile(schemaReplyDto)
 
-    static assertCommandDto (data: unknown): asserts data is ISdStargateGetDataCommandDto {
+    static assertCommandDto (data: unknown): asserts data is ISdStargateBakeDataCommandDto {
         return this.validate(this.validateCommandDto, data)
     }
 
-    static assertReplyDto (data: unknown): asserts data is ISdStargateGetDataReplyDto {
+    static assertReplyDto (data: unknown): asserts data is ISdStargateBakeDataReplyDto {
         return this.validate(this.validateReplyDto, data)
     }
 
