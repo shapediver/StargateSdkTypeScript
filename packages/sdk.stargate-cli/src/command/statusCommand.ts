@@ -28,7 +28,7 @@ const handler = async (msg: ISdStargateStatusCommandDto): Promise<ISdStargateSta
 
     console.info(chalk.magenta(`[${ nowTime() }] Finished handling command '${identifier}'!`))
 
-    // send dummy reply using some of the request data
+    // send dummy reply (timestamps expected in seconds)
     return {
         firstActivity,
         latestActivity: Math.floor(Date.now() / 1000)
