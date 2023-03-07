@@ -26,6 +26,10 @@ const handler = async (msg: ISdStargateStatusCommandDto): Promise<ISdStargateSta
         "\n",
     )
 
+    const seconds = randomIntFromInterval(1, 2)
+    console.info(chalk.magenta(`Waiting ${ seconds } seconds to simulate variability in network speed...`))
+    await sleep(seconds * 1000)
+
     console.info(chalk.magenta(`[${ nowTime() }] Finished handling command '${identifier}'!`))
 
     // send dummy reply (timestamps expected in seconds)
