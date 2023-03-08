@@ -324,7 +324,7 @@ ERROR:
 
         for c in selected_components:
             # Reuse the current version or ask for the new component version.
-            new_version = (
+            new_version = str(
                 c['version'] if keep_version
                 else ask_for_new_version(c['version'], c['name']))
             res.append({'component': c, 'new_version': new_version})
@@ -612,8 +612,8 @@ def package_version_exists(root: str, c: PublishableComponent, registry: Registr
 
     try:
         # Unfortunately, `npm search` does not work with the GitHub registry. Thus, we are using
-        # `npm view` here.
-        run_process(f"npm view {pkg}", root, show_output=False)
+        # `npm view` here instead.
+        run_process(f"npm view {pkg}", c['component']['location'], show_output=False)
         return True
     except RuntimeError:
         return False
