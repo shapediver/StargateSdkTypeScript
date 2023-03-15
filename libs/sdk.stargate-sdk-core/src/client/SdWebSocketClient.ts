@@ -1,6 +1,6 @@
-import { Data, ErrorEvent, WebSocket } from "isomorphic-ws"
 import { clearTimeout } from "timers"
 import { v4 as uuidv4 } from "uuid"
+import { Data, ErrorEvent, WebSocket } from "ws"
 import {
     ISdErrorResponseDto,
     ISdOkResponseDto,
@@ -103,7 +103,7 @@ export class SdWebSocketClient implements ISdStargateClient {
 
     async connect (url: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            const ws = new WebSocket(`wss://${ url }`)  // NOTE no support for the constructor options argument in browsers!!!
+            const ws = SdWebSocketClient.createWebSocket(`wss://${ url }`)
             ws.onopen = () => {
                 this.init(ws)   // Configure WebSocket events
                 this.updateKeepAlive()  // Start keep alive process
@@ -264,6 +264,20 @@ export class SdWebSocketClient implements ISdStargateClient {
                 this.errHandler(`Failed to send keep alive message: ${ e.message }`)
             }
         }, this.keepAlive.interval)
+    }
+
+    /** Helper function to create a new WebSocket instance on Browser or Node.js. */
+    static createWebSocket (url: string): WebSocket {
+        const ws = (
+            // @ts-ignore
+            global?.WebSocket || global?.MozWebSocket ||
+            // @ts-ignore
+            global?.window?.WebSocket || global?.window?.MozWebSocket ||
+            // Default is assumed to be a Node.js application, thus the 'ws' package is used.
+            require("ws")
+        ) as any
+
+        return new ws(url) // NOTE no support for the constructor options argument in browsers!!!
     }
 
 }
