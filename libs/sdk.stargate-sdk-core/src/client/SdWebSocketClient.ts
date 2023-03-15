@@ -1,4 +1,3 @@
-import { clearTimeout } from "timers"
 import { v4 as uuidv4 } from "uuid"
 import { Data, ErrorEvent, WebSocket } from "ws"
 import {
