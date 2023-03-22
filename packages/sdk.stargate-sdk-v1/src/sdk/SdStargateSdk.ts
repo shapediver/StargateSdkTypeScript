@@ -1,3 +1,4 @@
+import { SdUtils } from "@shapediver/sdk.stargate-sdk-core"
 import { ISdStargateCommander } from "../commander/ISdStargateCommander"
 import { SdWebSocketCommander } from "../commander/SdWebSocketCommander"
 import { ISdBaseCommand } from "../commands/ISdBaseCommand"
@@ -13,6 +14,9 @@ import { SdCommandPayloadValidator } from "../validators/commands/SdCommandPaylo
 import { ISdStargateSdk } from "./ISdStargateSdk"
 
 export class SdStargateSdk implements ISdStargateSdk {
+
+    /** The major version of the Stargate Backend service that is supported by this SDK. */
+    static STARGATE_VERSION = "1"
 
     readonly baseUrl: string
     readonly userMsgHandler: (payload: unknown) => void
@@ -43,15 +47,13 @@ export class SdStargateSdk implements ISdStargateSdk {
 
     /** Instantiates a new Stargate commander and establishes a connection to the Stargate service. */
     async init (): Promise<void> {
-        const url = `${ this.baseUrl }/v1`
-
         // Initialize commander and connect to Stargate
         this.commander = new SdWebSocketCommander(
             this.msgHandler.bind(this),
             this.errHandler.bind(this),
             this.dcnHandler.bind(this),
         )
-        await this.commander.connect(url)
+        await this.commander.connect(this.baseUrl)
     }
 
     /** Wrapper around the user message handler. */
@@ -116,8 +118,21 @@ export class SdStargateSdk implements ISdStargateSdk {
             },
         }
 
-        const res = await this.commander!.send(req)
-        return res as ISdStargateRegisterResponseDto
+        const res = await this.commander!.send(req) as ISdStargateRegisterResponseDto
+
+        // Make sure that the SDK version and the backend version are compatible
+        const version = SdUtils.extractVersion(res.version ?? "", "major")
+        if (!version || version !== SdStargateSdk.STARGATE_VERSION) {
+            await this.commander!.disconnect()
+            throw new SdStargateError(
+                SdStargateErrorTypes.GenericClientError,
+                "Incompatible versions: " +
+                `This SDK requires a ShapeDiver Stargate v${ SdStargateSdk.STARGATE_VERSION } backend system. ` +
+                `However, the URL '${ this.baseUrl }' points to a Stargate ${ (!version) ? "system of unknown version." : `v${ version } system.` }`,
+            )
+        }
+
+        return res
     }
 
     async listBackendClients (): Promise<ISdStargateListClientsResponseDto> {

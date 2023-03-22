@@ -1,4 +1,4 @@
-import { createSdk, ISdStargateSdk } from "@shapediver/sdk.stargate-sdk-v1"
+import { createSdk, ISdStargateRegisterResponseDto, ISdStargateSdk } from "@shapediver/sdk.stargate-sdk-v1"
 import { createWithAwsProfile } from "@shapediver/sdk.token-generator-sdk-v1"
 import chalk from "chalk"
 import inquirer from "inquirer"
@@ -105,8 +105,9 @@ export async function register (
     }
 
     // Register client
+    let info: ISdStargateRegisterResponseDto
     try {
-        await sdk.register(
+        info = await sdk.register(
             authToken,
             name,
             "local",
@@ -119,7 +120,7 @@ export async function register (
         process.exit(1)
     }
 
-    printResults(clientType, userId)
+    printResults(clientType, userId, info.version)
 
     return sdk
 }
@@ -251,6 +252,6 @@ async function fetchAuthToken (aud: string, sub: string): Promise<string> {
     }
 }
 
-function printResults (type: ClientType, uid: string): void {
-    console.log("\n", chalk.green(`Successfully registered ${ chalk.bold(type) } for user ${ chalk.bold(uid) }!`), "\n")
+function printResults (type: ClientType, uid: string, version: string): void {
+    console.log("\n", chalk.green(`Successfully registered ${ chalk.bold(type) } for user ${ chalk.bold(uid) } to Stargate v${ version }!`), "\n")
 }
