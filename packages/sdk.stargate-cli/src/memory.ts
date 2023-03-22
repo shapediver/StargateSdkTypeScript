@@ -5,7 +5,7 @@ import fs from "fs"
 export interface CliMemory {
     userId?: string
 
-    stargateUrl?: string
+    awsProfile?: string
 }
 
 const CLI_MEMORY_PATH: string = "./.memory.json"
@@ -31,7 +31,7 @@ export async function readCliMemory (): Promise<CliMemory> {
         // Update memory singleton
         memory = {}
         if (data.userId) memory.userId = data.userId
-        if (data.stargateUrl) memory.stargateUrl = data.stargateUrl
+        if (data.awsProfile) memory.awsProfile = data.awsProfile
     }
 
     return memory

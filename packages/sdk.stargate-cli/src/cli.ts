@@ -58,6 +58,7 @@ function askCommand () {
                 Command.DISCONNECT_CLIENTS,
                 Command.EXIT,
             ],
+            loop: false
         },
     ]
     return inquirer.prompt?.(command)
