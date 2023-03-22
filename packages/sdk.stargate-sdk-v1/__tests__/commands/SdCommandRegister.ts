@@ -119,3 +119,40 @@ test("command that already has been rejected receives error response; should ign
 
     // Nothing should happen
 })
+
+test("forcefully reject open command, topic not found; should return", async () => {
+    const register = new SdCommandRegister()
+
+    register.rejectCommand("foobar", new SdStargateError(SdStargateErrorTypes.GenericClientError, "baz"))
+
+    // Nothing should happen
+})
+
+test("forcefully reject open command, open command has been partly resolved; should reject", async () => {
+    const register = new SdCommandRegister(),
+        topic = "test",
+        clientData1 = { client: "foo" },
+        errMsg = "intended error"
+
+    const promise = register.registerCommand(topic, [ "foo", "bar" ], 60000)
+
+    // Update reply
+    register.updateCommand(topic, "foo", clientData1)
+
+    // Reject open command
+    register.rejectCommand(topic, new SdStargateError(SdStargateErrorTypes.GenericClientError, errMsg))
+
+    // await SdUtils.sleep(0)  // Required to wait for `.finally` call
+
+    try {
+        await promise
+        expect(true).toBeFalsy()
+    } catch (e) {
+        expect(e instanceof SdStargateError).toBeTruthy()
+        expect((<SdStargateError>e).type).toBe(SdStargateErrorTypes.GenericClientError)
+        expect((<SdStargateError>e).message).toBe(errMsg)
+
+        await SdUtils.sleep(0)  // Required to wait for `.finally` call
+        expect(Object.keys(register.openCommands).length).toBe(0)
+    }
+})

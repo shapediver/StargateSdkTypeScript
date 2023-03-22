@@ -1,3 +1,5 @@
+import { SdStargateError } from "../SdStargateError"
+
 export interface ISdCommandRegister {
 
     /**
@@ -22,5 +24,15 @@ export interface ISdCommandRegister {
      * @throws {@link SdStargateError} when {@link clientId} is not part of the open request.
      */
     updateCommand (topic: string, clientId: string, data: Record<string, any> | string): void
+
+    /**
+     * Closes the open command that has been registered for the given {@link topic} and rejects the
+     * promise with the given {@link reason}. No differentiation is done if the open command is
+     * already partly resolved or not. However, nothing happens when no open command has been found
+     * for this topic.
+     * @param topic The identifier of the command to update.
+     * @param error The error that will be used to reject the open command.
+     */
+    rejectCommand (topic: string, error: SdStargateError): void
 
 }

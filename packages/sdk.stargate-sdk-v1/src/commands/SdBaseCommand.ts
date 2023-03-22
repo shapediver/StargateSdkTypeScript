@@ -7,6 +7,7 @@ import {
 } from "../dto/commands/commandPayload"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
 import { ISdStargateSdk } from "../sdk/ISdStargateSdk"
+import { SdStargateError, SdStargateErrorTypes } from "../SdStargateError"
 import { ISdBaseCommand } from "./ISdBaseCommand"
 import { ISdCommandRegister } from "./ISdCommandRegister"
 
@@ -57,7 +58,7 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
         const payload: Omit<ISdCommandRequestPayload, "sender"> = { command, data }
 
         // Add response object if specified
-        let res
+        let res: Promise<any[]> | undefined
         if (responseType) {
             payload.response = {
                 type: responseType,
@@ -72,10 +73,26 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
             )
         }
 
-        // Send message to Stargate backend
-        await this.sdk.forwardMessage(payload, clients)
+        try {
+            // Send message to Stargate backend
+            await this.sdk.forwardMessage(payload, clients)
 
-        return res || Promise.resolve([])
+            return res || Promise.resolve([])
+        } catch (e) {
+            if (responseType) {
+                // Unregister command again since the clients never received the command request
+                this.register.rejectCommand(
+                    payload.response!.topic,
+                    new SdStargateError(SdStargateErrorTypes.GenericClientError, e.message),
+                )
+
+                // We do not want to propagate uncaught promise errors, so we wait here
+                await res?.catch(() => {
+                })
+            }
+
+            throw (e)
+        }
     }
 
     /**

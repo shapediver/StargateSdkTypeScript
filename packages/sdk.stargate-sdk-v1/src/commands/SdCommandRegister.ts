@@ -87,4 +87,19 @@ export class SdCommandRegister implements ISdCommandRegister {
         else client.reject(new SdStargateError(SdStargateErrorTypes.CommandClientError, result))
     }
 
+    rejectCommand (topic: string, error: SdStargateError): void {
+        const openCommand = this.openCommands[topic]
+
+        // Stop if no open command was found for this topic
+        if (openCommand === undefined) return
+
+        // Rejecting all clients also rejects the "wrapping" promise of the open command.
+        // Notes:
+        //   Actually, we would only need to reject one client to also reject the open command.
+        //   However, we only know that at least one client is still waiting for a response, but not
+        //   which one. Therefore, we just reject all of them (JavaScript ignores resolve/reject
+        //   calls of promises that are already settled).
+        openCommand.forEach(client => client.reject(error))
+    }
+
 }

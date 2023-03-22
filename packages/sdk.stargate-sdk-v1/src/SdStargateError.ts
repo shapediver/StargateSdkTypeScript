@@ -39,7 +39,7 @@ export const SdStargateErrorTypes = {
     /** Not all target clients sent a reply within the time limit. */
     CommandTimeoutError: "CommandTimeoutError",
 
-    /**  */
+    /** The command payload did not pass validation. */
     InvalidCommandPayload: "InvalidCommandPayload",
 }
 export type SdStargateErrorTypes = typeof SdStargateErrorTypes[keyof typeof SdStargateErrorTypes]
