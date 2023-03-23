@@ -1,79 +1,70 @@
-import Ajv from "ajv"
-import {
-    ISdStargateBakeDataCommandDto,
-    ISdStargateBakeDataReplyDto,
-} from "../../dto/commands/bakeDataCommand"
+import { ISdStargateBakeDataCommandDto, ISdStargateBakeDataReplyDto } from "../../dto/commands/bakeDataCommand"
 import { SdBaseValidator } from "../SdBaseValidator"
-
-const ajv = new Ajv()
 
 /** Schema for {@link ISdStargateBakeDataCommandDto} */
 const schemaCommandDto = {
-    type: 'object',
+    type: "object",
     properties: {
-        model: { 
-            type: 'object', 
-            required: ['id'],
+        model: {
+            type: "object",
             properties: {
-                id: { type: 'string' },
+                id: { type: "string" },
             },
+            required: [ "id" ],
             additionalProperties: true,
         },
         output: {
-            type: 'object', 
-            required: ['id'],
+            type: "object",
             properties: {
-                id: { type: 'string' },
-                chunk: { 
-                    type: 'object', 
+                id: { type: "string" },
+                chunk: {
+                    type: "object",
                     properties: {
-                        id: { type: 'string' },
-                        name: { type: 'string' },
+                        id: { type: "string" },
+                        name: { type: "string" },
                     },
                     additionalProperties: true,
-                }
+                },
             },
+            required: [ "id" ],
             additionalProperties: true,
         },
         parameters: {
-            type: 'object', 
+            type: "object",
             patternProperties: {
-                '.*': { type: 'string' },
+                ".*": { type: "string" },
             },
-       }
+        },
     },
-    required: ['model', 'output', 'parameters'],
+    required: [ "model", "output", "parameters" ],
     additionalProperties: true,
 }
 /** Schema for {@link ISdStargateBakeDataReplyDto} */
 const schemaReplyDto = {
-    type: 'object',
+    type: "object",
     properties: {
         info: {
-            type: 'object', 
-            required: ['count', 'result'],
+            type: "object",
             properties: {
-                count: { type: 'number' },
-                result: { enum: ['success', 'cancel', 'nothing', 'failure'] },
+                count: { type: "number" },
+                result: { enum: [ "success", "cancel", "nothing", "failure" ] },
             },
+            required: [ "count", "result" ],
             additionalProperties: true,
-        }
+        },
     },
-    required: ['info'],
+    required: [ "info" ],
     additionalProperties: true,
 }
 
 export abstract class SdBakeDataCommandValidator extends SdBaseValidator {
 
-    private static validateCommandDto = ajv.compile(schemaCommandDto)
-    private static validateReplyDto = ajv.compile(schemaReplyDto)
-
     static assertCommandDto (data: unknown): asserts data is ISdStargateBakeDataCommandDto {
-        return this.validate(this.validateCommandDto, data)
+        return this.assertValid(data, schemaCommandDto)
     }
 
     static assertReplyDto (data: unknown): asserts data is ISdStargateBakeDataReplyDto {
-        return this.validate(this.validateReplyDto, data)
+        return this.assertValid(data, schemaReplyDto)
     }
 
 }

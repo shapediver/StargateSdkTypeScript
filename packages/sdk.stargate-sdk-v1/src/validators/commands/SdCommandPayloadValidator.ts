@@ -1,12 +1,9 @@
-import Ajv from "ajv"
 import {
     ISdCommandErrorReplyPayload,
     ISdCommandOkReplyPayload,
     ISdCommandRequestPayload,
 } from "../../dto/commands/commandPayload"
 import { SdBaseValidator } from "../SdBaseValidator"
-
-const ajv = new Ajv()
 
 /** Schema for {@link ISdCommandRequestPayload} */
 const schemaCommandRequestPayload = {
@@ -83,24 +80,21 @@ const schemaCommandErrorReplyPayload = {
 
 export abstract class SdCommandPayloadValidator extends SdBaseValidator {
 
-    private static validateCommandRequestPayload = ajv.compile(schemaCommandRequestPayload)
-    private static validateCommandOkReplyPayload = ajv.compile(schemaCommandOkReplyPayload)
-    private static validateCommandErrorReplyPayload = ajv.compile(schemaCommandErrorReplyPayload)
 
     static isCommandPayload (data: unknown): data is (ISdCommandRequestPayload | ISdCommandOkReplyPayload | ISdCommandErrorReplyPayload) {
         return this.isCommandRequestPayload(data) || this.isCommandOkReplyPayload(data) || this.isCommandErrorReplyPayload(data)
     }
 
     static isCommandRequestPayload (data: unknown): data is ISdCommandRequestPayload {
-        return this.validateCommandRequestPayload(data)
+        return this.isValid(data, schemaCommandRequestPayload)
     }
 
     static isCommandOkReplyPayload (data: unknown): data is ISdCommandOkReplyPayload {
-        return this.validateCommandOkReplyPayload(data)
+        return this.isValid(data, schemaCommandOkReplyPayload)
     }
 
     static isCommandErrorReplyPayload (data: unknown): data is ISdCommandErrorReplyPayload {
-        return this.validateCommandErrorReplyPayload(data)
+        return this.isValid(data, schemaCommandErrorReplyPayload)
     }
 
 }
