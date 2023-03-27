@@ -20,8 +20,14 @@ const schemaReplyDto = {
                 type: "string",
             },
         },
+        typeHints: {
+            type: "array",
+            items: {
+                type: "string",
+            },
+        },
     },
-    required: [ "parameterTypes" ],
+    required: [ "parameterTypes", "typeHints" ],
     additionalProperties: true,
 }
 

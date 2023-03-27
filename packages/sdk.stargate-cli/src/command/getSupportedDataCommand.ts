@@ -1,8 +1,8 @@
 import {
     ISdStargateClientModel,
+    ISdStargateGetSupportedDataCommand,
     ISdStargateGetSupportedDataCommandDto,
     ISdStargateGetSupportedDataReplyDto,
-    ISdStargateGetSupportedDataCommand,
     ISdStargateSdk,
     SdStargateGetSupportedDataCommand,
 } from "@shapediver/sdk.stargate-sdk-v1"
@@ -13,13 +13,13 @@ import { nowTime, prettifyMsg, randomIntFromInterval, sleep } from "../utils"
 // Global command instance
 let command: ISdStargateGetSupportedDataCommand | undefined
 
-const identifier = "GET_SUPPORTED_DATA";
+const identifier = "GET_SUPPORTED_DATA"
 
 // User-handler for 'batch-reply' command
 const handler = async (msg: ISdStargateGetSupportedDataCommandDto): Promise<ISdStargateGetSupportedDataReplyDto> => {
     console.info(
         "\n",
-        chalk.magenta(chalk.bold(`Received command message '${identifier}' from Stargate:\n`)),
+        chalk.magenta(chalk.bold(`Received command message '${ identifier }' from Stargate:\n`)),
         chalk.magenta(prettifyMsg(msg)),
         "\n",
     )
@@ -28,11 +28,12 @@ const handler = async (msg: ISdStargateGetSupportedDataCommandDto): Promise<ISdS
     console.info(chalk.magenta(`Waiting ${ seconds } seconds to simulate variability in network speed...`))
     await sleep(seconds * 1000)
 
-    console.info(chalk.magenta(`[${ nowTime() }] Finished handling command '${identifier}'!`))
+    console.info(chalk.magenta(`[${ nowTime() }] Finished handling command '${ identifier }'!`))
 
-    // send dummy reply using some of the request data
+    // send dummy reply using parts of the request data
     return {
-        parameterTypes: ['sBrep', 'sMesh']
+        parameterTypes: [ "sBrep", "sMesh" ],
+        typeHints: [ "rhino.brep", "rhino.mesh" ],
     }
 }
 
@@ -71,16 +72,15 @@ export async function getSupportedDataCommand (sdk: ISdStargateSdk): Promise<voi
         ]
 
         const { clientIds } = await askCommand(clients)
-        
-        const dto: ISdStargateGetSupportedDataCommandDto = {
-        }
+
+        const dto: ISdStargateGetSupportedDataCommandDto = {}
 
         const selectedClients = clients.filter(c => (<string[]>clientIds).includes(c.id))
-        const res = await command.send(dto, selectedClients);
+        const res = await command.send(dto, selectedClients)
         printResults(identifier, selectedClients.length, res)
-       
+
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold(`Could not send command ${identifier}.`) }\n${ e.type }: ${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold(`Could not send command ${ identifier }.`) }\n${ e.type }: ${ e.message }`))
     }
 }
 
