@@ -15,5 +15,7 @@ export interface ISdStargateGetSupportedDataCommandDto {
  */
 export interface ISdStargateGetSupportedDataReplyDto {
     /** The parameter types supported. */
-    parameterTypes: Array<string>
+    parameterTypes: Array<string>;
+    /** List of supported sdTF type hints. */
+    typeHints: Array<string>
 }
