@@ -1,8 +1,5 @@
 import { ISdCommandOkReplyPayload, ISdCommandPayload, ISdCommandRequestPayload } from "../dto/commands/commandPayload"
-import {
-    ISdStargateGetDataCommandDto,
-    ISdStargateGetDataReplyDto
-} from "../dto/commands/getDataCommand"
+import { ISdStargateGetDataCommandDto, ISdStargateGetDataReplyDto } from "../dto/commands/getDataCommand"
 import { ISdStargateClientModel } from "../models/ISdStargateClientModel"
 import { ISdStargateSdk } from "../sdk/ISdStargateSdk"
 import { SdGetDataCommandValidator } from "../validators/commands/SdGetDataCommandValidator"
@@ -13,8 +10,8 @@ export class SdStargateGetDataCommand extends SdBaseCommand implements ISdStarga
 
     private handler: undefined | ((msg: ISdStargateGetDataCommandDto) => Promise<ISdStargateGetDataReplyDto>)
 
-    private identifier: string = 'GET_DATA'
-   
+    protected identifier: string = "GET_DATA"
+
     constructor (sdk: ISdStargateSdk) {
         super(sdk)
     }
@@ -25,7 +22,7 @@ export class SdStargateGetDataCommand extends SdBaseCommand implements ISdStarga
 
     async processCommandMessage (payload: ISdCommandRequestPayload) {
         let data = payload.data
-      
+
         SdGetDataCommandValidator.assertCommandDto(data)
         const handler = (this.handler) ? this.handler?.bind(this) : undefined
         await this.invokeHandler(payload, data, handler)
@@ -34,7 +31,7 @@ export class SdStargateGetDataCommand extends SdBaseCommand implements ISdStarga
     processOkReplyMessage (payload: ISdCommandOkReplyPayload) {
         // Validate reply-message
         SdGetDataCommandValidator.assertReplyDto(payload.data)
-       
+
         // Update the open command with the clients reply-message
         this.register.updateCommand(payload.response.topic, payload.sender, payload.data)
     }

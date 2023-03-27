@@ -17,6 +17,9 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
 
     protected register: ISdCommandRegister
 
+    /** The global identifier of this command type. */
+    protected abstract identifier: string
+
     protected constructor (protected sdk: ISdStargateSdk) {
         sdk.addCommand(this)
         this.register = sdk.commandRegister
@@ -27,6 +30,10 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
     abstract processCommandMessage (payload: ISdCommandRequestPayload): Promise<void>
 
     abstract processOkReplyMessage (payload: ISdCommandOkReplyPayload): void
+
+    getIdentifier (): string {
+        return this.identifier
+    }
 
     processErrorReplyMessage (payload: ISdCommandErrorReplyPayload): void {
         // Enrich the error message by the ID of the client that sent the reply

@@ -34,6 +34,10 @@ class DummyCommand implements ISdBaseCommand {
 
     processErrorReplyMessage (payload: ISdCommandErrorReplyPayload): void {
     }
+
+    getIdentifier (): string {
+        return "DUMMY"
+    }
 }
 
 describe("addCommand", function () {

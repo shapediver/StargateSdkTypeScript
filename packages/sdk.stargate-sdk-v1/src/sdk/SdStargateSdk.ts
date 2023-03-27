@@ -84,7 +84,7 @@ export class SdStargateSdk implements ISdStargateSdk {
     }
 
     addCommand (command: ISdBaseCommand): void {
-        if (this.commands.find(c => c.constructor.name === command.constructor.name)) {
+        if (this.commands.find(c => c.getIdentifier() === command.getIdentifier())) {
             throw new SdStargateError(
                 SdStargateErrorTypes.GenericClientError,
                 `Command implementation of type ${ command.constructor.name } has already been added.`,

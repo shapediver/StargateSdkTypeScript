@@ -27,6 +27,8 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
     private userAckReplyExampleHandler: undefined | ((msg: ISdStargateDummyAckReplyExampleCommandDto) => Promise<ISdStargateDummyAckReplyExampleReplyDto>)
     private userBatchReplyExampleHandler: undefined | ((msg: ISdStargateDummyBatchReplyExampleCommandDto) => Promise<ISdStargateDummyBatchReplyExampleReplyDto>)
 
+    protected identifier: string = "DUMMY"
+
     constructor (sdk: ISdStargateSdk) {
         super(sdk)
     }

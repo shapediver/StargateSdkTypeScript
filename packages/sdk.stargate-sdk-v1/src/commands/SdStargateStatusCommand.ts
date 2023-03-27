@@ -10,8 +10,8 @@ export class SdStargateStatusCommand extends SdBaseCommand implements ISdStargat
 
     private handler: undefined | ((msg: ISdStargateStatusCommandDto) => Promise<ISdStargateStatusReplyDto>)
 
-    private identifier: string = 'STATUS'
-   
+    protected identifier: string = "STATUS"
+
     constructor (sdk: ISdStargateSdk) {
         super(sdk)
     }
@@ -22,7 +22,7 @@ export class SdStargateStatusCommand extends SdBaseCommand implements ISdStargat
 
     async processCommandMessage (payload: ISdCommandRequestPayload) {
         let data = payload.data
-      
+
         SdStatusCommandValidator.assertCommandDto(data)
         const handler = (this.handler) ? this.handler?.bind(this) : undefined
         await this.invokeHandler(payload, data, handler)
@@ -31,7 +31,7 @@ export class SdStargateStatusCommand extends SdBaseCommand implements ISdStargat
     processOkReplyMessage (payload: ISdCommandOkReplyPayload) {
         // Validate reply-message
         SdStatusCommandValidator.assertReplyDto(payload.data)
-       
+
         // Update the open command with the clients reply-message
         this.register.updateCommand(payload.response.topic, payload.sender, payload.data)
     }

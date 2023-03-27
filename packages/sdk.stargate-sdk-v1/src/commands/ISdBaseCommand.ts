@@ -7,6 +7,9 @@ import {
 
 export interface ISdBaseCommand {
 
+    /** Returns the global identifier of the command type. */
+    getIdentifier (): string
+
     /**
      * Test whether the given command payload is supported (can be handled) by this instance.
      * This checks {@link payload.command} but does NOT validate {@link payload.data}.

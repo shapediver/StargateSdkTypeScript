@@ -10,6 +10,8 @@ import { SdStargateSdk } from "../../src/sdk/SdStargateSdk"
 /** A dummy class that enables us to test the abstract class {@link SdBaseCommand}. */
 class TestableSdBaseCommand extends SdBaseCommand {
 
+    protected identifier: string = "TESTABLE"
+
     constructor () {
         // @formatter:off
         const sdk = new SdStargateSdk(
