@@ -33,6 +33,11 @@ import {
     ISdStargateGetSupportedDataCommandDto,
     ISdStargateGetSupportedDataReplyDto,
 } from "./dto/commands/getSupportedDataCommand"
+import {
+    ISdStargatePrepareModelCommandDto,
+    ISdStargatePrepareModelReplyDto,
+    ISdStargatePrepareModelResultEnum
+} from "./dto/commands/prepareModelCommand"
 import { ISdStargateListClientsResponseDto } from "./dto/listClients"
 import { ISdStargateRegisterResponseDto } from "./dto/register"
 import { ISdStargateClientModel } from "./models/ISdStargateClientModel"
@@ -65,6 +70,9 @@ export {
     ISdStargateGetSupportedDataCommand,
     ISdStargateGetSupportedDataCommandDto,
     ISdStargateGetSupportedDataReplyDto,
+    ISdStargatePrepareModelCommandDto,
+    ISdStargatePrepareModelReplyDto,
+    ISdStargatePrepareModelResultEnum,
     ISdStargateListClientsResponseDto,
     ISdStargateRegisterResponseDto,
     ISdStargateSdk,
