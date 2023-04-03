@@ -1,48 +1,45 @@
 import {
     ISdStargateClientModel,
+    ISdStargateGetDataCommand,
     ISdStargateGetDataCommandDto,
     ISdStargateGetDataReplyDto,
-    ISdStargateGetDataCommand,
     ISdStargateGetDataResultEnum,
     ISdStargateSdk,
     SdStargateGetDataCommand,
 } from "@shapediver/sdk.stargate-sdk-v1"
 import chalk from "chalk"
 import inquirer from "inquirer"
-import { nowTime, prettifyMsg, randomIntFromInterval, sleep } from "../utils"
+import { nowTime, prettifyMsg, waitToSimulate } from "../utils"
 
 // Global command instance
 let command: ISdStargateGetDataCommand | undefined
 
-const identifier = "GET_DATA";
+const identifier = "GET_DATA"
 
 // User-handler for 'batch-reply' command
 const handler = async (msg: ISdStargateGetDataCommandDto): Promise<ISdStargateGetDataReplyDto> => {
     console.info(
         "\n",
-        chalk.magenta(chalk.bold(`Received command message '${identifier}' from Stargate:\n`)),
+        chalk.magenta(chalk.bold(`Received command message '${ identifier }' from Stargate:\n`)),
         chalk.magenta(prettifyMsg(msg)),
         "\n",
     )
 
-    const seconds = randomIntFromInterval(5, 10)
-    console.info(chalk.magenta(`Waiting ${ seconds } seconds to simulate user input...`))
-    await sleep(seconds * 1000)
-
-    console.info(chalk.magenta(`[${ nowTime() }] Finished handling command '${identifier}'!`))
+    await waitToSimulate(5, 10, "user input")
+    console.info(chalk.magenta(`\n[${ nowTime() }] Finished handling command '${ identifier }'!`))
 
     // send dummy reply using some of the request data
     return {
         asset: {
             id: msg.model.id,
             chunk: {
-                id: msg.parameter.id
-            }
+                id: msg.parameter.id,
+            },
         },
         info: {
             count: 1,
-            result: ISdStargateGetDataResultEnum.SUCCESS
-        }
+            result: ISdStargateGetDataResultEnum.SUCCESS,
+        },
     }
 }
 
@@ -91,18 +88,18 @@ export async function getDataCommand (sdk: ISdStargateSdk): Promise<void> {
         ]
 
         const { modelId, parameterId, clientIds } = await askCommand(clients)
-        
+
         const dto: ISdStargateGetDataCommandDto = {
-            model: {id: modelId},
-            parameter: {id: parameterId}
+            model: { id: modelId },
+            parameter: { id: parameterId },
         }
 
         const selectedClients = clients.filter(c => (<string[]>clientIds).includes(c.id))
-        const res = await command.send(dto, selectedClients);
+        const res = await command.send(dto, selectedClients)
         printResults(identifier, selectedClients.length, res)
-       
+
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold(`Could not send command ${identifier}.`) }\n${ e.type }: ${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold(`Could not send command ${ identifier }.`) }\n${ e.type }: ${ e.message }`))
     }
 }
 

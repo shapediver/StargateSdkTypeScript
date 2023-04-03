@@ -1,42 +1,39 @@
 import {
-    ISdStargateClientModel,
+    ISdStargateBakeDataCommand,
     ISdStargateBakeDataCommandDto,
     ISdStargateBakeDataReplyDto,
-    ISdStargateBakeDataCommand,
     ISdStargateBakeDataResultEnum,
+    ISdStargateClientModel,
     ISdStargateSdk,
     SdStargateBakeDataCommand,
 } from "@shapediver/sdk.stargate-sdk-v1"
 import chalk from "chalk"
 import inquirer from "inquirer"
-import { nowTime, prettifyMsg, randomIntFromInterval, sleep } from "../utils"
+import { nowTime, prettifyMsg, waitToSimulate } from "../utils"
 
 // Global command instance
 let command: ISdStargateBakeDataCommand | undefined
 
-const identifier = "BAKE_DATA";
+const identifier = "BAKE_DATA"
 
 // User-handler for 'batch-reply' command
 const handler = async (msg: ISdStargateBakeDataCommandDto): Promise<ISdStargateBakeDataReplyDto> => {
     console.info(
         "\n",
-        chalk.magenta(chalk.bold(`Received command message '${identifier}' from Stargate:\n`)),
+        chalk.magenta(chalk.bold(`Received command message '${ identifier }' from Stargate:\n`)),
         chalk.magenta(prettifyMsg(msg)),
         "\n",
     )
 
-    const seconds = randomIntFromInterval(5, 10)
-    console.info(chalk.magenta(`Waiting ${ seconds } seconds to simulate user input...`))
-    await sleep(seconds * 1000)
-
-    console.info(chalk.magenta(`[${ nowTime() }] Finished handling command '${identifier}'!`))
+    await waitToSimulate(5, 10, "user input")
+    console.info(chalk.magenta(`\n[${ nowTime() }] Finished handling command '${ identifier }'!`))
 
     // send dummy reply using some of the request data
     return {
         info: {
             count: 1,
-            result: ISdStargateBakeDataResultEnum.SUCCESS
-        }
+            result: ISdStargateBakeDataResultEnum.SUCCESS,
+        },
     }
 }
 
@@ -90,19 +87,19 @@ export async function bakeDataCommand (sdk: ISdStargateSdk): Promise<void> {
         ]
 
         const { modelId, outputId, chunkId, clientIds } = await askCommand(clients)
-        
+
         const dto: ISdStargateBakeDataCommandDto = {
             model: { id: modelId },
             parameters: { PARAM_ID: "PARAM_VALUE" },
-            output: { id: outputId, chunk: { id: chunkId } }
+            output: { id: outputId, chunk: { id: chunkId } },
         }
 
         const selectedClients = clients.filter(c => (<string[]>clientIds).includes(c.id))
-        const res = await command.send(dto, selectedClients);
+        const res = await command.send(dto, selectedClients)
         printResults(identifier, selectedClients.length, res)
-       
+
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold(`Could not send command ${identifier}.`) }\n${ e.type }: ${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold(`Could not send command ${ identifier }.`) }\n${ e.type }: ${ e.message }`))
     }
 }
 

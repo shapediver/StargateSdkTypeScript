@@ -8,7 +8,7 @@ import {
 } from "@shapediver/sdk.stargate-sdk-v1"
 import chalk from "chalk"
 import inquirer from "inquirer"
-import { nowTime, prettifyMsg, randomIntFromInterval, sleep } from "../utils"
+import { nowTime, prettifyMsg, waitToSimulate } from "../utils"
 
 // Global command instance
 let command: ISdStargateGetSupportedDataCommand | undefined
@@ -24,11 +24,8 @@ const handler = async (msg: ISdStargateGetSupportedDataCommandDto): Promise<ISdS
         "\n",
     )
 
-    const seconds = randomIntFromInterval(0.5, 1)
-    console.info(chalk.magenta(`Waiting ${ seconds } seconds to simulate variability in network speed...`))
-    await sleep(seconds * 1000)
-
-    console.info(chalk.magenta(`[${ nowTime() }] Finished handling command '${ identifier }'!`))
+    await waitToSimulate(0.5, 1, "variability in network speed")
+    console.info(chalk.magenta(`\n[${ nowTime() }] Finished handling command '${ identifier }'!`))
 
     // send dummy reply using parts of the request data
     return {

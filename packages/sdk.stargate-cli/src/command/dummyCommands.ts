@@ -8,15 +8,11 @@ import {
     ISdStargateDummyNoReplyExampleReplyDto,
     ISdStargateSdk,
 } from "@shapediver/sdk.stargate-sdk-v1"
-import {
-    ISdStargateDummyCommand,
-} from "@shapediver/sdk.stargate-sdk-v1/dist/commands/ISdStargateDummyCommand"
-import {
-    SdStargateDummyCommand,
-} from "@shapediver/sdk.stargate-sdk-v1/dist/commands/SdStargateDummyCommand"
+import { ISdStargateDummyCommand } from "@shapediver/sdk.stargate-sdk-v1/dist/commands/ISdStargateDummyCommand"
+import { SdStargateDummyCommand } from "@shapediver/sdk.stargate-sdk-v1/dist/commands/SdStargateDummyCommand"
 import chalk from "chalk"
 import inquirer from "inquirer"
-import { assertUnreachable, nowTime, prettifyMsg, randomIntFromInterval, sleep } from "../utils"
+import { assertUnreachable, nowTime, prettifyMsg, waitToSimulate } from "../utils"
 
 // Global dummy command instance
 let dummyCommand: ISdStargateDummyCommand | undefined
@@ -58,11 +54,8 @@ const batchReplyExampleHandler = async (msg: ISdStargateDummyBatchReplyExampleCo
         "\n",
     )
 
-    const seconds = randomIntFromInterval(5, 10)
-    console.info(chalk.magenta(`Waiting ${ seconds } seconds to simulate user input...`))
-    await sleep(seconds * 1000)
-
-    console.info(chalk.magenta(`[${ nowTime() }] Finished handling command 'BATCH-Reply'!`))
+    await waitToSimulate(5, 10, "user input")
+    console.info(chalk.magenta(`\n[${ nowTime() }] Finished handling command 'BATCH-Reply'!`))
 
     return {
         mesh: "Some mesh as string",

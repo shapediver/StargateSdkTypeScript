@@ -9,7 +9,7 @@ import {
 } from "@shapediver/sdk.stargate-sdk-v1"
 import chalk from "chalk"
 import inquirer from "inquirer"
-import { nowTime, prettifyMsg, randomIntFromInterval, sleep } from "../utils"
+import { nowTime, prettifyMsg, waitToSimulate } from "../utils"
 
 // Global command instance
 let command: ISdStargatePrepareModelCommand | undefined
@@ -25,11 +25,8 @@ const handler = async (msg: ISdStargatePrepareModelCommandDto): Promise<ISdStarg
         "\n",
     )
 
-    const seconds = randomIntFromInterval(3, 6)
-    console.info(chalk.magenta(`Waiting ${ seconds } seconds to simulate requesting a session, etc. ...`))
-    await sleep(seconds * 1000)
-
-    console.info(chalk.magenta(`[${ nowTime() }] Finished handling command '${ identifier }'!`))
+    await waitToSimulate(3, 6, "requesting a session, etc.")
+    console.info(chalk.magenta(`\n[${ nowTime() }] Finished handling command '${ identifier }'!`))
 
     // send dummy reply
     return {

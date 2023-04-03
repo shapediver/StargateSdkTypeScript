@@ -29,17 +29,17 @@ const init = () => {
 }
 
 enum Command {
+    BAKE_DATA_COMMAND = "Bake data for model and output",
     DISCONNECT_CLIENTS = "Deregister and disconnect selected clients from Stargate (backend only!)",
     DUMMY_COMMANDS = "Send a dummy command",
     EXIT = "Disconnect from Stargate and close CLI",
     FORWARD_MESSAGE = "Forward a custom message to selected clients from Stargate",
-    LIST_BACKEND_CLIENTS = "List all registered backend clients",
-    LIST_FRONTEND_CLIENTS = "List all registered frontend clients",
-    BAKE_DATA_COMMAND = "Bake data for model and output",
     GET_DATA_COMMAND = "Get data for model and parameter",
     GET_SUPPORTED_DATA_COMMAND = "Get supported parameter types",
-    STATUS_COMMAND = "Get status of client",
+    LIST_BACKEND_CLIENTS = "List all registered backend clients",
+    LIST_FRONTEND_CLIENTS = "List all registered frontend clients",
     PREPARE_MODEL = "Prepare client for model",
+    STATUS_COMMAND = "Get status of client",
 }
 
 function askCommand () {
@@ -49,7 +49,6 @@ function askCommand () {
             name: "command",
             message: "What do you wanna do next?",
             choices: [
-                Command.DUMMY_COMMANDS,
                 Command.LIST_BACKEND_CLIENTS,
                 Command.LIST_FRONTEND_CLIENTS,
                 Command.PREPARE_MODEL,
@@ -57,6 +56,7 @@ function askCommand () {
                 Command.GET_DATA_COMMAND,
                 Command.BAKE_DATA_COMMAND,
                 Command.STATUS_COMMAND,
+                Command.DUMMY_COMMANDS,
                 Command.FORWARD_MESSAGE,
                 Command.DISCONNECT_CLIENTS,
                 Command.EXIT,
@@ -97,17 +97,20 @@ function dcnHandler (msg: string): void {
     let sdk = await register(msgHandle, errHandler, dcnHandler)
 
     // Register user-handlers for all commands
-    setupDummyCommandHandlers(sdk)
     setupBakeDataCommandHandlers(sdk)
+    setupDummyCommandHandlers(sdk)
     setupGetDataCommandHandlers(sdk)
     setupGetSupportedDataCommandHandlers(sdk)
-    setupStatusCommandHandlers(sdk)
     setupPrepareModelCommandHandlers(sdk)
+    setupStatusCommandHandlers(sdk)
 
     while (true) {
         const { command } = await askCommand()
         const cmd: Command = command
         switch (cmd) {
+            case Command.BAKE_DATA_COMMAND:
+                await bakeDataCommand(sdk)
+                break
             case Command.DISCONNECT_CLIENTS:
                 await disconnectClients(sdk)
                 break
@@ -121,26 +124,23 @@ function dcnHandler (msg: string): void {
             case Command.FORWARD_MESSAGE:
                 await forwardMessage(sdk)
                 break
-            case Command.LIST_BACKEND_CLIENTS:
-                await listBackendClients(sdk)
-                break
-            case Command.LIST_FRONTEND_CLIENTS:
-                await listFrontendClients(sdk)
-                break
-            case Command.BAKE_DATA_COMMAND:
-                await bakeDataCommand(sdk)
-                break
             case Command.GET_DATA_COMMAND:
                 await getDataCommand(sdk)
                 break
             case Command.GET_SUPPORTED_DATA_COMMAND:
                 await getSupportedDataCommand(sdk)
                 break
-            case Command.STATUS_COMMAND:
-                await statusCommand(sdk)
+            case Command.LIST_BACKEND_CLIENTS:
+                await listBackendClients(sdk)
+                break
+            case Command.LIST_FRONTEND_CLIENTS:
+                await listFrontendClients(sdk)
                 break
             case Command.PREPARE_MODEL:
                 await prepareModelCommand(sdk)
+                break
+            case Command.STATUS_COMMAND:
+                await statusCommand(sdk)
                 break
             default:
                 assertUnreachable(cmd)

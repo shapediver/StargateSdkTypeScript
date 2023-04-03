@@ -1,19 +1,19 @@
 import {
     ISdStargateClientModel,
+    ISdStargateSdk,
+    ISdStargateStatusCommand,
     ISdStargateStatusCommandDto,
     ISdStargateStatusReplyDto,
-    ISdStargateStatusCommand,
-    ISdStargateSdk,
     SdStargateStatusCommand,
 } from "@shapediver/sdk.stargate-sdk-v1"
 import chalk from "chalk"
 import inquirer from "inquirer"
-import { nowTime, prettifyMsg, randomIntFromInterval, sleep } from "../utils"
+import { nowTime, prettifyMsg, waitToSimulate } from "../utils"
 
 // Global command instance
 let command: ISdStargateStatusCommand | undefined
 
-const identifier = "STATUS";
+const identifier = "STATUS"
 
 const firstActivity = Math.floor(Date.now() / 1000)
 
@@ -21,21 +21,18 @@ const firstActivity = Math.floor(Date.now() / 1000)
 const handler = async (msg: ISdStargateStatusCommandDto): Promise<ISdStargateStatusReplyDto> => {
     console.info(
         "\n",
-        chalk.magenta(chalk.bold(`Received command message '${identifier}' from Stargate:\n`)),
+        chalk.magenta(chalk.bold(`Received command message '${ identifier }' from Stargate:\n`)),
         chalk.magenta(prettifyMsg(msg)),
         "\n",
     )
 
-    const seconds = randomIntFromInterval(1, 2)
-    console.info(chalk.magenta(`Waiting ${ seconds } seconds to simulate variability in network speed...`))
-    await sleep(seconds * 1000)
-
-    console.info(chalk.magenta(`[${ nowTime() }] Finished handling command '${identifier}'!`))
+    await waitToSimulate(1, 2, "variability in network speed")
+    console.info(chalk.magenta(`\n[${ nowTime() }] Finished handling command '${ identifier }'!`))
 
     // send dummy reply (timestamps expected in seconds)
     return {
         firstActivity,
-        latestActivity: Math.floor(Date.now() / 1000)
+        latestActivity: Math.floor(Date.now() / 1000),
     }
 }
 
@@ -74,16 +71,15 @@ export async function statusCommand (sdk: ISdStargateSdk): Promise<void> {
         ]
 
         const { clientIds } = await askCommand(clients)
-        
-        const dto: ISdStargateStatusCommandDto = {
-        }
+
+        const dto: ISdStargateStatusCommandDto = {}
 
         const selectedClients = clients.filter(c => (<string[]>clientIds).includes(c.id))
-        const res = await command.send(dto, selectedClients);
+        const res = await command.send(dto, selectedClients)
         printResults(identifier, selectedClients.length, res)
-       
+
     } catch (e) {
-        console.error(chalk.red(`${ chalk.bold(`Could not send command ${identifier}.`) }\n${ e.type }: ${ e.message }`))
+        console.error(chalk.red(`${ chalk.bold(`Could not send command ${ identifier }.`) }\n${ e.type }: ${ e.message }`))
     }
 }
 
