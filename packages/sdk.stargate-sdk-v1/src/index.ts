@@ -1,10 +1,12 @@
 import { ISdCommandRegister } from "./commands/ISdCommandRegister"
 import { ISdStargateBakeDataCommand } from "./commands/ISdStargateBakeDataCommand"
 import { ISdStargateGetDataCommand } from "./commands/ISdStargateGetDataCommand"
+import { ISdStargatePrepareModelCommand } from "./commands/ISdStargatePrepareModelCommand"
 import { ISdStargateStatusCommand } from "./commands/ISdStargateStatusCommand"
 import { ISdStargateGetSupportedDataCommand } from "./commands/ISdStargateGetSupportedDataCommand"
 import { SdStargateBakeDataCommand } from "./commands/SdStargateBakeDataCommand"
 import { SdStargateGetDataCommand } from "./commands/SdStargateGetDataCommand"
+import { SdStargatePrepareModelCommand } from "./commands/SdStargatePrepareModelCommand"
 import { SdStargateStatusCommand } from "./commands/SdStargateStatusCommand"
 import { SdStargateGetSupportedDataCommand } from "./commands/SdStargateGetSupportedDataCommand"
 import {
@@ -33,6 +35,11 @@ import {
     ISdStargateGetSupportedDataCommandDto,
     ISdStargateGetSupportedDataReplyDto,
 } from "./dto/commands/getSupportedDataCommand"
+import {
+    ISdStargatePrepareModelCommandDto,
+    ISdStargatePrepareModelReplyDto,
+    ISdStargatePrepareModelResultEnum
+} from "./dto/commands/prepareModelCommand"
 import { ISdStargateListClientsResponseDto } from "./dto/listClients"
 import { ISdStargateRegisterResponseDto } from "./dto/register"
 import { ISdStargateClientModel } from "./models/ISdStargateClientModel"
@@ -62,9 +69,13 @@ export {
     ISdStargateStatusReplyDto,
     ISdStargateBakeDataCommand,
     ISdStargateGetDataCommand,
+    ISdStargatePrepareModelCommand,
     ISdStargateGetSupportedDataCommand,
     ISdStargateGetSupportedDataCommandDto,
     ISdStargateGetSupportedDataReplyDto,
+    ISdStargatePrepareModelCommandDto,
+    ISdStargatePrepareModelReplyDto,
+    ISdStargatePrepareModelResultEnum,
     ISdStargateListClientsResponseDto,
     ISdStargateRegisterResponseDto,
     ISdStargateSdk,
@@ -73,6 +84,7 @@ export {
     SdStargateErrorTypes,
     SdStargateBakeDataCommand,
     SdStargateGetDataCommand,
+    SdStargatePrepareModelCommand,
     SdStargateStatusCommand,
     SdStargateGetSupportedDataCommand,
 }
