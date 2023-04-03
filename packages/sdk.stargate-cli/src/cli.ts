@@ -9,6 +9,7 @@ import { forwardMessage } from "./command/forward"
 import { getDataCommand, setupGetDataCommandHandlers } from "./command/getDataCommand"
 import { getSupportedDataCommand, setupGetSupportedDataCommandHandlers } from "./command/getSupportedDataCommand"
 import { listBackendClients, listFrontendClients } from "./command/listClients"
+import { prepareModelCommand, setupPrepareModelCommandHandlers } from "./command/prepareModelCommand"
 import { register } from "./command/register"
 import { setupStatusCommandHandlers, statusCommand } from "./command/statusCommand"
 import { assertUnreachable, prettifyMsg } from "./utils"
@@ -38,6 +39,7 @@ enum Command {
     GET_DATA_COMMAND = "Get data for model and parameter",
     GET_SUPPORTED_DATA_COMMAND = "Get supported parameter types",
     STATUS_COMMAND = "Get status of client",
+    PREPARE_MODEL = "Prepare client for model",
 }
 
 function askCommand () {
@@ -50,6 +52,7 @@ function askCommand () {
                 Command.DUMMY_COMMANDS,
                 Command.LIST_BACKEND_CLIENTS,
                 Command.LIST_FRONTEND_CLIENTS,
+                Command.PREPARE_MODEL,
                 Command.GET_SUPPORTED_DATA_COMMAND,
                 Command.GET_DATA_COMMAND,
                 Command.BAKE_DATA_COMMAND,
@@ -58,7 +61,7 @@ function askCommand () {
                 Command.DISCONNECT_CLIENTS,
                 Command.EXIT,
             ],
-            loop: false
+            loop: false,
         },
     ]
     return inquirer.prompt?.(command)
@@ -99,6 +102,7 @@ function dcnHandler (msg: string): void {
     setupGetDataCommandHandlers(sdk)
     setupGetSupportedDataCommandHandlers(sdk)
     setupStatusCommandHandlers(sdk)
+    setupPrepareModelCommandHandlers(sdk)
 
     while (true) {
         const { command } = await askCommand()
@@ -134,6 +138,9 @@ function dcnHandler (msg: string): void {
                 break
             case Command.STATUS_COMMAND:
                 await statusCommand(sdk)
+                break
+            case Command.PREPARE_MODEL:
+                await prepareModelCommand(sdk)
                 break
             default:
                 assertUnreachable(cmd)

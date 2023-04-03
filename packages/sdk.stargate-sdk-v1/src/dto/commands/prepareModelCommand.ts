@@ -25,26 +25,23 @@ export interface ISdStargatePrepareModelReplyDto {
     info: ISdStargatePrepareModelInfoReplyDto
 }
 
-/** Enum describing possible outcomes of the data input by the user. */
-export enum ISdStargatePrepareModelResultEnum
-{
-    /** The user input was successful. */
-    SUCCESS = 'success',
-    /** The data input failed. */
-    FAILURE = 'failure',
-}
-
 /**
  * Info specification for ISdStargatePrepareModelReplyDto
  */
 export interface ISdStargatePrepareModelInfoReplyDto {
-    /**
-     * Optional message to display on the frontend
-     */
+    /** Optional message to display on the frontend. */
     message?: string
 
-    /** 
-     * Result of the data input by the user. 
-     */
+    /** Result of the data input by the user. */
     result: ISdStargatePrepareModelResultEnum 
+}
+
+/** Enum describing possible outcomes of the model preparation process. */
+export enum ISdStargatePrepareModelResultEnum
+{
+    /** The client has been successfully prepared for the model. */
+    SUCCESS = 'success',
+
+    /** The model preparation failed. */
+    FAILURE = 'failure',
 }
