@@ -75,7 +75,7 @@ importers:
   packages/sdk.stargate-cli:
     dependencies:
       '@shapediver/sdk.stargate-sdk-v1':
-        specifier: ~1.2.1
+        specifier: ~1.3.0
         version: link:../sdk.stargate-sdk-v1
       '@shapediver/sdk.token-generator-sdk-v1':
         specifier: ~1.1.0
