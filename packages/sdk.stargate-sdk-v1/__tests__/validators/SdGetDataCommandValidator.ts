@@ -82,7 +82,8 @@ describe("validate get data command", function () {
                 },
                 info: {
                     count: 1,
-                    result: ISdStargateGetDataResultEnum.SUCCESS
+                    result: ISdStargateGetDataResultEnum.SUCCESS,
+                    message: "foo"
                 }
             }
             SdGetDataCommandValidator.assertReplyDto(data)
@@ -196,6 +197,17 @@ describe("validate get data command", function () {
             } catch (e) {
                 expect(e instanceof SdStargateError).toBeTruthy()
             }
+        })
+
+        test("info with message", () => {
+            let data: ISdStargateGetDataReplyDto = {
+                info: {
+                    count: 1,
+                    result: ISdStargateGetDataResultEnum.SUCCESS,
+                    message: "foo"
+                }
+            }
+            SdGetDataCommandValidator.assertReplyDto(data)
         })
 
     })

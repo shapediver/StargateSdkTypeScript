@@ -84,4 +84,9 @@ export interface ISdStargateBakeDataInfoReplyDto {
      * Result of the data input by the user. 
      */
     result: ISdStargateBakeDataResultEnum 
+    
+    /**
+     * Optional message that can be used by client to send additional information to the platform frontend.
+     */
+    message?: string;
 }

@@ -88,4 +88,9 @@ export interface ISdStargateGetDataInfoReplyDto {
      * Result of the data input by the user. 
      */
     result: ISdStargateGetDataResultEnum 
+
+    /**
+     * Optional message that can be used by client to send additional information to the platform frontend.
+     */
+    message?: string;
 }
