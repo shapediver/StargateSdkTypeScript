@@ -50,6 +50,7 @@ const schemaReplyDto = {
             properties: {
                 count: { type: "number" },
                 result: { enum: [ "success", "cancel", "nothing", "failure" ] },
+                message: { type: "string" , nullable: true },
             },
             required: [ "count", "result" ],
             additionalProperties: true,

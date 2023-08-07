@@ -117,7 +117,18 @@ describe("validate bake data command", function () {
             let data: Required<ISdStargateBakeDataReplyDto> = {
                 info: {
                     count: 1,
-                    result: ISdStargateBakeDataResultEnum.SUCCESS
+                    result: ISdStargateBakeDataResultEnum.SUCCESS,
+                    message: "foo"
+                }
+            }
+            SdBakeDataCommandValidator.assertReplyDto(data)
+        })
+
+        test("info without message", () => {
+            let data: Required<ISdStargateBakeDataReplyDto> = {
+                info: {
+                    count: 1,
+                    result: ISdStargateBakeDataResultEnum.SUCCESS,
                 }
             }
             SdBakeDataCommandValidator.assertReplyDto(data)
