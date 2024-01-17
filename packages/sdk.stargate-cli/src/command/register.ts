@@ -11,6 +11,7 @@ const os = require("os")
 
 interface Environment {
     stargate: {
+        type: string
         region: string
         lambda: string
     }
@@ -27,8 +28,9 @@ interface Environment {
  * TODO: Add new systems to this list whenever needed!
  */
 const ENVIRONMENTS: Record<string, Environment> = {
-    "dev": {
+    "eu-central-1_dev": {
         stargate: {
+            type: "dev",
             region: "eu-central-1",
             lambda: "dev-sg.eu-central-1.shapediver.com",
         },
@@ -37,8 +39,9 @@ const ENVIRONMENTS: Record<string, Environment> = {
             lambda: "devsduse1-platformTokenGenerator",
         },
     },
-    "test": {
+    "eu-central-1_test": {
         stargate: {
+            type: "test",
             region: "eu-central-1",
             lambda: "staging-sg.eu-central-1.shapediver.com",
         },
@@ -47,10 +50,44 @@ const ENVIRONMENTS: Record<string, Environment> = {
             lambda: "testsduse1-platformTokenGenerator",
         },
     },
-    "prod": {
+    "eu-central-1_prod": {
         stargate: {
+            type: "prod",
             region: "eu-central-1",
             lambda: "prod-sg.eu-central-1.shapediver.com",
+        },
+        tokenGenerator: {
+            region: "us-east-1",
+            lambda: "sduse1-platformTokenGenerator",
+        },
+    },
+    "us-east-1_dev": {
+        stargate: {
+            type: "dev",
+            region: "us-east-1",
+            lambda: "dev-sg.us-east-1.shapediver.com",
+        },
+        tokenGenerator: {
+            region: "us-east-1",
+            lambda: "devsduse1-platformTokenGenerator",
+        },
+    },
+    "us-east-1_test": {
+        stargate: {
+            type: "test",
+            region: "us-east-1",
+            lambda: "staging-sg.us-east-1.shapediver.com",
+        },
+        tokenGenerator: {
+            region: "us-east-1",
+            lambda: "testsduse1-platformTokenGenerator",
+        },
+    },
+    "us-east-1_prod": {
+        stargate: {
+            type: "prod",
+            region: "us-east-1",
+            lambda: "prod-sg.us-east-1.shapediver.com",
         },
         tokenGenerator: {
             region: "us-east-1",
@@ -77,10 +114,12 @@ function askQuestions (defaultUserId: string = uuidv4(), defaultAwsProfile: stri
             message: "To which Stargate system do you want to connect?",
             choices: Object
                 .keys(ENVIRONMENTS)
-                .map(key => `${ key } (${ ENVIRONMENTS[key].stargate.region })`),
+                .map(key => `${ ENVIRONMENTS[key].stargate.region }: \
+${ ENVIRONMENTS[key].stargate.type }`),
             filter: (selection: string) => {
                 // We have to remove the region again from the selection
-                return selection.split(" ")[0]
+                const parts = selection.split(": ")
+                return `${ parts[0] }_${ parts[1] }`
             },
             loop: false,
         },
