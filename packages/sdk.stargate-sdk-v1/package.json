@@ -37,9 +37,9 @@
   },
   "devDependencies": {
     "jest": "~29.7.0",
-    "lerna": "~8.0.2",
+    "lerna": "~8.1.2",
     "typescript": "~5.3.3",
-    "webpack": "~5.89.0",
+    "webpack": "~5.90.1",
     "webpack-cli": "~5.1.4",
     "webpack-dev-server": "~4.15.1"
   },
