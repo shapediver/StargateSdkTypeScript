@@ -5,7 +5,8 @@
     ],
     "compilerOptions": {
         "rootDir": "src",
-        "outDir": "dist"
+        "outDir": "dist",
+        "sourceRoot": "packages/sdk.stargate-cli/src"
     },
     "exclude": [
         "__tests__/**/*",
