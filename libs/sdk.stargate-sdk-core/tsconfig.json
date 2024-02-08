@@ -5,8 +5,7 @@
     ],
     "compilerOptions": {
         "rootDir": "src",
-        "outDir": "dist",
-        "sourceRoot": "libs/sdk.stargate-sdk-core/src"
+        "outDir": "dist"
     },
     "exclude": [
         "__tests__/**/*",
