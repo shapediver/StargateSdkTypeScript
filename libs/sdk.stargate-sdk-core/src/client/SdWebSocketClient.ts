@@ -267,11 +267,13 @@ export class SdWebSocketClient implements ISdStargateClient {
 
     /** Helper function to create a new WebSocket instance on Browser or Node.js. */
     static createWebSocket (url: string): WebSocket {
+        // @ts-ignore
+        const globalScope = global || globalThis;
         const ws = (
             // @ts-ignore
-            global?.WebSocket || global?.MozWebSocket ||
+            globalScope?.WebSocket || globalScope?.MozWebSocket ||
             // @ts-ignore
-            global?.window?.WebSocket || global?.window?.MozWebSocket ||
+            globalScope?.window?.WebSocket || globalScope?.window?.MozWebSocket ||
             // Default is assumed to be a Node.js application, thus the 'ws' package is used.
             require("ws")
         ) as any
