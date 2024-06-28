@@ -1,6 +1,6 @@
 {
   "name": "@shapediver/sdk.stargate-sdk-v1",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "",
   "keywords": [],
   "author": "Matthias Reisacher <matt@shapediver.com>",
@@ -44,7 +44,7 @@
     "webpack-dev-server": "~4.15.2"
   },
   "dependencies": {
-    "@shapediver/sdk.stargate-sdk-core": "~1.1.5",
+    "@shapediver/sdk.stargate-sdk-core": "~1.2.0",
     "@types/node": "~20.14.9",
     "@types/uuid": "~9.0.8",
     "ajv": "~8.16.0",
