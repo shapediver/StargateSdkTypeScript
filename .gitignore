@@ -6,6 +6,7 @@ dist-prod
 lerna-debug.log
 .npmrc
 .nx
+tsconfig.tsbuildinfo
 
 # Python
 .venv/
