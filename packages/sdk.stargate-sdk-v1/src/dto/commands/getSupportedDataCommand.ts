@@ -4,17 +4,16 @@
  * parameters are supported by the client's implementation of the "get data" command.
  * Corresponding reply DTO: ISdStargateGetSupportedDataReplyDto
  */
-export interface ISdStargateGetSupportedDataCommandDto {
-}
+export interface ISdStargateGetSupportedDataCommandDto {}
 
 /**
  * Reply DTO for "get supported data" command.
  * Corresponding command DTO: ISdStargateGetSupportedDataCommandDto
  */
 export interface ISdStargateGetSupportedDataReplyDto {
-    /** The parameter types supported. */
-    parameterTypes: Array<string>
+  /** The parameter types supported. */
+  parameterTypes: Array<string>;
 
-    /** List of supported sdTF type hints. */
-    typeHints: Array<string>
+  /** List of supported sdTF type hints. */
+  typeHints: Array<string>;
 }

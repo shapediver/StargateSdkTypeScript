@@ -1,11 +1,11 @@
 export interface ISdStargateDummyNoReplyExampleCommandDto {
-    text: string
+  text: string;
 }
 
 export interface ISdStargateDummyNoReplyExampleReplyDto {}
 
 export interface ISdStargateDummyAckReplyExampleCommandDto {
-    text: string
+  text: string;
 }
 
 export interface ISdStargateDummyAckReplyExampleReplyDto {}
@@ -13,7 +13,7 @@ export interface ISdStargateDummyAckReplyExampleReplyDto {}
 export interface ISdStargateDummyBatchReplyExampleCommandDto {}
 
 export interface ISdStargateDummyBatchReplyExampleReplyDto {
-    mesh: string,
+  mesh: string;
 
-    visible: boolean,
+  visible: boolean;
 }
