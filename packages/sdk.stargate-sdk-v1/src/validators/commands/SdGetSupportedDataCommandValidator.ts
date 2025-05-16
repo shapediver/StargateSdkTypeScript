@@ -26,7 +26,22 @@ const schemaReplyDto = {
         type: "string",
       },
     },
+    // Property was added in version 1.5.0.
+    contentTypes: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
+    // Property was added in version 1.5.0.
+    fileExtensions: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+    },
   },
+  // Leave out newer properties for backwards compatibility.
   required: ["parameterTypes", "typeHints"],
   additionalProperties: true,
 };

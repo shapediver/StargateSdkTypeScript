@@ -45,12 +45,13 @@ export class SdStargateGetSupportedDataCommand
     // Validate reply-message
     SdGetSupportedDataCommandValidator.assertReplyDto(payload.data);
 
+    // Set default values for newer command properties to avoid breaking changes.
+    const data = payload.data;
+    if (data.contentTypes === undefined) data.contentTypes = [];
+    if (data.fileExtensions === undefined) data.fileExtensions = [];
+
     // Update the open command with the clients reply-message
-    this.register.updateCommand(
-      payload.response.topic,
-      payload.sender,
-      payload.data
-    );
+    this.register.updateCommand(payload.response.topic, payload.sender, data);
   }
 
   async send(

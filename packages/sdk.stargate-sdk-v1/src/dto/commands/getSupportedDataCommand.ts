@@ -16,4 +16,10 @@ export interface ISdStargateGetSupportedDataReplyDto {
 
   /** List of supported sdTF type hints. */
   typeHints: Array<string>;
+
+  /** List of supported content types (MIME types). */
+  contentTypes: Array<string>;
+
+  /** List of supported file extensions. */
+  fileExtensions: Array<string>;
 }

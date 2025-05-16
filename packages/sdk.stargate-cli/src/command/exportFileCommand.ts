@@ -1,24 +1,25 @@
 import {
+  ISdStargateExportFileCommand,
+  ISdStargateExportFileCommandDto,
+  ISdStargateExportFileReplyDto,
+  ISdStargateExportFileResultEnum,
   ISdStargateClientModel,
-  ISdStargateGetSupportedDataCommand,
-  ISdStargateGetSupportedDataCommandDto,
-  ISdStargateGetSupportedDataReplyDto,
   ISdStargateSdk,
-  SdStargateGetSupportedDataCommand,
+  SdStargateExportFileCommand,
 } from "@shapediver/sdk.stargate-sdk-v1";
 import chalk from "chalk";
 import inquirer from "inquirer";
 import { nowTime, prettifyMsg, waitToSimulate } from "../utils";
 
 // Global command instance
-let command: ISdStargateGetSupportedDataCommand | undefined;
+let command: ISdStargateExportFileCommand | undefined;
 
-const identifier = "GET_SUPPORTED_DATA";
+const identifier = "EXPORT_FILE";
 
 // User-handler for 'batch-reply' command
 const handler = async (
-  msg: ISdStargateGetSupportedDataCommandDto
-): Promise<ISdStargateGetSupportedDataReplyDto> => {
+  msg: ISdStargateExportFileCommandDto
+): Promise<ISdStargateExportFileReplyDto> => {
   console.info(
     "\n",
     chalk.magenta(
@@ -28,31 +29,43 @@ const handler = async (
     "\n"
   );
 
-  await waitToSimulate(0.5, 1, "variability in network speed");
+  await waitToSimulate(2, 5, "export request");
   console.info(
     chalk.magenta(`\n[${nowTime()}] Finished handling command '${identifier}'!`)
   );
 
-  // send dummy reply using parts of the request data
+  // send dummy reply using some of the request data
   return {
-    parameterTypes: ["sBrep", "sMesh"],
-    typeHints: ["rhino.brep", "rhino.mesh"],
-    contentTypes: ["application/dwg"],
-    fileExtensions: ["dwg"],
+    info: {
+      result: ISdStargateExportFileResultEnum.SUCCESS,
+    },
   };
 };
 
 /** Instantiate a new command object and register all handlers. */
-export function setupGetSupportedDataCommandHandlers(
-  sdk: ISdStargateSdk
-): void {
-  command = new SdStargateGetSupportedDataCommand(sdk);
+export function setupExportFileCommandHandlers(sdk: ISdStargateSdk): void {
+  command = new SdStargateExportFileCommand(sdk);
 
   command.registerHandler(handler);
 }
 
 function askCommand(clients: ISdStargateClientModel[]) {
   const questions = [
+    {
+      type: "input",
+      name: "modelId",
+      message: "Platform id of the model to export file for?",
+    },
+    {
+      type: "input",
+      name: "exportId",
+      message: "Export id to export file for?",
+    },
+    {
+      type: "input",
+      name: "exportIndex",
+      message: "Export index of the file?",
+    },
     {
       type: "checkbox",
       name: "clientIds",
@@ -68,9 +81,7 @@ function askCommand(clients: ISdStargateClientModel[]) {
   return inquirer.prompt?.(questions);
 }
 
-export async function getSupportedDataCommand(
-  sdk: ISdStargateSdk
-): Promise<void> {
+export async function exportFileCommand(sdk: ISdStargateSdk): Promise<void> {
   if (!command) throw new Error("Commands have not been registered.");
 
   try {
@@ -80,9 +91,15 @@ export async function getSupportedDataCommand(
       ...(await sdk.listBackendClients()),
     ];
 
-    const { clientIds } = await askCommand(clients);
+    const { modelId, exportId, exportIndex, clientIds } = await askCommand(
+      clients
+    );
 
-    const dto: ISdStargateGetSupportedDataCommandDto = {};
+    const dto: ISdStargateExportFileCommandDto = {
+      model: { id: modelId },
+      parameters: { PARAM_ID: "PARAM_VALUE" },
+      export: { id: exportId, index: parseInt(exportIndex) },
+    };
 
     const selectedClients = clients.filter((c) =>
       (<string[]>clientIds).includes(c.id)

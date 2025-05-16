@@ -31,6 +31,10 @@ import {
   statusCommand,
 } from "./command/statusCommand";
 import { assertUnreachable, prettifyMsg } from "./utils";
+import {
+  exportFileCommand,
+  setupExportFileCommandHandlers,
+} from "./command/exportFileCommand";
 
 const figlet = require("figlet");
 
@@ -51,6 +55,7 @@ enum Command {
   DISCONNECT_CLIENTS = "Deregister and disconnect selected clients from Stargate (backend only!)",
   DUMMY_COMMANDS = "Send a dummy command",
   EXIT = "Disconnect from Stargate and close CLI",
+  EXPORT_FILE = "Export file for model and parameter",
   FORWARD_MESSAGE = "Forward a custom message to selected clients from Stargate",
   GET_DATA_COMMAND = "Get data for model and parameter",
   GET_SUPPORTED_DATA_COMMAND = "Get supported parameter types",
@@ -73,6 +78,7 @@ function askCommand() {
         Command.GET_SUPPORTED_DATA_COMMAND,
         Command.GET_DATA_COMMAND,
         Command.BAKE_DATA_COMMAND,
+        Command.EXPORT_FILE,
         Command.STATUS_COMMAND,
         Command.DUMMY_COMMANDS,
         Command.FORWARD_MESSAGE,
@@ -125,6 +131,7 @@ function dcnHandler(msg: string): void {
   // Register user-handlers for all commands
   setupBakeDataCommandHandlers(sdk);
   setupDummyCommandHandlers(sdk);
+  setupExportFileCommandHandlers(sdk);
   setupGetDataCommandHandlers(sdk);
   setupGetSupportedDataCommandHandlers(sdk);
   setupPrepareModelCommandHandlers(sdk);
@@ -146,6 +153,8 @@ function dcnHandler(msg: string): void {
       case Command.EXIT:
         await sdk.close();
         process.exit();
+      case Command.EXPORT_FILE:
+        await exportFileCommand(sdk);
         return;
       case Command.FORWARD_MESSAGE:
         await forwardMessage(sdk);

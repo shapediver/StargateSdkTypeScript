@@ -1,10 +1,12 @@
 import { ISdCommandRegister } from "./commands/ISdCommandRegister";
 import { ISdStargateBakeDataCommand } from "./commands/ISdStargateBakeDataCommand";
+import { ISdStargateExportFileCommand } from "./commands/ISdStargateExportFileCommand";
 import { ISdStargateGetDataCommand } from "./commands/ISdStargateGetDataCommand";
 import { ISdStargateGetSupportedDataCommand } from "./commands/ISdStargateGetSupportedDataCommand";
 import { ISdStargatePrepareModelCommand } from "./commands/ISdStargatePrepareModelCommand";
 import { ISdStargateStatusCommand } from "./commands/ISdStargateStatusCommand";
 import { SdStargateBakeDataCommand } from "./commands/SdStargateBakeDataCommand";
+import { SdStargateExportFileCommand } from "./commands/SdStargateExportFileCommand";
 import { SdStargateGetDataCommand } from "./commands/SdStargateGetDataCommand";
 import { SdStargateGetSupportedDataCommand } from "./commands/SdStargateGetSupportedDataCommand";
 import { SdStargatePrepareModelCommand } from "./commands/SdStargatePrepareModelCommand";
@@ -22,6 +24,11 @@ import {
   ISdStargateDummyNoReplyExampleCommandDto,
   ISdStargateDummyNoReplyExampleReplyDto,
 } from "./dto/commands/dummyCommand";
+import {
+  ISdStargateExportFileCommandDto,
+  ISdStargateExportFileReplyDto,
+  ISdStargateExportFileResultEnum,
+} from "./dto/commands/exportFileCommand";
 import {
   ISdStargateGetDataCommandDto,
   ISdStargateGetDataReplyDto,
@@ -52,6 +59,7 @@ import { isSgError } from "./utils";
 export {
   ISdCommandRegister,
   ISdStargateBakeDataCommand,
+  ISdStargateExportFileCommand,
   ISdStargateBakeDataCommandDto,
   ISdStargateBakeDataReplyDto,
   ISdStargateBakeDataResultEnum,
@@ -62,6 +70,9 @@ export {
   ISdStargateDummyBatchReplyExampleReplyDto,
   ISdStargateDummyNoReplyExampleCommandDto,
   ISdStargateDummyNoReplyExampleReplyDto,
+  ISdStargateExportFileCommandDto,
+  ISdStargateExportFileReplyDto,
+  ISdStargateExportFileResultEnum,
   ISdStargateGetDataCommand,
   ISdStargateGetDataCommandDto,
   ISdStargateGetDataReplyDto,
@@ -81,6 +92,7 @@ export {
   ISdStargateStatusCommandDto,
   ISdStargateStatusReplyDto,
   SdStargateBakeDataCommand,
+  SdStargateExportFileCommand,
   SdStargateError,
   SdStargateErrorTypes,
   SdStargateGetDataCommand,

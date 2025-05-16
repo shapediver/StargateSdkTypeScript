@@ -14,62 +14,50 @@ describe("validate get supported data command", function () {
   });
 
   describe("reply dto", function () {
-    test("full", () => {
-      let data: Required<ISdStargateGetSupportedDataReplyDto> = {
-        parameterTypes: ["foo", "bar"],
-        typeHints: ["baz", "qux"],
+    const validReplyDto: Required<ISdStargateGetSupportedDataReplyDto> = {
+      parameterTypes: ["foo", "bar"],
+      typeHints: ["baz", "qux"],
+      contentTypes: ["application/dwg"],
+      fileExtensions: ["dwg"],
+    };
+
+    test("full - latest version", () => {
+      expect(() =>
+        SdGetSupportedDataCommandValidator.assertReplyDto(validReplyDto)
+      ).not.toThrow();
+    });
+
+    test("legacy (v1.5.0) missing newer properties", () => {
+      // Only required properties are present, simulating an older reply DTO.
+      const legacyReplyDto = {
+        parameterTypes: validReplyDto.parameterTypes,
+        typeHints: validReplyDto.typeHints,
       };
-      SdGetSupportedDataCommandValidator.assertReplyDto(data);
+
+      expect(() =>
+        SdGetSupportedDataCommandValidator.assertReplyDto(legacyReplyDto)
+      ).not.toThrow();
     });
 
-    test("parameterTypes missing", () => {
-      try {
-        let data = {
-          typeHints: ["baz", "qux"],
-        };
-        SdGetSupportedDataCommandValidator.assertReplyDto(data);
-        expect(true).toBeFalsy();
-      } catch (e) {
-        expect(e instanceof SdStargateError).toBeTruthy();
-      }
+    test.each([
+      ["parameterTypes", { ...validReplyDto, parameterTypes: undefined }],
+      ["typeHints", { ...validReplyDto, typeHints: undefined }],
+      // Properties added later are optional and set later.
+    ])("%s missing", (_, data) => {
+      expect(() =>
+        SdGetSupportedDataCommandValidator.assertReplyDto(data)
+      ).toThrow(SdStargateError);
     });
 
-    test("typeHints missing", () => {
-      try {
-        let data = {
-          parameterTypes: ["foo", "bar"],
-        };
-        SdGetSupportedDataCommandValidator.assertReplyDto(data);
-        expect(true).toBeFalsy();
-      } catch (e) {
-        expect(e instanceof SdStargateError).toBeTruthy();
-      }
-    });
-
-    test("parameterTypes wrong type", () => {
-      try {
-        let data = {
-          parameterTypes: [1],
-          typeHints: ["baz", "qux"],
-        };
-        SdGetSupportedDataCommandValidator.assertReplyDto(data);
-        expect(true).toBeFalsy();
-      } catch (e) {
-        expect(e instanceof SdStargateError).toBeTruthy();
-      }
-    });
-
-    test("typeHints wrong type", () => {
-      try {
-        let data = {
-          parameterTypes: ["foo", "bar"],
-          typeHints: [1],
-        };
-        SdGetSupportedDataCommandValidator.assertReplyDto(data);
-        expect(true).toBeFalsy();
-      } catch (e) {
-        expect(e instanceof SdStargateError).toBeTruthy();
-      }
+    test.each([
+      ["parameterTypes", { ...validReplyDto, parameterTypes: [1] }],
+      ["typeHints", { ...validReplyDto, typeHints: [1] }],
+      ["contentTypes", { ...validReplyDto, contentTypes: [1] }],
+      ["fileExtensions", { ...validReplyDto, fileExtensions: [1] }],
+    ])("%s wrong type", (_, data) => {
+      expect(() =>
+        SdGetSupportedDataCommandValidator.assertReplyDto(data)
+      ).toThrow(SdStargateError);
     });
   });
 });
