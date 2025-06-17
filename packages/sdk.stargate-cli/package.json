@@ -44,12 +44,12 @@
     "uuid": "~9.0.1"
   },
   "devDependencies": {
-    "@types/node": "~20.17.47",
+    "@types/node": "~20.19.1",
     "@types/inquirer": "8.2.11",
     "@types/uuid": "~9.0.8",
     "lerna": "~8.2.2",
     "typescript": "~5.8.3",
-    "webpack": "~5.99.8",
+    "webpack": "~5.99.9",
     "webpack-cli": "~5.1.4",
     "webpack-dev-server": "~4.15.2"
   }
