@@ -149,8 +149,15 @@ ${ENVIRONMENTS[key].stargate.type}`
         ClientType.REVIT_CLIENT,
         ClientType.RHINO_CLIENT,
         ClientType.STANDALONE_CLIENT,
+        "Other (custom UUID)",
       ],
       loop: false,
+    },
+    {
+      type: "input",
+      name: "customClientType",
+      message: "Please enter your custom client UUID:",
+      when: (answers: any) => answers.clientType === "Other (custom UUID)",
     },
     {
       type: "input",
@@ -181,10 +188,8 @@ export async function register(
   // Usually, the user would get the JWT from the ShapeDiver Platform Backend. For these kind of
   // requests, the Platform always uses the ShapeDiver user ID as the JWT subject claim (and not
   // the optional `sd_user_name` property!).
-  const { envName, userId, clientType, awsProfile } = await askQuestions(
-    memory.userId,
-    memory.awsProfile
-  );
+  const { envName, userId, clientType, customClientType, awsProfile } =
+    await askQuestions(memory.userId, memory.awsProfile);
 
   // Update CLI memory with user inputs.
   memory.userId = userId;
@@ -195,7 +200,9 @@ export async function register(
   const env = ENVIRONMENTS[envName];
 
   // Ask user for client info
-  const { appId, name } = getAppIdFromClientType(clientType);
+  const { appId, name } = getAppIdFromClientType(
+    customClientType ?? clientType
+  );
 
   console.log(); // Empty line
   const jwtSpinner = createSpinner("Generating JWT").start();
@@ -307,7 +314,10 @@ function getAppIdFromClientType(type: ClientType): {
         name: "Standalone",
       };
     default:
-      assertUnreachable(type);
+      return {
+        appId: type,
+        name: "Custom",
+      };
   }
 }
 
