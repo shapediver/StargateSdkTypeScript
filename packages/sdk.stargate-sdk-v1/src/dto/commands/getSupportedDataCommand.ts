@@ -11,15 +11,15 @@ export interface ISdStargateGetSupportedDataCommandDto {}
  * Corresponding command DTO: ISdStargateGetSupportedDataCommandDto
  */
 export interface ISdStargateGetSupportedDataReplyDto {
-  /** The parameter types supported. */
-  parameterTypes: Array<string>;
+    /** The parameter types supported. */
+    parameterTypes: Array<string>;
 
-  /** List of supported sdTF type hints. */
-  typeHints: Array<string>;
+    /** List of supported sdTF type hints. */
+    typeHints: Array<string>;
 
-  /** List of supported content types (MIME types). */
-  contentTypes: Array<string>;
+    /** List of supported content types (MIME types). */
+    contentTypes: Array<string>;
 
-  /** List of supported file extensions. */
-  fileExtensions: Array<string>;
+    /** List of supported file extensions. */
+    fileExtensions: Array<string>;
 }

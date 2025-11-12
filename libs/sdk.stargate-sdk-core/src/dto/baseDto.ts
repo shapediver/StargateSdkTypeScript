@@ -1,10 +1,10 @@
 /** The structure of a client request. */
 export interface ISdStargateCommandDto {
-  requestId?: string;
+    requestId?: string;
 
-  header: Record<string, unknown>;
+    header: Record<string, unknown>;
 
-  payload?: Record<string, unknown>;
+    payload?: Record<string, unknown>;
 }
 
 /**
@@ -15,24 +15,24 @@ export interface ISdStargateCommandDto {
  *    another client ({@link requestId} is `undefined`).
  */
 export interface ISdOkResponseDto {
-  requestId?: string;
+    requestId?: string;
 
-  payload: unknown;
+    payload: unknown;
 }
 
 export function isOkResponseDto(res: unknown): res is ISdOkResponseDto {
-  return typeof res === "object" && res !== null && "payload" in res;
+    return typeof res === 'object' && res !== null && 'payload' in res;
 }
 
 /** The structure of a backend error message. */
 export interface ISdErrorResponseDto {
-  requestId?: string;
+    requestId?: string;
 
-  errorType?: string;
+    errorType?: string;
 
-  errorMessage: string;
+    errorMessage: string;
 }
 
 export function isErrorResponseDto(res: unknown): res is ISdErrorResponseDto {
-  return typeof res === "object" && res !== null && "errorMessage" in res;
+    return typeof res === 'object' && res !== null && 'errorMessage' in res;
 }

@@ -12,9 +12,9 @@ export interface ISdStargateStatusCommandDto {}
  * Corresponding command DTO: ISdStargateStatusCommandDto
  */
 export interface ISdStargateStatusReplyDto {
-  /** Unix timestamp of first user activity (seconds). */
-  firstActivity: number;
+    /** Unix timestamp of first user activity (seconds). */
+    firstActivity: number;
 
-  /** Unix timestamp of most recent user activity (seconds). */
-  latestActivity: number;
+    /** Unix timestamp of most recent user activity (seconds). */
+    latestActivity: number;
 }

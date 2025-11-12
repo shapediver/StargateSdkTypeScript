@@ -5,14 +5,14 @@
  * Corresponding reply DTO: ISdStargatePrepareModelReplyDto
  */
 export interface ISdStargatePrepareModelCommandDto {
-  /** The model to get data for. */
-  model: ISdStargatePrepareModelModelCommandDto;
+    /** The model to get data for. */
+    model: ISdStargatePrepareModelModelCommandDto;
 }
 
 /** Model specification for ISdStargatePrepareModelCommandDto. */
 export interface ISdStargatePrepareModelModelCommandDto {
-  /** The platform id of the model. */
-  id: string;
+    /** The platform id of the model. */
+    id: string;
 }
 
 /**
@@ -20,26 +20,26 @@ export interface ISdStargatePrepareModelModelCommandDto {
  * Corresponding command DTO: ISdStargatePrepareModelCommandDto
  */
 export interface ISdStargatePrepareModelReplyDto {
-  /** General information about the result. */
-  info: ISdStargatePrepareModelInfoReplyDto;
+    /** General information about the result. */
+    info: ISdStargatePrepareModelInfoReplyDto;
 }
 
 /**
  * Info specification for ISdStargatePrepareModelReplyDto
  */
 export interface ISdStargatePrepareModelInfoReplyDto {
-  /** Optional message to display on the frontend. */
-  message?: string;
+    /** Optional message to display on the frontend. */
+    message?: string;
 
-  /** Result of the data input by the user. */
-  result: ISdStargatePrepareModelResultEnum;
+    /** Result of the data input by the user. */
+    result: ISdStargatePrepareModelResultEnum;
 }
 
 /** Enum describing possible outcomes of the model preparation process. */
 export enum ISdStargatePrepareModelResultEnum {
-  /** The client has been successfully prepared for the model. */
-  SUCCESS = "success",
+    /** The client has been successfully prepared for the model. */
+    SUCCESS = 'success',
 
-  /** The model preparation failed. */
-  FAILURE = "failure",
+    /** The model preparation failed. */
+    FAILURE = 'failure',
 }

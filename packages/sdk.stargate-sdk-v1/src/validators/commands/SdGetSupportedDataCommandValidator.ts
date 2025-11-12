@@ -1,61 +1,57 @@
 import {
-  ISdStargateGetSupportedDataCommandDto,
-  ISdStargateGetSupportedDataReplyDto,
-} from "../../dto/commands/getSupportedDataCommand";
-import { SdBaseValidator } from "../SdBaseValidator";
+    ISdStargateGetSupportedDataCommandDto,
+    ISdStargateGetSupportedDataReplyDto,
+} from '../../dto/commands/getSupportedDataCommand';
+import { SdBaseValidator } from '../SdBaseValidator';
 
 /** Schema for {@link ISdStargateGetSupportedDataCommandDto} */
 const schemaCommandDto = {
-  type: "object",
-  properties: {},
-  additionalProperties: true,
+    type: 'object',
+    properties: {},
+    additionalProperties: true,
 };
 /** Schema for {@link ISdStargateGetSupportedDataReplyDto} */
 const schemaReplyDto = {
-  type: "object",
-  properties: {
-    parameterTypes: {
-      type: "array",
-      items: {
-        type: "string",
-      },
+    type: 'object',
+    properties: {
+        parameterTypes: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
+        typeHints: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
+        // Property was added in version 1.5.0.
+        contentTypes: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
+        // Property was added in version 1.5.0.
+        fileExtensions: {
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
     },
-    typeHints: {
-      type: "array",
-      items: {
-        type: "string",
-      },
-    },
-    // Property was added in version 1.5.0.
-    contentTypes: {
-      type: "array",
-      items: {
-        type: "string",
-      },
-    },
-    // Property was added in version 1.5.0.
-    fileExtensions: {
-      type: "array",
-      items: {
-        type: "string",
-      },
-    },
-  },
-  // Leave out newer properties for backwards compatibility.
-  required: ["parameterTypes", "typeHints"],
-  additionalProperties: true,
+    // Leave out newer properties for backwards compatibility.
+    required: ['parameterTypes', 'typeHints'],
+    additionalProperties: true,
 };
 
 export abstract class SdGetSupportedDataCommandValidator extends SdBaseValidator {
-  static assertCommandDto(
-    data: unknown
-  ): asserts data is ISdStargateGetSupportedDataCommandDto {
-    return this.assertValid(data, schemaCommandDto);
-  }
+    static assertCommandDto(data: unknown): asserts data is ISdStargateGetSupportedDataCommandDto {
+        return this.assertValid(data, schemaCommandDto);
+    }
 
-  static assertReplyDto(
-    data: unknown
-  ): asserts data is ISdStargateGetSupportedDataReplyDto {
-    return this.assertValid(data, schemaReplyDto);
-  }
+    static assertReplyDto(data: unknown): asserts data is ISdStargateGetSupportedDataReplyDto {
+        return this.assertValid(data, schemaReplyDto);
+    }
 }
