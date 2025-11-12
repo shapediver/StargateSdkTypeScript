@@ -1,3 +1,17 @@
 {
-  "cSpell.words": ["shapediver", "Stargate"]
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "search.exclude": {
+    "**/.git": true,
+    "**/.nx": true,
+    "**/.venv": true,
+    "**/dist": true
+  },
+  "terminal.integrated.defaultProfile.osx": "zsh - work",
+  "cSpell.words": ["shapediver", "Stargate"],
+  "jest.disabledWorkspaceFolders": [],
+  "jest.rootPath": ".",
+  "jest.runMode": {
+    "type": "on-demand"
+  },
+  "typescript.preferences.includePackageJsonAutoImports": "on"
 }
