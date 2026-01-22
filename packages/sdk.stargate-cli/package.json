@@ -34,22 +34,20 @@
     "typings": "dist/index.d.ts",
     "dependencies": {
         "@shapediver/sdk.stargate-sdk-v1": "1.6.1",
-        "@shapediver/sdk.token-generator-sdk-v1": "1.4.1",
-        "chalk": "4.1.2",
-        "dayjs": "1.11.13",
-        "figlet": "1.8.1",
-        "inquirer": "8.2.6",
+        "@shapediver/sdk.token-generator-sdk-v1": "1.4.2",
+        "chalk": "5.6.2",
+        "dayjs": "1.11.19",
+        "figlet": "1.9.4",
+        "inquirer": "8.2.7",
         "nanospinner": "1.2.2",
         "table": "6.9.0",
-        "uuid": "9.0.1"
+        "uuid": "11.1.0"
     },
     "devDependencies": {
-        "@types/node": "20.19.1",
-        "@types/inquirer": "8.2.11",
-        "@types/uuid": "9.0.8",
-        "lerna": "8.2.2",
-        "typescript": "5.8.3",
-        "webpack": "5.99.9",
+        "@types/node": "24.1.0",
+        "@types/inquirer": "9.0.9",
+        "typescript": "5.9.3",
+        "webpack": "5.104.1",
         "webpack-cli": "5.1.4",
         "webpack-dev-server": "4.15.2"
     }
