@@ -76,8 +76,8 @@ importers:
   packages/sdk.stargate-cli:
     dependencies:
       '@shapediver/sdk.stargate-sdk-v1':
-        specifier: 1.6.1
-        version: 1.6.1
+        specifier: 1.6.2
+        version: 1.6.2
       '@shapediver/sdk.token-generator-sdk-v1':
         specifier: 1.4.2
         version: 1.4.2
@@ -125,8 +125,8 @@ importers:
   packages/sdk.stargate-sdk-v1:
     dependencies:
       '@shapediver/sdk.stargate-sdk-core':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 1.3.2
+        version: 1.3.2
       '@types/node':
         specifier: 24.1.0
         version: 24.1.0
@@ -948,11 +948,11 @@ packages:
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
-  '@shapediver/sdk.stargate-sdk-core@1.3.1':
-    resolution: {integrity: sha512-94Zto7YO7mA1xGPEjMNK6y6eL6iONdFnb7NQYnhq2sz9H06Rs9/RHIXpUjSLOtBbT9L2i1fmUNxharQngG1E6w==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.stargate-sdk-core/1.3.1/008609c631817783667f3544671f3cc9dece45fc}
+  '@shapediver/sdk.stargate-sdk-core@1.3.2':
+    resolution: {integrity: sha512-fLES9vARdHllbC0DFHaJFmK/Xr2cUJ5zbO7liLMB+D0m+buEzeaAxN9pELgUW6EUvfZ/eTivLIGI6JXpHTP9nQ==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.stargate-sdk-core/1.3.2/e49b675848058c6c48099a6e144176021e7a2a5f}
 
-  '@shapediver/sdk.stargate-sdk-v1@1.6.1':
-    resolution: {integrity: sha512-qM/kOWmLcXrK6uirZH78D41bbNkh1EYtKvkvSM+z/fIsGKZ9fzINw3R5C62IAlDEeM/m5at5S3SrYv+u4DHKrg==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.stargate-sdk-v1/1.6.1/7830212ef1690d35fd6d007205508e49ac39a93d}
+  '@shapediver/sdk.stargate-sdk-v1@1.6.2':
+    resolution: {integrity: sha512-iYRkb3J1pkQ5mNjbZ9lnijIJqWX95WXtkjyOrZFLhOO1H64Tq+E3Q9h9uNo4pIPLwzxbi81tudNvIZLroOqXTQ==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.stargate-sdk-v1/1.6.2/294ba856927ce8f818f4c6b2626fb515d81d09aa}
 
   '@shapediver/sdk.token-generator-dto-v1@1.1.6':
     resolution: {integrity: sha512-cEZN6IvOTbx365IDp6Gx0QRPa5co/dVmVD9XgKmy++41foegYF+dCJtGzhAN3hP98WBxoAxajYKDEr3OYlDxVw==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.token-generator-dto-v1/1.1.6/279b593a4309130b0867443813771f5af76e2b87}
@@ -1281,9 +1281,6 @@ packages:
   '@types/node-forge@1.3.14':
     resolution: {integrity: sha512-mhVF2BnD4BO+jtOp7z1CdzaK4mbuK0LLQYAvdOLqHTavxFNq4zA1EmYkpnFjP8HOUzedfQkRnp0E2ulSAYSzAw==}
 
-  '@types/node@20.19.30':
-    resolution: {integrity: sha512-WJtwWJu7UdlvzEAUm484QNg5eAoq5QR08KDNx7g45Usrs2NtOPiX8ugDqmKdXkyL03rBqU5dYNYVQetEpBHq2g==}
-
   '@types/node@24.1.0':
     resolution: {integrity: sha512-ut5FthK5moxFKH2T1CUOC6ctR67rQRvvHdFLCD2Ql6KXmMuCrjsSsRI9UsLCm9M18BMwClv4pn327UvB7eeO1w==}
 
@@ -1319,9 +1316,6 @@ packages:
 
   '@types/through@0.0.33':
     resolution: {integrity: sha512-HsJ+z3QuETzP3cswwtzt2vEIiHBk/dCcHGhbmG5X3ecnwFD/lPrMpliGXxSCg03L9AhrdwA4Oz/qfspkDW+xGQ==}
-
-  '@types/uuid@9.0.8':
-    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
 
   '@types/ws@8.18.1':
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
@@ -4271,9 +4265,6 @@ packages:
     engines: {node: '>=0.8.0'}
     hasBin: true
 
-  undici-types@6.21.0:
-    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
-
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
 
@@ -4330,10 +4321,6 @@ packages:
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    hasBin: true
-
-  uuid@9.0.1:
-    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
 
   v8-to-istanbul@9.3.0:
@@ -4487,18 +4474,6 @@ packages:
   write-pkg@4.0.0:
     resolution: {integrity: sha512-v2UQ+50TNf2rNHJ8NyWttfm/EJUBWMJcx6ZTYZr6Qp52uuegWw/lBkCtCbnYZEmPRNL61m+u67dAmGxo+HTULA==}
     engines: {node: '>=8'}
-
-  ws@8.18.3:
-    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
 
   ws@8.19.0:
     resolution: {integrity: sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==}
@@ -5927,22 +5902,21 @@ snapshots:
 
   '@pkgr/core@0.2.9': {}
 
-  '@shapediver/sdk.stargate-sdk-core@1.3.1':
+  '@shapediver/sdk.stargate-sdk-core@1.3.2':
     dependencies:
-      uuid: 9.0.1
-      ws: 8.18.3
+      uuid: 11.1.0
+      ws: 8.19.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@shapediver/sdk.stargate-sdk-v1@1.6.1':
+  '@shapediver/sdk.stargate-sdk-v1@1.6.2':
     dependencies:
-      '@shapediver/sdk.stargate-sdk-core': 1.3.1
-      '@types/node': 20.19.30
-      '@types/uuid': 9.0.8
+      '@shapediver/sdk.stargate-sdk-core': 1.3.2
+      '@types/node': 24.1.0
       ajv: 8.17.1
       jsonschema: 1.5.0
-      uuid: 9.0.1
+      uuid: 11.1.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -6435,10 +6409,6 @@ snapshots:
     dependencies:
       '@types/node': 24.1.0
 
-  '@types/node@20.19.30':
-    dependencies:
-      undici-types: 6.21.0
-
   '@types/node@24.1.0':
     dependencies:
       undici-types: 7.8.0
@@ -6479,8 +6449,6 @@ snapshots:
   '@types/through@0.0.33':
     dependencies:
       '@types/node': 24.1.0
-
-  '@types/uuid@9.0.8': {}
 
   '@types/ws@8.18.1':
     dependencies:
@@ -9785,8 +9753,6 @@ snapshots:
   uglify-js@3.19.3:
     optional: true
 
-  undici-types@6.21.0: {}
-
   undici-types@7.8.0: {}
 
   unique-filename@4.0.0:
@@ -9850,8 +9816,6 @@ snapshots:
   uuid@11.1.0: {}
 
   uuid@8.3.2: {}
-
-  uuid@9.0.1: {}
 
   v8-to-istanbul@9.3.0:
     dependencies:
@@ -10076,8 +10040,6 @@ snapshots:
       sort-keys: 2.0.0
       type-fest: 0.4.1
       write-json-file: 3.2.0
-
-  ws@8.18.3: {}
 
   ws@8.19.0: {}
 
