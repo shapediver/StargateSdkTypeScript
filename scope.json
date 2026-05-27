@@ -1,6 +1,6 @@
 {
-  "scope": "sdk",
-  "repomaintain": {
-    "publish_mode": "independent"
-  }
+    "scope": "sdk",
+    "repomaintain": {
+        "publish_mode": "independent"
+    }
 }
