@@ -32,10 +32,25 @@
     "typings": "dist/index.d.ts",
     "jest": {
         "preset": "ts-jest",
-        "testEnvironment": "node"
+        "testEnvironment": "node",
+        "transform": {
+            "^.+\\.[tj]sx?$": [
+                "ts-jest",
+                {
+                    "tsconfig": {
+                        "allowJs": true,
+                        "module": "commonjs"
+                    }
+                }
+            ]
+        },
+        "transformIgnorePatterns": [
+            "/node_modules/.pnpm/(?!(uuid)@)",
+            "node_modules/(?!.pnpm|uuid)"
+        ]
     },
     "dependencies": {
-        "uuid": "11.1.1",
+        "uuid": "14.0.0",
         "ws": "8.21.0"
     },
     "devDependencies": {
