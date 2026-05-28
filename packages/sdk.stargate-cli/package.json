@@ -33,7 +33,7 @@
   "homepage": "https://github.com/shapediver/StargateSdkTypeScript#readme",
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "@shapediver/sdk.stargate-sdk-v1": "1.6.3",
+    "@shapediver/sdk.stargate-sdk-v1": "workspace:*",
     "@shapediver/sdk.token-generator-sdk-v1": "1.4.4",
     "chalk": "5.6.2",
     "dayjs": "1.11.20",

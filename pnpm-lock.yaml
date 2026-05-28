@@ -76,8 +76,8 @@ importers:
   packages/sdk.stargate-cli:
     dependencies:
       '@shapediver/sdk.stargate-sdk-v1':
-        specifier: 1.6.3
-        version: 1.6.3
+        specifier: workspace:*
+        version: link:../sdk.stargate-sdk-v1
       '@shapediver/sdk.token-generator-sdk-v1':
         specifier: 1.4.4
         version: 1.4.4
@@ -125,8 +125,8 @@ importers:
   packages/sdk.stargate-sdk-v1:
     dependencies:
       '@shapediver/sdk.stargate-sdk-core':
-        specifier: 1.3.3
-        version: 1.3.3
+        specifier: workspace:*
+        version: link:../../libs/sdk.stargate-sdk-core
       '@types/node':
         specifier: 24.12.4
         version: 24.12.4
@@ -1076,12 +1076,6 @@ packages:
   '@pkgr/core@0.2.9':
     resolution: {integrity: sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
-
-  '@shapediver/sdk.stargate-sdk-core@1.3.3':
-    resolution: {integrity: sha512-/h37udMLycFAltdwFUjhvM5F11PODLJVZKAnHOL6oAQKuHp1boXGjjbBknD09mM5htNe/ea0N+MLQhq+90KGcQ==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.stargate-sdk-core/1.3.3/75c3c0633b7ae44cd2c31dd35af55b7654daa1a3}
-
-  '@shapediver/sdk.stargate-sdk-v1@1.6.3':
-    resolution: {integrity: sha512-7UtsSf6EOvJzYmxi0wWo/bJUy+pXab2VFvWfee8olQUHn2wrsEcOhe2hXWVLEcD4VVARxE292+gxsa52KmDYZQ==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.stargate-sdk-v1/1.6.3/3c9119ca679435265997f4a12e7312217c31b786}
 
   '@shapediver/sdk.token-generator-dto-v1@1.1.8':
     resolution: {integrity: sha512-Ka4yZpRHfxcaNxQcA2OcxmhCg7MuXtX9IW6jna7rPKuykCXpdwlW9NpOMd1p3xW5tWf7EI3kjSvUTjO6e8lGPA==, tarball: https://npm.pkg.github.com/download/@shapediver/sdk.token-generator-dto-v1/1.1.8/c56ddc86c5a25f9c3c08a92d0e4a9fc66d8fc651}
@@ -5658,25 +5652,6 @@ snapshots:
     optional: true
 
   '@pkgr/core@0.2.9': {}
-
-  '@shapediver/sdk.stargate-sdk-core@1.3.3':
-    dependencies:
-      uuid: 14.0.0
-      ws: 8.21.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
-  '@shapediver/sdk.stargate-sdk-v1@1.6.3':
-    dependencies:
-      '@shapediver/sdk.stargate-sdk-core': 1.3.3
-      '@types/node': 24.12.4
-      ajv: 8.20.0
-      jsonschema: 1.5.0
-      uuid: 14.0.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
 
   '@shapediver/sdk.token-generator-dto-v1@1.1.8': {}
 
