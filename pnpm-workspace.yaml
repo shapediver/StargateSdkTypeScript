@@ -1,6 +1,8 @@
 packages:
-  - 'packages/*'
-  - 'libs/*'
+    - 'packages/*'
+    - 'libs/*'
 allowBuilds:
-  nx: true
-  unrs-resolver: true
+    nx: true
+    unrs-resolver: true
+minimumReleaseAgeExclude:
+    - '@shapediver/*'
