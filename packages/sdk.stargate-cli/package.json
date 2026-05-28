@@ -1,54 +1,54 @@
 {
-    "name": "@shapediver/sdk.stargate-cli",
-    "version": "0.1.0",
-    "description": "CLI tool for local Stargate testing.",
-    "keywords": [],
-    "author": "Matthias Reisacher <matt@shapediver.com>",
-    "license": "ISC",
-    "main": "dist/cli.js",
-    "private": true,
-    "directories": {},
-    "files": [
-        "dist",
-        "src"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/shapediver/StargateSdkTypeScript.git"
-    },
-    "scripts": {
-        "test": "exit 0",
-        "check": "tsc --noEmit",
-        "build": "bash ../../scripts/build.sh",
-        "build-dep": "bash ../../scripts/build-dep.sh",
-        "build-dev": "bash ../../scripts/build-dev.sh",
-        "build-prod": "bash ../../scripts/build-prod.sh",
-        "pre-publish": "bash ../../scripts/pre-publish.sh",
-        "post-publish": "bash ../../scripts/post-publish.sh",
-        "start": "node ./dist/cli.js"
-    },
-    "bugs": {
-        "url": "https://github.com/shapediver/StargateSdkTypeScript/issues"
-    },
-    "homepage": "https://github.com/shapediver/StargateSdkTypeScript#readme",
-    "typings": "dist/index.d.ts",
-    "dependencies": {
-        "@shapediver/sdk.stargate-sdk-v1": "1.6.2",
-        "@shapediver/sdk.token-generator-sdk-v1": "1.4.4",
-        "chalk": "5.6.2",
-        "dayjs": "1.11.20",
-        "figlet": "1.11.0",
-        "inquirer": "13.4.3",
-        "nanospinner": "1.2.2",
-        "table": "6.9.0",
-        "uuid": "14.0.0"
-    },
-    "devDependencies": {
-        "@types/node": "24.12.4",
-        "@types/inquirer": "9.0.9",
-        "typescript": "5.9.3",
-        "webpack": "5.107.2",
-        "webpack-cli": "5.1.4",
-        "webpack-dev-server": "4.15.2"
-    }
+  "name": "@shapediver/sdk.stargate-cli",
+  "version": "0.1.0",
+  "description": "CLI tool for local Stargate testing.",
+  "keywords": [],
+  "author": "Matthias Reisacher <matt@shapediver.com>",
+  "license": "ISC",
+  "main": "dist/cli.js",
+  "private": true,
+  "directories": {},
+  "files": [
+    "dist",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shapediver/StargateSdkTypeScript.git"
+  },
+  "scripts": {
+    "test": "exit 0",
+    "check": "tsc --noEmit",
+    "build": "bash ../../scripts/build.sh",
+    "build-dep": "bash ../../scripts/build-dep.sh",
+    "build-dev": "bash ../../scripts/build-dev.sh",
+    "build-prod": "bash ../../scripts/build-prod.sh",
+    "pre-publish": "bash ../../scripts/pre-publish.sh",
+    "post-publish": "bash ../../scripts/post-publish.sh",
+    "start": "node ./dist/cli.js"
+  },
+  "bugs": {
+    "url": "https://github.com/shapediver/StargateSdkTypeScript/issues"
+  },
+  "homepage": "https://github.com/shapediver/StargateSdkTypeScript#readme",
+  "typings": "dist/index.d.ts",
+  "dependencies": {
+    "@shapediver/sdk.stargate-sdk-v1": "1.6.3",
+    "@shapediver/sdk.token-generator-sdk-v1": "1.4.4",
+    "chalk": "5.6.2",
+    "dayjs": "1.11.20",
+    "figlet": "1.11.0",
+    "inquirer": "13.4.3",
+    "nanospinner": "1.2.2",
+    "table": "6.9.0",
+    "uuid": "14.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.12.4",
+    "@types/inquirer": "9.0.9",
+    "typescript": "5.9.3",
+    "webpack": "5.107.2",
+    "webpack-cli": "5.1.4",
+    "webpack-dev-server": "4.15.2"
+  }
 }
