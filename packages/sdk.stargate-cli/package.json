@@ -38,7 +38,7 @@
         "chalk": "5.6.2",
         "dayjs": "1.11.20",
         "figlet": "1.11.0",
-        "inquirer": "8.2.7",
+        "inquirer": "13.4.3",
         "nanospinner": "1.2.2",
         "table": "6.9.0",
         "uuid": "11.1.1"

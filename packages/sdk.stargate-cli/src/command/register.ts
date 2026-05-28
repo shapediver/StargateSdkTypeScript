@@ -113,7 +113,7 @@ enum ClientType {
 function askQuestions(defaultUserId: string = uuidv4(), defaultAwsProfile: string = 'default') {
     const questions = [
         {
-            type: 'list',
+            type: 'select',
             name: 'envName',
             message: 'To which Stargate system do you want to connect?',
             choices: Object.keys(ENVIRONMENTS).map(
@@ -136,7 +136,7 @@ ${ENVIRONMENTS[key].stargate.type}`
             },
         },
         {
-            type: 'list',
+            type: 'select',
             name: 'clientType',
             message: 'Whats the type of this client?',
             choices: [
@@ -166,7 +166,7 @@ ${ENVIRONMENTS[key].stargate.type}`
             },
         },
     ];
-    return inquirer.prompt?.(questions);
+    return inquirer.prompt(questions);
 }
 
 /** Generates a new JWT authentication token, instantiates the Stargate SDK and registers the selected client app. */

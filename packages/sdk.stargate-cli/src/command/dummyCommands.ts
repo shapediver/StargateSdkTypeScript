@@ -87,7 +87,7 @@ export function setupDummyCommandHandlers(sdk: ISdStargateSdk): void {
 function askCommand(clients: ISdStargateClientModel[]) {
     const questions = [
         {
-            type: 'list',
+            type: 'select',
             name: 'command',
             message: 'Which dummy command do you want to send?',
             choices: [DummyCommand.NO_REPLY, DummyCommand.ACK_REPLY, DummyCommand.BATCH_REPLY],
@@ -104,7 +104,7 @@ function askCommand(clients: ISdStargateClientModel[]) {
             }),
         },
     ];
-    return inquirer.prompt?.(questions);
+    return inquirer.prompt(questions);
 }
 
 export async function dummyCommands(sdk: ISdStargateSdk): Promise<void> {

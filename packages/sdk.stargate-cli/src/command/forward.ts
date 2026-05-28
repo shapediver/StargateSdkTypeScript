@@ -21,7 +21,7 @@ function askQuestions(clients: ISdStargateClientModel[]) {
             }),
         },
     ];
-    return inquirer.prompt?.(questions);
+    return inquirer.prompt(questions);
 }
 
 export async function forwardMessage(sdk: ISdStargateSdk): Promise<void> {

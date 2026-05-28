@@ -16,7 +16,7 @@ function askQuestions(clients: ISdStargateClientModel[]) {
             }),
         },
     ];
-    return inquirer.prompt?.(questions);
+    return inquirer.prompt(questions);
 }
 
 export async function disconnectClients(sdk: ISdStargateSdk): Promise<void> {

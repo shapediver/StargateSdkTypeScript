@@ -59,7 +59,7 @@ function askCommand(clients: ISdStargateClientModel[]) {
             }),
         },
     ];
-    return inquirer.prompt?.(questions);
+    return inquirer.prompt(questions);
 }
 
 export async function getSupportedDataCommand(sdk: ISdStargateSdk): Promise<void> {

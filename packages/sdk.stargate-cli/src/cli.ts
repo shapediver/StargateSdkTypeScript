@@ -53,7 +53,7 @@ enum Command {
 function askCommand() {
     const command = [
         {
-            type: 'list',
+            type: 'select',
             name: 'command',
             message: 'What do you wanna do next?',
             choices: [
@@ -73,7 +73,7 @@ function askCommand() {
             loop: false,
         },
     ];
-    return inquirer.prompt?.(command);
+    return inquirer.prompt(command);
 }
 
 /* Custom handler for all server messages. */
