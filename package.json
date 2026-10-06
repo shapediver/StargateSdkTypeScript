@@ -21,7 +21,9 @@
         "lint": "eslint . --max-warnings=0",
         "format": "prettier --write .",
         "format:check": "prettier --check .",
-        "knip": "knip --treat-config-hints-as-errors"
+        "knip": "knip --treat-config-hints-as-errors",
+        "check:static": "npm run typecheck && npm run lint && npm run format:check && npm run knip",
+        "prepare": "husky"
     },
     "devDependencies": {
         "@eslint/js": "10.0.1",
@@ -30,6 +32,7 @@
         "eslint": "10.12.0",
         "eslint-config-prettier": "10.1.8",
         "globals": "16.5.0",
+        "husky": "9.1.7",
         "jest": "30.5.2",
         "json": "11.0.0",
         "knip": "6.39.0",

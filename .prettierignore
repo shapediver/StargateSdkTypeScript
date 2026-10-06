@@ -7,3 +7,4 @@ coverage
 .nx
 pnpm-lock.yaml
 package-lock.json
+.husky
