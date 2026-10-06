@@ -1,8 +1,12 @@
 packages:
-    - 'packages/*'
-    - 'libs/*'
+  - 'packages/*'
+  - 'libs/*'
 allowBuilds:
-    nx: true
-    unrs-resolver: true
+  '@parcel/watcher': true
+  nx: true
+  unrs-resolver: true
 minimumReleaseAgeExclude:
-    - '@shapediver/*'
+  - '@shapediver/*'
+overrides:
+  # inquirer 13.4.3 types fail under TypeScript 5.9 with @inquirer/type 4.1+.
+  "inquirer@13>@inquirer/type": "4.0.5"

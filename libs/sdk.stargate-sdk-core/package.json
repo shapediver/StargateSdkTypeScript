@@ -50,13 +50,13 @@
     ]
   },
   "dependencies": {
-    "uuid": "14.0.0",
-    "ws": "8.21.0"
+    "uuid": "14.0.2",
+    "ws": "8.22.0"
   },
   "devDependencies": {
-    "@types/node": "24.12.4",
-    "@types/ws": "8.18.1",
-    "jest": "30.4.2",
+    "@types/node": "24.19.1",
+    "@types/ws": "8.18.2",
+    "jest": "30.5.2",
     "lerna": "9.0.7",
     "typescript": "5.9.3"
   }
