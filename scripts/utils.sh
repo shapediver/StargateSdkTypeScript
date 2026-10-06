@@ -20,7 +20,7 @@ function exec_python() {
 # Stops the script when the version of the Python command is invalid.
 function check_python_version() {
   # We try to use the same Python version (LTS) for all TypeScript ShapeDiver projects.
-  local target_python_version="3.9"
+  local target_python_version="3.13"
 
   if ! exec_python -V 2>&1 | grep -q "^Python $(echo "${target_python_version}" | sed -r 's/\.+/\\./g')\."; then
     echo "Invalid Python version: Detected version $(python -V) but requires ${target_python_version}.x." >&2
