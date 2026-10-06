@@ -9,7 +9,7 @@ import { SdBakeDataCommandValidator } from '../../src/validators/commands/SdBake
 describe('validate bake data command', function () {
     describe('command dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateBakeDataCommandDto> = {
+            const data: Required<ISdStargateBakeDataCommandDto> = {
                 model: { id: '123' },
                 parameters: { id: 'xyz' },
                 output: { id: 'abc', chunk: { id: 'foo', name: 'bar' } },
@@ -18,7 +18,7 @@ describe('validate bake data command', function () {
         });
 
         test('minimum', () => {
-            let data: ISdStargateBakeDataCommandDto = {
+            const data: ISdStargateBakeDataCommandDto = {
                 model: { id: '123' },
                 parameters: {},
                 output: { id: 'abc' },
@@ -28,7 +28,7 @@ describe('validate bake data command', function () {
 
         test('parameters missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: '123' },
                     output: { id: 'abc' },
                 };
@@ -41,7 +41,7 @@ describe('validate bake data command', function () {
 
         test('model id missing', () => {
             try {
-                let data = {
+                const data = {
                     model: {},
                     parameters: {},
                     output: { id: 'abc' },
@@ -55,7 +55,7 @@ describe('validate bake data command', function () {
 
         test('model missing', () => {
             try {
-                let data = {
+                const data = {
                     parameters: {},
                     output: { id: 'abc' },
                 };
@@ -68,7 +68,7 @@ describe('validate bake data command', function () {
 
         test('output id missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: 'abc' },
                     parameters: {},
                     output: {},
@@ -82,7 +82,7 @@ describe('validate bake data command', function () {
 
         test('output missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: 'abc' },
                     parameters: {},
                 };
@@ -95,7 +95,7 @@ describe('validate bake data command', function () {
 
         test('param value no string', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: 'abc' },
                     parameters: { paramId: 1 },
                     output: { id: 'abc' },
@@ -110,7 +110,7 @@ describe('validate bake data command', function () {
 
     describe('reply dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateBakeDataReplyDto> = {
+            const data: Required<ISdStargateBakeDataReplyDto> = {
                 info: {
                     count: 1,
                     result: ISdStargateBakeDataResultEnum.SUCCESS,
@@ -121,7 +121,7 @@ describe('validate bake data command', function () {
         });
 
         test('info without message', () => {
-            let data: Required<ISdStargateBakeDataReplyDto> = {
+            const data: Required<ISdStargateBakeDataReplyDto> = {
                 info: {
                     count: 1,
                     result: ISdStargateBakeDataResultEnum.SUCCESS,
@@ -132,7 +132,7 @@ describe('validate bake data command', function () {
 
         test('info missing', () => {
             try {
-                let data = {};
+                const data = {};
                 SdBakeDataCommandValidator.assertReplyDto(data);
                 expect(true).toBeFalsy();
             } catch (e) {
@@ -142,7 +142,7 @@ describe('validate bake data command', function () {
 
         test('count missing', () => {
             try {
-                let data = {
+                const data = {
                     info: {
                         result: ISdStargateBakeDataResultEnum.SUCCESS,
                     },
@@ -156,7 +156,7 @@ describe('validate bake data command', function () {
 
         test('result missing', () => {
             try {
-                let data = {
+                const data = {
                     info: {
                         count: 1,
                     },
@@ -170,7 +170,7 @@ describe('validate bake data command', function () {
 
         test('result wrong type', () => {
             try {
-                let data = {
+                const data = {
                     info: {
                         count: 1,
                         result: 'foo',
@@ -185,7 +185,7 @@ describe('validate bake data command', function () {
 
         test('count wrong type', () => {
             try {
-                let data = {
+                const data = {
                     info: {
                         count: false,
                         result: ISdStargateBakeDataResultEnum.SUCCESS,

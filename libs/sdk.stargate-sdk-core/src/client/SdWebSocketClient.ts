@@ -10,10 +10,13 @@ import {
 import { SdStargateCoreErrorTypes } from '../SdStargateCoreErrorTypes';
 import { ISdStargateClient, ISdStargateClientOptionKeepAlive } from './ISdStargateClient';
 
+/** Tuple passed to promise reject handlers in this client. */
+export type SdWebSocketRejectReason = [string | undefined, string | undefined] | string;
+
 /** Holds the promise functions of a single open request */
 type OpenRequest = {
-    resolve: (value: any) => void;
-    reject: (reason?: any) => void;
+    resolve: (value: unknown) => void;
+    reject: (reason: SdWebSocketRejectReason) => void;
 };
 
 export class SdWebSocketClient implements ISdStargateClient {
@@ -109,8 +112,7 @@ export class SdWebSocketClient implements ISdStargateClient {
                 this.updateKeepAlive(); // Start keep alive process
                 resolve();
             };
-            ws.onerror = (event: ErrorEvent) =>
-                reject([SdStargateCoreErrorTypes.GenericClientError, event.message]);
+            ws.onerror = (event: ErrorEvent) => { reject([SdStargateCoreErrorTypes.GenericClientError, event.message]); };
         });
     }
 
@@ -122,24 +124,23 @@ export class SdWebSocketClient implements ISdStargateClient {
 
         return new Promise((resolve, reject) => {
             this._ws = undefined;
-            ws.onclose = () => resolve();
-            ws.onerror = (event: ErrorEvent) =>
-                reject([SdStargateCoreErrorTypes.GenericClientError, event.message]);
+            ws.onclose = () => { resolve(); };
+            ws.onerror = (event: ErrorEvent) => { reject([SdStargateCoreErrorTypes.GenericClientError, event.message]); };
             ws.close(); // close connection
         });
     }
 
-    async send(msg: ISdStargateCommandDto): Promise<any> {
+    async send(msg: ISdStargateCommandDto): Promise<unknown> {
         const reqId = this.generateRequestId();
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<unknown>((resolve, reject) => {
             msg.requestId = reqId;
             this.openRequests[reqId] = {
-                resolve: (value: any) => {
-                    delete this.openRequests[reqId];
+                resolve: (value: unknown) => {
+                    Reflect.deleteProperty(this.openRequests, reqId);
                     resolve(value);
                 },
-                reject: (value: any) => {
-                    delete this.openRequests[reqId];
+                reject: (value: SdWebSocketRejectReason) => {
+                    Reflect.deleteProperty(this.openRequests, reqId);
                     reject(
                         Array.isArray(value)
                             ? value
@@ -172,10 +173,10 @@ export class SdWebSocketClient implements ISdStargateClient {
         }
 
         // All responses must be in valid JSON format
-        let res;
+        let res: unknown;
         try {
-            res = JSON.parse(data);
-        } catch (e) {
+            res = JSON.parse(data) as unknown;
+        } catch {
             this.errHandler('Received data in invalid format: Not a JSON object.');
             return;
         }
@@ -222,11 +223,15 @@ export class SdWebSocketClient implements ISdStargateClient {
     processErrorMessage(res: ISdErrorResponseDto): void {
         // API Gateway errors are of type `Runtime.*` (e.g. `Runtime.ExitError`), which is wrapped
         // by our default type `SdStargateDefaultErrorType`.
+        const errorType = res.errorType;
         const mappedErrorType =
-            res.errorType && String(res.errorType).startsWith('Runtime.')
+            typeof errorType === 'string' && errorType.startsWith('Runtime.')
                 ? SdStargateCoreErrorTypes.ServiceUnavailable
-                : res.errorType;
-        const rejectReason = [mappedErrorType, res.errorMessage];
+                : errorType;
+        const rejectReason: [string | undefined, string | undefined] = [
+            mappedErrorType,
+            res.errorMessage,
+        ];
 
         // An error response without a requestId property is seen as a general system error.
         // In this case, we want to reject all open requests.
@@ -267,15 +272,17 @@ export class SdWebSocketClient implements ISdStargateClient {
         if (this.keepAliveTimeout) clearTimeout(this.keepAliveTimeout);
 
         // Create new keep alive
-        this.keepAliveTimeout = setTimeout(async () => {
-            try {
-                // `send` runs `updateKeepAlive` again
-                await this.send(keepAlive.reqCreator());
-            } catch (e) {
-                this.errHandler(
-                    `Failed to send keep alive message: ${e instanceof Error ? e.message : String(e)}`
-                );
-            }
+        this.keepAliveTimeout = setTimeout(() => {
+            void (async () => {
+                try {
+                    // `send` runs `updateKeepAlive` again
+                    await this.send(keepAlive.reqCreator());
+                } catch (e) {
+                    this.errHandler(
+                        `Failed to send keep alive message: ${e instanceof Error ? e.message : String(e)}`
+                    );
+                }
+            })();
         }, keepAlive.interval);
     }
 
@@ -283,11 +290,9 @@ export class SdWebSocketClient implements ISdStargateClient {
     static createWebSocket(url: string): WebSocket {
         // Browser environment
         if (typeof globalThis.WebSocket === 'function') {
-            return new globalThis.WebSocket(url) as any;
+            return new globalThis.WebSocket(url) as unknown as WebSocket;
         }
 
-        // Node.js environment
-        const NodeWebSocket = require('ws');
-        return new NodeWebSocket(url);
+        return new WebSocket(url);
     }
 }

@@ -65,10 +65,10 @@ const schemaReplyDto = {
 
 export abstract class SdGetDataCommandValidator extends SdBaseValidator {
     static assertCommandDto(data: unknown): asserts data is ISdStargateGetDataCommandDto {
-        return this.assertValid(data, schemaCommandDto);
+        this.assertValid(data, schemaCommandDto);
     }
 
     static assertReplyDto(data: unknown): asserts data is ISdStargateGetDataReplyDto {
-        return this.assertValid(data, schemaReplyDto);
+        this.assertValid(data, schemaReplyDto);
     }
 }

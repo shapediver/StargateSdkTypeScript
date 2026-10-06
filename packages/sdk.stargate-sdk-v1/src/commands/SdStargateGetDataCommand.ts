@@ -8,7 +8,6 @@ import {
     ISdStargateGetDataReplyDto,
 } from '../dto/commands/getDataCommand';
 import { ISdStargateClientModel } from '../models/ISdStargateClientModel';
-import { ISdStargateSdk } from '../sdk/ISdStargateSdk';
 import { SdGetDataCommandValidator } from '../validators/commands/SdGetDataCommandValidator';
 import { ISdStargateGetDataCommand } from './ISdStargateGetDataCommand';
 import { SdBaseCommand } from './SdBaseCommand';
@@ -20,20 +19,20 @@ export class SdStargateGetDataCommand extends SdBaseCommand implements ISdStarga
 
     protected identifier: string = 'GET_DATA';
 
-    constructor(sdk: ISdStargateSdk) {
-        super(sdk);
-    }
-
     isSupported(payload: ISdCommandPayload): boolean {
-        return payload.command == this.identifier;
+        return payload.command === this.identifier;
     }
 
-    async processCommandMessage(payload: ISdCommandRequestPayload) {
-        let data = payload.data;
+    async processCommandMessage(payload: ISdCommandRequestPayload): Promise<void> {
+        const data = payload.data;
 
         SdGetDataCommandValidator.assertCommandDto(data);
-        const handler = this.handler ? this.handler?.bind(this) : undefined;
-        await this.invokeHandler(payload, data, handler);
+        const userHandler = this.handler;
+        await this.invokeHandler(
+            payload,
+            data,
+            userHandler ? (msg: ISdStargateGetDataCommandDto) => userHandler(msg) : undefined
+        );
     }
 
     processOkReplyMessage(payload: ISdCommandOkReplyPayload) {
@@ -49,7 +48,13 @@ export class SdStargateGetDataCommand extends SdBaseCommand implements ISdStarga
         clients: ISdStargateClientModel[],
         timeout: number = 60000
     ): Promise<ISdStargateGetDataReplyDto[]> {
-        return await this.sendCommand(data, clients, this.identifier, 'BATCH', timeout);
+        return (await this.sendCommand(
+            data,
+            clients,
+            this.identifier,
+            'BATCH',
+            timeout
+        )) as ISdStargateGetDataReplyDto[];
     }
 
     registerHandler(

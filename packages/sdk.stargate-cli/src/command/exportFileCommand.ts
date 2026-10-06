@@ -46,6 +46,13 @@ export function setupExportFileCommandHandlers(sdk: ISdStargateSdk): void {
     command.registerHandler(handler);
 }
 
+type ExportFileCommandAnswers = {
+    modelId: string;
+    exportId: string;
+    exportIndex: string;
+    clientIds: string[];
+};
+
 function askCommand(clients: ISdStargateClientModel[]) {
     const questions = [
         {
@@ -75,7 +82,7 @@ function askCommand(clients: ISdStargateClientModel[]) {
             }),
         },
     ];
-    return inquirer.prompt(questions);
+    return inquirer.prompt<ExportFileCommandAnswers>(questions);
 }
 
 export async function exportFileCommand(sdk: ISdStargateSdk): Promise<void> {
@@ -93,10 +100,10 @@ export async function exportFileCommand(sdk: ISdStargateSdk): Promise<void> {
         const dto: ISdStargateExportFileCommandDto = {
             model: { id: modelId },
             parameters: { PARAM_ID: 'PARAM_VALUE' },
-            export: { id: exportId, index: parseInt(exportIndex) },
+            export: { id: exportId, index: Number.parseInt(exportIndex, 10) },
         };
 
-        const selectedClients = clients.filter((c) => (<string[]>clientIds).includes(c.id));
+        const selectedClients = clients.filter((c) => clientIds.includes(c.id));
         const res = await command.send(dto, selectedClients);
         printResults(identifier, selectedClients.length, res);
     } catch (e) {
@@ -110,9 +117,9 @@ export async function exportFileCommand(sdk: ISdStargateSdk): Promise<void> {
     }
 }
 
-function printResults(cmd: string, nClients: number, res?: any): void {
+function printResults(cmd: string, nClients: number, res?: unknown): void {
     console.log(
-        chalk.green(`[${nowTime()}] Successfully sent command '${cmd}' to ${nClients} clients!`)
+        chalk.green(`[${nowTime()}] Successfully sent command '${cmd}' to ${String(nClients)} clients!`)
     );
     if (res) console.log(chalk.green('Result:\n', prettifyMsg(res)));
 }

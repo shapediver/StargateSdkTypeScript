@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import dayjs from 'dayjs';
 import { createSpinner } from 'nanospinner';
+import util from 'util';
 
 /** Use this in default-block to force the compiler to make the switch statement exhaustive */
 export function assertUnreachable(_: never): never {
@@ -11,8 +12,7 @@ export function assertUnreachable(_: never): never {
 export function prettifyMsg(msg: unknown): unknown {
     let pretty = msg;
 
-    if (typeof msg === 'object' && msg !== null)
-        pretty = require('util').inspect(pretty, false, null);
+    if (typeof msg === 'object' && msg !== null) pretty = util.inspect(pretty, false, null);
 
     return pretty;
 }
@@ -40,7 +40,7 @@ export async function waitToSimulate(
 ): Promise<void> {
     const seconds = randomIntFromInterval(min, max);
     const spinner = createSpinner(
-        chalk.magenta(`Waiting ${seconds} seconds to simulate ${description} ...`)
+        chalk.magenta(`Waiting ${String(seconds)} seconds to simulate ${description} ...`)
     ).start();
 
     await sleep(seconds * 1000);

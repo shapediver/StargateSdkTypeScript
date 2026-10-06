@@ -5,7 +5,7 @@ import { SdCommandRegister } from '../../src/commands/SdCommandRegister';
 test('command with single client times out; should reject', async () => {
     const register = new SdCommandRegister();
 
-    let promise = register.registerCommand('test', ['foo'], 100);
+    const promise = register.registerCommand('test', ['foo'], 100);
 
     // New open command should be registered
     expect(Object.keys(register.openCommands)).toStrictEqual(['test']);
@@ -124,7 +124,7 @@ test('command that already has been rejected receives error response; should ign
     // Nothing should happen
 });
 
-test('forcefully reject open command, topic not found; should return', async () => {
+test('forcefully reject open command, topic not found; should return', () => {
     const register = new SdCommandRegister();
 
     register.rejectCommand(

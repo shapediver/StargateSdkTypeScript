@@ -9,7 +9,7 @@ import { SdGetDataCommandValidator } from '../../src/validators/commands/SdGetDa
 describe('validate get data command', function () {
     describe('command dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateGetDataCommandDto> = {
+            const data: Required<ISdStargateGetDataCommandDto> = {
                 model: { id: '123' },
                 parameter: { id: 'xyz' },
             };
@@ -18,7 +18,7 @@ describe('validate get data command', function () {
 
         test('model id missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { foo: '123' },
                     parameter: { id: 'xyz' },
                 };
@@ -31,7 +31,7 @@ describe('validate get data command', function () {
 
         test('parameter id missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: '123' },
                     parameter: { foo: 'xyz' },
                 };
@@ -44,7 +44,7 @@ describe('validate get data command', function () {
 
         test('model missing', () => {
             try {
-                let data = {
+                const data = {
                     parameter: { id: 'xyz' },
                 };
                 SdGetDataCommandValidator.assertCommandDto(data);
@@ -56,7 +56,7 @@ describe('validate get data command', function () {
 
         test('parameter missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: '123' },
                 };
                 SdGetDataCommandValidator.assertCommandDto(data);
@@ -69,7 +69,7 @@ describe('validate get data command', function () {
 
     describe('reply dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateGetDataReplyDto> = {
+            const data: Required<ISdStargateGetDataReplyDto> = {
                 asset: {
                     id: '1',
                     chunk: {
@@ -87,7 +87,7 @@ describe('validate get data command', function () {
         });
 
         test('min asset', () => {
-            let data: Required<ISdStargateGetDataReplyDto> = {
+            const data: Required<ISdStargateGetDataReplyDto> = {
                 asset: {
                     id: '1',
                 },
@@ -100,7 +100,7 @@ describe('validate get data command', function () {
         });
 
         test('required', () => {
-            let data: ISdStargateGetDataReplyDto = {
+            const data: ISdStargateGetDataReplyDto = {
                 info: {
                     count: 1,
                     result: ISdStargateGetDataResultEnum.SUCCESS,
@@ -111,7 +111,7 @@ describe('validate get data command', function () {
 
         test('asset id missing', () => {
             try {
-                let data = {
+                const data = {
                     asset: {
                         foo: '1',
                     },
@@ -129,7 +129,7 @@ describe('validate get data command', function () {
 
         test('chunk id wrong', () => {
             try {
-                let data = {
+                const data = {
                     asset: {
                         id: '1',
                         chunk: { id: false },
@@ -148,7 +148,7 @@ describe('validate get data command', function () {
 
         test('info missing', () => {
             try {
-                let data = {
+                const data = {
                     asset: {
                         id: '1',
                     },
@@ -162,7 +162,7 @@ describe('validate get data command', function () {
 
         test('info count wrong', () => {
             try {
-                let data = {
+                const data = {
                     asset: {
                         id: '1',
                     },
@@ -180,7 +180,7 @@ describe('validate get data command', function () {
 
         test('info result wrong', () => {
             try {
-                let data = {
+                const data = {
                     asset: {
                         id: '1',
                     },
@@ -197,7 +197,7 @@ describe('validate get data command', function () {
         });
 
         test('info with message', () => {
-            let data: ISdStargateGetDataReplyDto = {
+            const data: ISdStargateGetDataReplyDto = {
                 info: {
                     count: 1,
                     result: ISdStargateGetDataResultEnum.SUCCESS,

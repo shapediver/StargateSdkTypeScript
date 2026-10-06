@@ -1,10 +1,11 @@
 import { SdStargateError, SdStargateErrorTypes } from './SdStargateError';
 
+const stargateErrorTypeValues = new Set<string>(Object.values(SdStargateErrorTypes));
+
 /** Type guard for all error types of the Stargate SDK package. */
-export function isSgError(e: any): e is SdStargateError {
+export function isSgError(e: unknown): e is SdStargateError {
     return (
-        e instanceof Error &&
-        'type' in e &&
-        Object.values(SdStargateErrorTypes).includes(e.type as any)
+        e instanceof SdStargateError &&
+        stargateErrorTypeValues.has(e.type)
     );
 }

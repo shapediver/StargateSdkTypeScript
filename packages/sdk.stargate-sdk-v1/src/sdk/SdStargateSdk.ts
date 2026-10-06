@@ -51,9 +51,15 @@ export class SdStargateSdk implements ISdStargateSdk {
     async init(): Promise<void> {
         // Initialize commander and connect to Stargate
         this.commander = new SdWebSocketCommander(
-            this.msgHandler.bind(this),
-            this.errHandler.bind(this),
-            this.dcnHandler.bind(this)
+            (payload) => {
+                this.msgHandler(payload);
+            },
+            (msg) => {
+                this.errHandler(msg);
+            },
+            (msg) => {
+                this.dcnHandler(msg);
+            }
         );
         await this.commander.connect(this.baseUrl);
     }
@@ -66,7 +72,7 @@ export class SdStargateSdk implements ISdStargateSdk {
                 // Invoke the general user message handler when the message is not a client command
                 if (!res) this.userMsgHandler(payload);
             })
-            .catch((e) => {
+            .catch((e: unknown) => {
                 let msg;
                 if (e instanceof SdStargateError) msg = `${e.type}: ${e.message}`;
                 else if (e instanceof Error) msg = e.message;
@@ -97,7 +103,17 @@ export class SdStargateSdk implements ISdStargateSdk {
 
     async close(): Promise<void> {
         // We can just close the connection. The Stargate service will clean up the data by itself.
-        return this.commander!.disconnect();
+        return this.requireCommander().disconnect();
+    }
+
+    private requireCommander(): ISdStargateCommander {
+        if (!this.commander) {
+            throw new SdStargateError(
+                SdStargateErrorTypes.GenericClientError,
+                'Stargate SDK is not connected.'
+            );
+        }
+        return this.commander;
     }
 
     async register(
@@ -120,12 +136,12 @@ export class SdStargateSdk implements ISdStargateSdk {
             },
         };
 
-        const res = (await this.commander!.send(req)) as ISdStargateRegisterResponseDto;
+        const res = (await this.requireCommander().send(req)) as ISdStargateRegisterResponseDto;
 
         // Make sure that the SDK version and the backend version are compatible
-        const version = SdUtils.extractVersion(res.version ?? '', 'major');
+        const version = SdUtils.extractVersion(res.version, 'major');
         if (!version || version !== SdStargateSdk.STARGATE_VERSION) {
-            await this.commander!.disconnect();
+            await this.requireCommander().disconnect();
             throw new SdStargateError(
                 SdStargateErrorTypes.GenericClientError,
                 'Incompatible versions: ' +
@@ -144,7 +160,7 @@ export class SdStargateSdk implements ISdStargateSdk {
             header: { command: 'LIST_BACKEND_CLIENTS' },
         };
 
-        const res = await this.commander!.send(req);
+        const res = await this.requireCommander().send(req);
         return res as ISdStargateListClientsResponseDto;
     }
 
@@ -153,17 +169,12 @@ export class SdStargateSdk implements ISdStargateSdk {
             header: { command: 'LIST_FRONTEND_CLIENTS' },
         };
 
-        const res = await this.commander!.send(req);
+        const res = await this.requireCommander().send(req);
         return res as ISdStargateListClientsResponseDto;
     }
 
     async forwardMessage(
-        payload: Record<string, any>,
-        clients: ISdStargateClientModel[]
-    ): Promise<void>;
-    async forwardMessage(payload: Record<string, any>, clients: string[]): Promise<void>;
-    async forwardMessage(
-        payload: Record<string, any>,
+        payload: Record<string, unknown>,
         clients: ISdStargateClientModel[] | string[]
     ): Promise<void> {
         const clientIds =
@@ -179,7 +190,7 @@ export class SdStargateSdk implements ISdStargateSdk {
             payload,
         };
 
-        await this.commander!.send(req);
+        await this.requireCommander().send(req);
     }
 
     async disconnectClients(clients: ISdStargateClientModel[]): Promise<void> {
@@ -190,7 +201,7 @@ export class SdStargateSdk implements ISdStargateSdk {
             },
         };
 
-        await this.commander!.send(req);
+        await this.requireCommander().send(req);
     }
 
     private async tryProcessClientCommand(payload: unknown): Promise<boolean> {

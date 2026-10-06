@@ -19,5 +19,5 @@ export interface ISdStargateClient {
     disconnect(): Promise<void>;
 
     /** Sends the given message to the server and waits for a response. */
-    send(msg: ISdStargateCommandDto): Promise<any>;
+    send(msg: ISdStargateCommandDto): Promise<unknown>;
 }

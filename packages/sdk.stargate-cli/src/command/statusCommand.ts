@@ -44,6 +44,10 @@ export function setupStatusCommandHandlers(sdk: ISdStargateSdk): void {
     command.registerHandler(handler);
 }
 
+type StatusCommandAnswers = {
+    clientIds: string[];
+};
+
 function askCommand(clients: ISdStargateClientModel[]) {
     const questions = [
         {
@@ -58,7 +62,7 @@ function askCommand(clients: ISdStargateClientModel[]) {
             }),
         },
     ];
-    return inquirer.prompt(questions);
+    return inquirer.prompt<StatusCommandAnswers>(questions);
 }
 
 export async function statusCommand(sdk: ISdStargateSdk): Promise<void> {
@@ -75,7 +79,7 @@ export async function statusCommand(sdk: ISdStargateSdk): Promise<void> {
 
         const dto: ISdStargateStatusCommandDto = {};
 
-        const selectedClients = clients.filter((c) => (<string[]>clientIds).includes(c.id));
+        const selectedClients = clients.filter((c) => clientIds.includes(c.id));
         const res = await command.send(dto, selectedClients);
         printResults(identifier, selectedClients.length, res);
     } catch (e) {
@@ -89,9 +93,9 @@ export async function statusCommand(sdk: ISdStargateSdk): Promise<void> {
     }
 }
 
-function printResults(cmd: string, nClients: number, res?: any): void {
+function printResults(cmd: string, nClients: number, res?: unknown): void {
     console.log(
-        chalk.green(`[${nowTime()}] Successfully sent command '${cmd}' to ${nClients} clients!`)
+        chalk.green(`[${nowTime()}] Successfully sent command '${cmd}' to ${String(nClients)} clients!`)
     );
     if (res) console.log(chalk.green('Result:\n', prettifyMsg(res)));
 }

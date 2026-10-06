@@ -6,6 +6,10 @@ import {
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 
+type DisconnectClientsAnswers = {
+    clientIds: string[];
+};
+
 function askQuestions(clients: ISdStargateClientModel[]) {
     const questions = [
         {
@@ -20,7 +24,7 @@ function askQuestions(clients: ISdStargateClientModel[]) {
             }),
         },
     ];
-    return inquirer.prompt(questions);
+    return inquirer.prompt<DisconnectClientsAnswers>(questions);
 }
 
 export async function disconnectClients(sdk: ISdStargateSdk): Promise<void> {
@@ -33,7 +37,7 @@ export async function disconnectClients(sdk: ISdStargateSdk): Promise<void> {
 
         // Ask user which clients should get disconnected
         const { clientIds } = await askQuestions(clients);
-        const selectedClients = clients.filter((c) => (<string[]>clientIds).includes(c.id));
+        const selectedClients = clients.filter((c) => clientIds.includes(c.id));
 
         // Send command and print results
         await sdk.disconnectClients(selectedClients);
@@ -52,7 +56,7 @@ export async function disconnectClients(sdk: ISdStargateSdk): Promise<void> {
 function printResults(nClients: number): void {
     console.log(
         chalk.green(
-            `Successfully deregistered and disconnected ${nClients} clients from Stargate!`
+            `Successfully deregistered and disconnected ${String(nClients)} clients from Stargate!`
         )
     );
 }

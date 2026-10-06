@@ -44,7 +44,7 @@ export interface ISdCommandRequestPayload {
     command: string;
 
     /** Any data that is associated with the respective command. */
-    data: Record<string, any>;
+    data: Record<string, unknown>;
 }
 
 /** Describes the payload of a reply to a client command. */
@@ -76,7 +76,7 @@ interface ISdCommandReplyPayload {
 
 export interface ISdCommandOkReplyPayload extends ISdCommandReplyPayload {
     /** The reply data of a successfully executed command. */
-    data: Record<string, any>;
+    data: Record<string, unknown>;
 }
 
 export interface ISdCommandErrorReplyPayload extends ISdCommandReplyPayload {

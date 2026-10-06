@@ -8,7 +8,7 @@ import { SdGetSupportedDataCommandValidator } from '../../src/validators/command
 describe('validate get supported data command', function () {
     describe('command dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateGetSupportedDataCommandDto> = {};
+            const data: Required<ISdStargateGetSupportedDataCommandDto> = {};
             SdGetSupportedDataCommandValidator.assertCommandDto(data);
         });
     });
@@ -22,8 +22,7 @@ describe('validate get supported data command', function () {
         };
 
         test('full - latest version', () => {
-            expect(() =>
-                SdGetSupportedDataCommandValidator.assertReplyDto(validReplyDto)
+            expect(() => { SdGetSupportedDataCommandValidator.assertReplyDto(validReplyDto); }
             ).not.toThrow();
         });
 
@@ -34,8 +33,7 @@ describe('validate get supported data command', function () {
                 typeHints: validReplyDto.typeHints,
             };
 
-            expect(() =>
-                SdGetSupportedDataCommandValidator.assertReplyDto(legacyReplyDto)
+            expect(() => { SdGetSupportedDataCommandValidator.assertReplyDto(legacyReplyDto); }
             ).not.toThrow();
         });
 
@@ -44,7 +42,7 @@ describe('validate get supported data command', function () {
             ['typeHints', { ...validReplyDto, typeHints: undefined }],
             // Properties added later are optional and set later.
         ])('%s missing', (_, data) => {
-            expect(() => SdGetSupportedDataCommandValidator.assertReplyDto(data)).toThrow(
+            expect(() => { SdGetSupportedDataCommandValidator.assertReplyDto(data); }).toThrow(
                 SdStargateError
             );
         });
@@ -55,7 +53,7 @@ describe('validate get supported data command', function () {
             ['contentTypes', { ...validReplyDto, contentTypes: [1] }],
             ['fileExtensions', { ...validReplyDto, fileExtensions: [1] }],
         ])('%s wrong type', (_, data) => {
-            expect(() => SdGetSupportedDataCommandValidator.assertReplyDto(data)).toThrow(
+            expect(() => { SdGetSupportedDataCommandValidator.assertReplyDto(data); }).toThrow(
                 SdStargateError
             );
         });

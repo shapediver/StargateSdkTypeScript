@@ -47,11 +47,11 @@ describe('addCommand', function () {
     test('adding an instance of a command multiple times; should add only once', () => {
         const cmd = new DummyCommand();
         sdk.addCommand(cmd);
-        expect(() => sdk.addCommand(cmd)).toThrow();
+        expect(() => { sdk.addCommand(cmd); }).toThrow();
     });
 
     test('adding command instances of the same type multiple times; should add only once', () => {
         sdk.addCommand(new DummyCommand());
-        expect(() => sdk.addCommand(new DummyCommand())).toThrow();
+        expect(() => { sdk.addCommand(new DummyCommand()); }).toThrow();
     });
 });

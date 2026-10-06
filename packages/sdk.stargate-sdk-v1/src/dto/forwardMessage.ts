@@ -6,5 +6,5 @@ export interface ISdStargateForwardMessageRequestDto extends ISdStargateCommandD
         targets: string[];
     };
 
-    payload: Record<string, any>;
+    payload: Record<string, unknown>;
 }

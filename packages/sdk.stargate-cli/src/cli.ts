@@ -20,8 +20,7 @@ import { register } from './command/register';
 import { setupStatusCommandHandlers, statusCommand } from './command/statusCommand';
 import { assertUnreachable, prettifyMsg } from './utils';
 import { exportFileCommand, setupExportFileCommandHandlers } from './command/exportFileCommand';
-
-const figlet = require('figlet');
+import figlet from 'figlet';
 
 const init = () => {
     console.log(
@@ -73,7 +72,7 @@ function askCommand() {
             loop: false,
         },
     ];
-    return inquirer.prompt(command);
+    return inquirer.prompt<{ command: Command }>(command);
 }
 
 /* Custom handler for all server messages. */
@@ -81,7 +80,7 @@ function msgHandle(msg: unknown): void {
     console.log(
         '\n',
         chalk.blue(
-            `${chalk.bold('Received non-command message from Stargate:')}\n${prettifyMsg(msg)}`
+            `${chalk.bold('Received non-command message from Stargate:')}\n${String(prettifyMsg(msg))}`
         ),
         '\n'
     );
@@ -92,7 +91,7 @@ function errHandler(msg: string): void {
     console.error(
         '\n',
         chalk.red(
-            `${chalk.bold('Received new error message from Stargate:')}\n${prettifyMsg(msg)}`
+            `${chalk.bold('Received new error message from Stargate:')}\n${String(prettifyMsg(msg))}`
         ),
         '\n'
     );
@@ -104,10 +103,10 @@ function dcnHandler(msg: string): void {
     process.exit(0);
 }
 
-(async function (): Promise<void> {
+void (async function (): Promise<void> {
     init();
 
-    let sdk = await register(msgHandle, errHandler, dcnHandler);
+    const sdk = await register(msgHandle, errHandler, dcnHandler);
 
     // Register user-handlers for all commands
     setupBakeDataCommandHandlers(sdk);
@@ -118,9 +117,8 @@ function dcnHandler(msg: string): void {
     setupPrepareModelCommandHandlers(sdk);
     setupStatusCommandHandlers(sdk);
 
-    while (true) {
-        const { command } = await askCommand();
-        const cmd: Command = command;
+    for (;;) {
+        const { command: cmd } = await askCommand();
         switch (cmd) {
             case Command.BAKE_DATA_COMMAND:
                 await bakeDataCommand(sdk);
@@ -133,7 +131,7 @@ function dcnHandler(msg: string): void {
                 break;
             case Command.EXIT:
                 await sdk.close();
-                process.exit();
+                return process.exit();
             case Command.EXPORT_FILE:
                 await exportFileCommand(sdk);
                 return;

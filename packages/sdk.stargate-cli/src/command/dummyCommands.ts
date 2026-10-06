@@ -19,7 +19,7 @@ import { assertUnreachable, nowTime, prettifyMsg, waitToSimulate } from '../util
 let dummyCommand: ISdStargateDummyCommand | undefined;
 
 // User-handler for 'no-reply' command
-const noReplyExampleHandler = async (
+const noReplyExampleHandler = (
     msg: ISdStargateDummyNoReplyExampleCommandDto
 ): Promise<ISdStargateDummyNoReplyExampleReplyDto> => {
     console.info(
@@ -31,11 +31,11 @@ const noReplyExampleHandler = async (
 
     console.info(chalk.magenta(`[${nowTime()}] Finished handling command 'No-Reply'!`));
 
-    return {};
+    return Promise.resolve({});
 };
 
 // User-handler for 'ack-reply' command
-const ackReplyExampleHandler = async (
+const ackReplyExampleHandler = (
     msg: ISdStargateDummyAckReplyExampleCommandDto
 ): Promise<ISdStargateDummyAckReplyExampleReplyDto> => {
     console.info(
@@ -47,7 +47,7 @@ const ackReplyExampleHandler = async (
 
     console.info(chalk.magenta(`[${nowTime()}] Finished handling command 'ACK-Reply'!`));
 
-    return {};
+    return Promise.resolve({});
 };
 
 // User-handler for 'batch-reply' command
@@ -85,6 +85,11 @@ export function setupDummyCommandHandlers(sdk: ISdStargateSdk): void {
     dummyCommand.registerBatchReplyExampleHandler(batchReplyExampleHandler);
 }
 
+type DummyCommandAnswers = {
+    command: DummyCommand;
+    clientIds: string[];
+};
+
 function askCommand(clients: ISdStargateClientModel[]) {
     const questions = [
         {
@@ -105,7 +110,7 @@ function askCommand(clients: ISdStargateClientModel[]) {
             }),
         },
     ];
-    return inquirer.prompt(questions);
+    return inquirer.prompt<DummyCommandAnswers>(questions);
 }
 
 export async function dummyCommands(sdk: ISdStargateSdk): Promise<void> {
@@ -118,10 +123,9 @@ export async function dummyCommands(sdk: ISdStargateSdk): Promise<void> {
             ...(await sdk.listBackendClients()),
         ];
 
-        const { command, clientIds } = await askCommand(clients);
-        const cmd: DummyCommand = command;
+        const { command: cmd, clientIds } = await askCommand(clients);
 
-        const selectedClients = clients.filter((c) => (<string[]>clientIds).includes(c.id));
+        const selectedClients = clients.filter((c) => clientIds.includes(c.id));
 
         switch (cmd) {
             case DummyCommand.NO_REPLY:
@@ -177,9 +181,9 @@ async function batchReplyExampleCommand(
     printResults('BATCH-Reply', clients.length, res);
 }
 
-function printResults(cmd: string, nClients: number, res?: any): void {
+function printResults(cmd: string, nClients: number, res?: unknown): void {
     console.log(
-        chalk.green(`[${nowTime()}] Successfully sent command '${cmd}' to ${nClients} clients!`)
+        chalk.green(`[${nowTime()}] Successfully sent command '${cmd}' to ${String(nClients)} clients!`)
     );
     if (res) console.log(chalk.green('Result:\n', prettifyMsg(res)));
 }

@@ -9,7 +9,7 @@ import { SdExportFileCommandValidator } from '../../src/validators/commands/SdEx
 describe('validate export file command', function () {
     describe('command dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateExportFileCommandDto> = {
+            const data: Required<ISdStargateExportFileCommandDto> = {
                 model: { id: '123' },
                 parameters: { id: 'xyz' },
                 export: { id: 'abc', index: 3 },
@@ -18,7 +18,7 @@ describe('validate export file command', function () {
         });
 
         test('minimum', () => {
-            let data: ISdStargateExportFileCommandDto = {
+            const data: ISdStargateExportFileCommandDto = {
                 model: { id: '123' },
                 parameters: {},
                 export: { id: 'abc', index: 3 },
@@ -28,7 +28,7 @@ describe('validate export file command', function () {
 
         test('parameters missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: '123' },
                     export: { id: 'abc', index: 3 },
                 };
@@ -41,7 +41,7 @@ describe('validate export file command', function () {
 
         test('model id missing', () => {
             try {
-                let data = {
+                const data = {
                     model: {},
                     parameters: {},
                     export: { id: 'abc', index: 3 },
@@ -55,7 +55,7 @@ describe('validate export file command', function () {
 
         test('model missing', () => {
             try {
-                let data = {
+                const data = {
                     parameters: {},
                     export: { id: 'abc', index: 3 },
                 };
@@ -68,7 +68,7 @@ describe('validate export file command', function () {
 
         test('export id missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: 'abc' },
                     parameters: {},
                     export: { index: 3 },
@@ -82,7 +82,7 @@ describe('validate export file command', function () {
 
         test('export index missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: 'abc' },
                     parameters: {},
                     export: { id: 'abc' },
@@ -96,7 +96,7 @@ describe('validate export file command', function () {
 
         test('export missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: 'abc' },
                     parameters: {},
                 };
@@ -109,7 +109,7 @@ describe('validate export file command', function () {
 
         test('param value no string', () => {
             try {
-                let data = {
+                const data = {
                     model: { id: 'abc' },
                     parameters: { paramId: 1 },
                     export: { id: 'abc' },
@@ -124,7 +124,7 @@ describe('validate export file command', function () {
 
     describe('reply dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateExportFileReplyDto> = {
+            const data: Required<ISdStargateExportFileReplyDto> = {
                 info: {
                     result: ISdStargateExportFileResultEnum.SUCCESS,
                     message: 'foo',
@@ -134,7 +134,7 @@ describe('validate export file command', function () {
         });
 
         test('info without message', () => {
-            let data: Required<ISdStargateExportFileReplyDto> = {
+            const data: Required<ISdStargateExportFileReplyDto> = {
                 info: {
                     result: ISdStargateExportFileResultEnum.SUCCESS,
                 },
@@ -144,7 +144,7 @@ describe('validate export file command', function () {
 
         test('info missing', () => {
             try {
-                let data = {};
+                const data = {};
                 SdExportFileCommandValidator.assertReplyDto(data);
                 expect(true).toBeFalsy();
             } catch (e) {
@@ -154,7 +154,7 @@ describe('validate export file command', function () {
 
         test('result missing', () => {
             try {
-                let data = {
+                const data = {
                     info: {
                         message: 'foo',
                     },
@@ -168,7 +168,7 @@ describe('validate export file command', function () {
 
         test('result wrong type', () => {
             try {
-                let data = {
+                const data = {
                     info: {
                         result: 'foo',
                     },

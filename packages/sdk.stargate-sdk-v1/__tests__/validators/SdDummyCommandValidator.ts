@@ -11,7 +11,7 @@ import { SdDummyCommandValidator } from '../../src/validators/commands/SdDummyCo
 describe('validate no-reply example', function () {
     describe('command dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateDummyNoReplyExampleCommandDto> = {
+            const data: Required<ISdStargateDummyNoReplyExampleCommandDto> = {
                 text: 'foobar',
             };
             SdDummyCommandValidator.assertNoReplyExampleCommandDto(data);
@@ -20,7 +20,7 @@ describe('validate no-reply example', function () {
 
     describe('reply dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateDummyNoReplyExampleReplyDto> = {};
+            const data: Required<ISdStargateDummyNoReplyExampleReplyDto> = {};
             SdDummyCommandValidator.assertNoReplyExampleReplyDto(data);
         });
     });
@@ -29,7 +29,7 @@ describe('validate no-reply example', function () {
 describe('validate ack-reply example', function () {
     describe('command dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateDummyAckReplyExampleCommandDto> = {
+            const data: Required<ISdStargateDummyAckReplyExampleCommandDto> = {
                 text: 'foobar',
             };
             SdDummyCommandValidator.assertAckReplyExampleCommandDto(data);
@@ -38,7 +38,7 @@ describe('validate ack-reply example', function () {
 
     describe('reply dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateDummyAckReplyExampleReplyDto> = {};
+            const data: Required<ISdStargateDummyAckReplyExampleReplyDto> = {};
             SdDummyCommandValidator.assertAckReplyExampleReplyDto(data);
         });
     });
@@ -47,14 +47,14 @@ describe('validate ack-reply example', function () {
 describe('validate batch-reply example', function () {
     describe('command dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateDummyBatchReplyExampleCommandDto> = {};
+            const data: Required<ISdStargateDummyBatchReplyExampleCommandDto> = {};
             SdDummyCommandValidator.assertBatchReplyExampleCommandDto(data);
         });
     });
 
     describe('reply dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateDummyBatchReplyExampleReplyDto> = {
+            const data: Required<ISdStargateDummyBatchReplyExampleReplyDto> = {
                 mesh: 'foobar',
                 visible: false,
             };

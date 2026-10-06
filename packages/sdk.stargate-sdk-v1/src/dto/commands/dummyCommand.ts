@@ -2,15 +2,15 @@ export interface ISdStargateDummyNoReplyExampleCommandDto {
     text: string;
 }
 
-export interface ISdStargateDummyNoReplyExampleReplyDto {}
+export type ISdStargateDummyNoReplyExampleReplyDto = Record<string, never>;
 
 export interface ISdStargateDummyAckReplyExampleCommandDto {
     text: string;
 }
 
-export interface ISdStargateDummyAckReplyExampleReplyDto {}
+export type ISdStargateDummyAckReplyExampleReplyDto = Record<string, never>;
 
-export interface ISdStargateDummyBatchReplyExampleCommandDto {}
+export type ISdStargateDummyBatchReplyExampleCommandDto = Record<string, never>;
 
 export interface ISdStargateDummyBatchReplyExampleReplyDto {
     mesh: string;

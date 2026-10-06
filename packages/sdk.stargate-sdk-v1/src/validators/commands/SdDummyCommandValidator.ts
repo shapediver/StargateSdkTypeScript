@@ -62,36 +62,36 @@ export abstract class SdDummyCommandValidator extends SdBaseValidator {
     static assertNoReplyExampleCommandDto(
         data: unknown
     ): asserts data is ISdStargateDummyNoReplyExampleCommandDto {
-        return this.assertValid(data, schemaNoReplyExampleCommandDto);
+        this.assertValid(data, schemaNoReplyExampleCommandDto);
     }
 
     static assertNoReplyExampleReplyDto(
         data: unknown
     ): asserts data is ISdStargateDummyNoReplyExampleReplyDto {
-        return this.assertValid(data, schemaNoReplyExampleReplyDto);
+        this.assertValid(data, schemaNoReplyExampleReplyDto);
     }
 
     static assertAckReplyExampleCommandDto(
         data: unknown
     ): asserts data is ISdStargateDummyAckReplyExampleCommandDto {
-        return this.assertValid(data, schemaAckReplyExampleCommandDto);
+        this.assertValid(data, schemaAckReplyExampleCommandDto);
     }
 
     static assertAckReplyExampleReplyDto(
         data: unknown
     ): asserts data is ISdStargateDummyAckReplyExampleReplyDto {
-        return this.assertValid(data, schemaAckReplyExampleReplyDto);
+        this.assertValid(data, schemaAckReplyExampleReplyDto);
     }
 
     static assertBatchReplyExampleCommandDto(
         data: unknown
     ): asserts data is ISdStargateDummyBatchReplyExampleCommandDto {
-        return this.assertValid(data, schemaBatchReplyExampleCommandDto);
+        this.assertValid(data, schemaBatchReplyExampleCommandDto);
     }
 
     static assertBatchReplyExampleReplyDto(
         data: unknown
     ): asserts data is ISdStargateDummyBatchReplyExampleReplyDto {
-        return this.assertValid(data, schemaBatchReplyExampleReplyDto);
+        this.assertValid(data, schemaBatchReplyExampleReplyDto);
     }
 }

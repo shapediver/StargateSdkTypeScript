@@ -9,10 +9,9 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { createSpinner } from 'nanospinner';
 import { v4 as uuidv4 } from 'uuid';
+import os from 'os';
 import { readCliMemory, updateCliMemory } from '../memory';
 import { sleep } from '../utils';
-
-const os = require('os');
 
 interface Environment {
     stargate: {
@@ -111,6 +110,14 @@ enum ClientType {
     STANDALONE_CLIENT = 'Standalone Client',
 }
 
+type RegisterAnswers = {
+    envName: string;
+    userId: string;
+    clientType: ClientType | 'Other (custom UUID)';
+    customClientType?: string;
+    awsProfile: string;
+};
+
 function askQuestions(defaultUserId: string = uuidv4(), defaultAwsProfile: string = 'default') {
     const questions = [
         {
@@ -150,7 +157,8 @@ function askQuestions(defaultUserId: string = uuidv4(), defaultAwsProfile: strin
             type: 'input',
             name: 'customClientType',
             message: 'Please enter your custom client UUID:',
-            when: (answers: any) => answers.clientType === 'Other (custom UUID)',
+            when: (answers: Partial<RegisterAnswers>) =>
+                answers.clientType === 'Other (custom UUID)',
         },
         {
             type: 'input',
@@ -162,7 +170,7 @@ function askQuestions(defaultUserId: string = uuidv4(), defaultAwsProfile: strin
             },
         },
     ];
-    return inquirer.prompt(questions);
+    return inquirer.prompt<RegisterAnswers>(questions);
 }
 
 /** Generates a new JWT authentication token, instantiates the Stargate SDK and registers the selected client app. */
@@ -176,7 +184,7 @@ export async function register(
     await sleep(0);
 
     // Load CLI memory of previous user inputs.
-    const memory = await readCliMemory();
+    const memory = readCliMemory();
 
     // Usually, the user would get the JWT from the ShapeDiver Platform Backend. For these kind of
     // requests, the Platform always uses the ShapeDiver user ID as the JWT subject claim (and not
@@ -189,12 +197,12 @@ export async function register(
     // Update CLI memory with user inputs.
     memory.userId = userId;
     memory.awsProfile = awsProfile;
-    await updateCliMemory(memory);
+    updateCliMemory(memory);
 
     // Get environment for envName
     const env = ENVIRONMENTS[envName];
     if (!env) {
-        console.error(chalk.red(`${chalk.bold('Unknown Stargate environment - stopping CLI!')}`));
+        console.error(chalk.red(chalk.bold('Unknown Stargate environment - stopping CLI!')));
         process.exit(1);
     }
 

@@ -34,7 +34,7 @@ export async function listFrontendClients(sdk: ISdStargateSdk): Promise<void> {
 }
 
 function printResults(clients: ISdStargateListClientsResponseDto): void {
-    const data: any[][] = [['ID', 'Type', 'Name', 'Version', 'Host']];
+    const data: string[][] = [['ID', 'Type', 'Name', 'Version', 'Host']];
 
     clients.forEach((c: ISdStargateClientModel) => {
         data.push([

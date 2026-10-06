@@ -27,7 +27,7 @@ export class SdWebSocketCommander implements ISdStargateCommander {
 
     async connect(url: string): Promise<void> {
         try {
-            return await this.client.connect(url);
+            await this.client.connect(url); return;
         } catch (e) {
             throw SdWebSocketCommander.mapRejectToError(
                 e,
@@ -38,7 +38,7 @@ export class SdWebSocketCommander implements ISdStargateCommander {
 
     async disconnect(): Promise<void> {
         try {
-            return await this.client.disconnect();
+            await this.client.disconnect(); return;
         } catch (e) {
             throw SdWebSocketCommander.mapRejectToError(e, 'Error when disconnecting client:');
         }
@@ -75,12 +75,14 @@ export class SdWebSocketCommander implements ISdStargateCommander {
      * default error type and message.
      * @private
      */
-    static mapRejectToError(e: any, prefix?: string): SdStargateError {
-        // Try to extract error type
-        let errType =
-            Array.isArray(e) && SdUtils.enumValues(SdStargateErrorTypes).includes(e[0])
+    static mapRejectToError(e: unknown, prefix?: string): SdStargateError {
+        const errorTypes = SdUtils.enumValues(SdStargateErrorTypes);
+        const tupleType =
+            Array.isArray(e) && typeof e[0] === 'string' && errorTypes.includes(e[0])
                 ? e[0]
-                : SdStargateErrorTypes.GenericClientError;
+                : undefined;
+        // Try to extract error type
+        const errType = tupleType ?? SdStargateErrorTypes.GenericClientError;
 
         // Try to extract error message
         let errMsg;

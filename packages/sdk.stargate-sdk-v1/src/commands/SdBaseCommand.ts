@@ -19,7 +19,9 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
     /** The global identifier of this command type. */
     protected abstract identifier: string;
 
-    protected constructor(protected sdk: ISdStargateSdk) {
+    // Public so a subclass can be constructed without redeclaring this constructor.
+    // The class is abstract, so SdBaseCommand itself still cannot be constructed.
+    constructor(protected sdk: ISdStargateSdk) {
         sdk.addCommand(this);
         this.register = sdk.commandRegister;
     }
@@ -53,18 +55,21 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
      * @protected
      */
     protected async sendCommand(
-        data: Record<string, any>,
+        data: unknown,
         clients: ISdStargateClientModel[],
         command: string,
         responseType?: 'ACK' | 'BATCH',
         timeout?: number
-    ): Promise<any[]> {
+    ): Promise<unknown[]> {
         // We are omitting the `sender` property, because it is set by the Stargate backend service before the message
         // is forwarded to the target clients.
-        const payload: Omit<ISdCommandRequestPayload, 'sender'> = { command, data };
+        const payload: Omit<ISdCommandRequestPayload, 'sender'> = {
+            command,
+            data: data as Record<string, unknown>,
+        };
 
         // Add response object if specified
-        let res: Promise<any[]> | undefined;
+        let res: Promise<unknown[]> | undefined;
         if (responseType) {
             payload.response = {
                 type: responseType,
@@ -83,7 +88,7 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
             // Send message to Stargate backend
             await this.sdk.forwardMessage(payload, clients);
 
-            return res || Promise.resolve([]);
+            return await (res ?? Promise.resolve([]));
         } catch (e) {
             const response = payload.response;
             if (responseType && response) {
@@ -112,7 +117,7 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
     protected async invokeHandler<T>(
         payload: ISdCommandRequestPayload,
         data: T,
-        handler?: (msg: T) => Promise<Record<string, any>>
+        handler?: (msg: T) => Promise<unknown>
     ): Promise<void> {
         // Stop when no user handler has been registered for the command
         if (!handler) {
@@ -131,7 +136,7 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
 
         // Call the user handler.
         // This way, the user handler can just throw to propagate error messages.
-        let res;
+        let res: unknown;
         try {
             res = await handler(data);
         } catch (e) {
@@ -151,7 +156,7 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
      */
     private async sendReply(
         request: ISdCommandRequestPayload,
-        result: Record<string, any> | string
+        result: unknown
     ): Promise<void> {
         const requestResponse = request.response;
         if (!requestResponse) {
@@ -176,8 +181,11 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
         let ackPayload:
             | Omit<ISdCommandOkReplyPayload, 'sender'>
             | Omit<ISdCommandErrorReplyPayload, 'sender'>;
-        if (typeof result === 'object') ackPayload = { ...template, data: result };
-        else ackPayload = { ...template, error: { message: result } };
+        if (typeof result === 'object' && result !== null) {
+            ackPayload = { ...template, data: result as Record<string, unknown> };
+        } else {
+            ackPayload = { ...template, error: { message: String(result) } };
+        }
 
         // Send message to Stargate backend
         await this.sdk.forwardMessage(ackPayload, [request.sender]);

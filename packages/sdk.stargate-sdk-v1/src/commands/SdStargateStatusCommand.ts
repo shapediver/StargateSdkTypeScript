@@ -8,7 +8,6 @@ import {
     ISdStargateStatusReplyDto,
 } from '../dto/commands/statusCommand';
 import { ISdStargateClientModel } from '../models/ISdStargateClientModel';
-import { ISdStargateSdk } from '../sdk/ISdStargateSdk';
 import { SdStatusCommandValidator } from '../validators/commands/SdStatusCommandValidator';
 import { ISdStargateStatusCommand } from './ISdStargateStatusCommand';
 import { SdBaseCommand } from './SdBaseCommand';
@@ -20,20 +19,20 @@ export class SdStargateStatusCommand extends SdBaseCommand implements ISdStargat
 
     protected identifier: string = 'STATUS';
 
-    constructor(sdk: ISdStargateSdk) {
-        super(sdk);
-    }
-
     isSupported(payload: ISdCommandPayload): boolean {
-        return payload.command == this.identifier;
+        return payload.command === this.identifier;
     }
 
-    async processCommandMessage(payload: ISdCommandRequestPayload) {
-        let data = payload.data;
+    async processCommandMessage(payload: ISdCommandRequestPayload): Promise<void> {
+        const data = payload.data;
 
         SdStatusCommandValidator.assertCommandDto(data);
-        const handler = this.handler ? this.handler?.bind(this) : undefined;
-        await this.invokeHandler(payload, data, handler);
+        const userHandler = this.handler;
+        await this.invokeHandler(
+            payload,
+            data,
+            userHandler ? (msg: ISdStargateStatusCommandDto) => userHandler(msg) : undefined
+        );
     }
 
     processOkReplyMessage(payload: ISdCommandOkReplyPayload) {
@@ -49,7 +48,13 @@ export class SdStargateStatusCommand extends SdBaseCommand implements ISdStargat
         clients: ISdStargateClientModel[],
         timeout: number = 10000
     ): Promise<ISdStargateStatusReplyDto[]> {
-        return await this.sendCommand(data, clients, this.identifier, 'BATCH', timeout);
+        return (await this.sendCommand(
+            data,
+            clients,
+            this.identifier,
+            'BATCH',
+            timeout
+        )) as ISdStargateStatusReplyDto[];
     }
 
     registerHandler(

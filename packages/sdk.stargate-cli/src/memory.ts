@@ -14,15 +14,15 @@ const CLI_MEMORY_PATH: string = './.memory.json';
 let memory: CliMemory | undefined = undefined;
 
 /** Tries to read a stored memory object from file. If not found, default values are returned. */
-export async function readCliMemory(): Promise<CliMemory> {
+export function readCliMemory(): CliMemory {
     if (memory === undefined) {
         let data: Partial<CliMemory> = {};
 
         // Try to read file and parse content if file exists
         if (fs.existsSync(CLI_MEMORY_PATH)) {
             try {
-                const file = await fs.readFileSync(CLI_MEMORY_PATH);
-                data = JSON.parse(file.toString());
+                const file = fs.readFileSync(CLI_MEMORY_PATH);
+                data = JSON.parse(file.toString()) as Partial<CliMemory>;
             } catch (e) {
                 console.error(
                     chalk.red(
@@ -44,11 +44,11 @@ export async function readCliMemory(): Promise<CliMemory> {
 }
 
 /** Writes the content of the given memory object to a file; overwriting if it already exists. */
-export async function updateCliMemory(newMemory: CliMemory): Promise<void> {
+export function updateCliMemory(newMemory: CliMemory): void {
     memory = newMemory;
 
     try {
-        await fs.writeFileSync(CLI_MEMORY_PATH, JSON.stringify(memory, null, 2));
+        fs.writeFileSync(CLI_MEMORY_PATH, JSON.stringify(memory, null, 2));
     } catch (e) {
         console.error(
             chalk.red(

@@ -8,7 +8,6 @@ import {
     ISdStargateGetSupportedDataReplyDto,
 } from '../dto/commands/getSupportedDataCommand';
 import { ISdStargateClientModel } from '../models/ISdStargateClientModel';
-import { ISdStargateSdk } from '../sdk/ISdStargateSdk';
 import { SdGetSupportedDataCommandValidator } from '../validators/commands/SdGetSupportedDataCommandValidator';
 import { ISdStargateGetSupportedDataCommand } from './ISdStargateGetSupportedDataCommand';
 import { SdBaseCommand } from './SdBaseCommand';
@@ -25,32 +24,37 @@ export class SdStargateGetSupportedDataCommand
 
     protected identifier: string = 'GET_SUPPORTED_DATA';
 
-    constructor(sdk: ISdStargateSdk) {
-        super(sdk);
-    }
-
     isSupported(payload: ISdCommandPayload): boolean {
-        return payload.command == this.identifier;
+        return payload.command === this.identifier;
     }
 
-    async processCommandMessage(payload: ISdCommandRequestPayload) {
-        let data = payload.data;
+    async processCommandMessage(payload: ISdCommandRequestPayload): Promise<void> {
+        const data = payload.data;
 
         SdGetSupportedDataCommandValidator.assertCommandDto(data);
-        const handler = this.handler ? this.handler?.bind(this) : undefined;
-        await this.invokeHandler(payload, data, handler);
+        const userHandler = this.handler;
+        await this.invokeHandler(
+            payload,
+            data,
+            userHandler ? (msg: ISdStargateGetSupportedDataCommandDto) => userHandler(msg) : undefined
+        );
     }
 
     processOkReplyMessage(payload: ISdCommandOkReplyPayload) {
         // Validate reply-message
         SdGetSupportedDataCommandValidator.assertReplyDto(payload.data);
 
-        // Set default values for newer command properties to avoid breaking changes.
-        const data = payload.data;
-        if (data.contentTypes === undefined) data.contentTypes = [];
-        if (data.fileExtensions === undefined) data.fileExtensions = [];
+        const data = payload.data as ISdStargateGetSupportedDataReplyDto & {
+            contentTypes?: string[];
+            fileExtensions?: string[];
+        };
+        if (data.contentTypes === undefined) {
+            data.contentTypes = [];
+        }
+        if (data.fileExtensions === undefined) {
+            data.fileExtensions = [];
+        }
 
-        // Update the open command with the clients reply-message
         this.register.updateCommand(payload.response.topic, payload.sender, data);
     }
 
@@ -59,7 +63,13 @@ export class SdStargateGetSupportedDataCommand
         clients: ISdStargateClientModel[],
         timeout: number = 10000
     ): Promise<ISdStargateGetSupportedDataReplyDto[]> {
-        return await this.sendCommand(data, clients, this.identifier, 'BATCH', timeout);
+        return (await this.sendCommand(
+            data,
+            clients,
+            this.identifier,
+            'BATCH',
+            timeout
+        )) as ISdStargateGetSupportedDataReplyDto[];
     }
 
     registerHandler(

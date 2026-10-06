@@ -8,7 +8,6 @@ import {
     ISdCommandRequestPayload,
 } from '../dto/commands/commandPayload';
 import { ISdStargateClientModel } from '../models/ISdStargateClientModel';
-import { ISdStargateSdk } from '../sdk/ISdStargateSdk';
 import { SdExportFileCommandValidator } from '../validators/commands/SdExportFileCommandValidator';
 import { ISdStargateExportFileCommand } from './ISdStargateExportFileCommand';
 import { SdBaseCommand } from './SdBaseCommand';
@@ -23,20 +22,20 @@ export class SdStargateExportFileCommand
 
     protected identifier: string = 'EXPORT_FILE';
 
-    constructor(sdk: ISdStargateSdk) {
-        super(sdk);
-    }
-
     isSupported(payload: ISdCommandPayload): boolean {
-        return payload.command == this.identifier;
+        return payload.command === this.identifier;
     }
 
-    async processCommandMessage(payload: ISdCommandRequestPayload) {
-        let data = payload.data;
+    async processCommandMessage(payload: ISdCommandRequestPayload): Promise<void> {
+        const data = payload.data;
 
         SdExportFileCommandValidator.assertCommandDto(data);
-        const handler = this.handler ? this.handler?.bind(this) : undefined;
-        await this.invokeHandler(payload, data, handler);
+        const userHandler = this.handler;
+        await this.invokeHandler(
+            payload,
+            data,
+            userHandler ? (msg: ISdStargateExportFileCommandDto) => userHandler(msg) : undefined
+        );
     }
 
     processOkReplyMessage(payload: ISdCommandOkReplyPayload) {
@@ -52,7 +51,13 @@ export class SdStargateExportFileCommand
         clients: ISdStargateClientModel[],
         timeout: number = 60000
     ): Promise<ISdStargateExportFileReplyDto[]> {
-        return await this.sendCommand(data, clients, this.identifier, 'BATCH', timeout);
+        return (await this.sendCommand(
+            data,
+            clients,
+            this.identifier,
+            'BATCH',
+            timeout
+        )) as ISdStargateExportFileReplyDto[];
     }
 
     registerHandler(

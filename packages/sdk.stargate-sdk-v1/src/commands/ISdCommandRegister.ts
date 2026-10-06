@@ -11,7 +11,7 @@ export interface ISdCommandRegister {
      * @throws {@link SdStargateError} when an open request with the specified {@link topic} has
      * already been registered.
      */
-    registerCommand(topic: string, clientIds: string[], timeout: number): Promise<any[]>;
+    registerCommand(topic: string, clientIds: string[], timeout: number): Promise<unknown[]>;
 
     /**
      * Updates the previously registered command of this {@link topic} with the received client
@@ -22,7 +22,7 @@ export interface ISdCommandRegister {
      * @param data Either the data object of an ok-reply, or the message of an error-reply.
      * @throws {@link SdStargateError} when {@link clientId} is not part of the open request.
      */
-    updateCommand(topic: string, clientId: string, data: Record<string, any> | string): void;
+    updateCommand(topic: string, clientId: string, data: unknown): void;
 
     /**
      * Closes the open command that has been registered for the given {@link topic} and rejects the

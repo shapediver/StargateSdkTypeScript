@@ -5,7 +5,7 @@
  * the client is still responsive.
  * Corresponding reply DTO: ISdStargateStatusReplyDto
  */
-export interface ISdStargateStatusCommandDto {}
+export type ISdStargateStatusCommandDto = Record<string, never>;
 
 /**
  * Reply DTO for "status" command.

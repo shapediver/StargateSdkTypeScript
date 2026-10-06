@@ -8,14 +8,14 @@ import { SdStatusCommandValidator } from '../../src/validators/commands/SdStatus
 describe('validate status command', function () {
     describe('command dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateStatusCommandDto> = {};
+            const data: Required<ISdStargateStatusCommandDto> = {};
             SdStatusCommandValidator.assertCommandDto(data);
         });
     });
 
     describe('reply dto', function () {
         test('full', () => {
-            let data: Required<ISdStargateStatusReplyDto> = {
+            const data: Required<ISdStargateStatusReplyDto> = {
                 firstActivity: 1,
                 latestActivity: 2,
             };
@@ -24,7 +24,7 @@ describe('validate status command', function () {
 
         test('missing firstActivity', () => {
             try {
-                let data = {
+                const data = {
                     latestActivity: 2,
                 };
                 SdStatusCommandValidator.assertReplyDto(data);
@@ -36,7 +36,7 @@ describe('validate status command', function () {
 
         test('missing latestActivity', () => {
             try {
-                let data = {
+                const data = {
                     firstActivity: 2,
                 };
                 SdStatusCommandValidator.assertReplyDto(data);

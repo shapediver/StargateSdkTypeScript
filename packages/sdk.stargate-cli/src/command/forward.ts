@@ -6,6 +6,11 @@ import {
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 
+type ForwardAnswers = {
+    message: string;
+    clientIds: string[];
+};
+
 function askQuestions(clients: ISdStargateClientModel[]) {
     const questions = [
         {
@@ -25,7 +30,7 @@ function askQuestions(clients: ISdStargateClientModel[]) {
             }),
         },
     ];
-    return inquirer.prompt(questions);
+    return inquirer.prompt<ForwardAnswers>(questions);
 }
 
 export async function forwardMessage(sdk: ISdStargateSdk): Promise<void> {
@@ -38,18 +43,20 @@ export async function forwardMessage(sdk: ISdStargateSdk): Promise<void> {
 
         // Ask user what message which clients should receive
         const { message, clientIds } = await askQuestions(clients);
-        let json;
+        let json: unknown;
         try {
-            json = JSON.parse(message);
+            json = JSON.parse(message) as unknown;
         } catch (e) {
-            throw new Error(
-                'Invalid input message: ' + (e instanceof Error ? e.message : String(e))
-            );
+            const parseError = e instanceof Error ? e : new Error(String(e));
+            throw new Error('Invalid input message: ' + parseError.message);
         }
-        const selectedClients = clients.filter((c) => (<string[]>clientIds).includes(c.id));
+        if (typeof json !== 'object' || json === null || Array.isArray(json)) {
+            throw new Error('Invalid input message: JSON value must be an object.');
+        }
+        const selectedClients = clients.filter((c) => clientIds.includes(c.id));
 
         // Send command and print results
-        await sdk.forwardMessage(json, selectedClients);
+        await sdk.forwardMessage(json as Record<string, unknown>, selectedClients);
         printResults(selectedClients.length);
     } catch (e) {
         const errType = isSgError(e) ? e.type : 'JS-Error';
@@ -63,5 +70,5 @@ export async function forwardMessage(sdk: ISdStargateSdk): Promise<void> {
 }
 
 function printResults(nClients: number): void {
-    console.log(chalk.green(`Successfully sent message to ${nClients} clients!`));
+    console.log(chalk.green(`Successfully sent message to ${String(nClients)} clients!`));
 }

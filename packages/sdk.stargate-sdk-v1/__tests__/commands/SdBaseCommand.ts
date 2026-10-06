@@ -42,7 +42,9 @@ class TestableSdBaseCommand extends SdBaseCommand {
 const command = new TestableSdBaseCommand();
 
 describe('sendCommand', function () {
-    let origRegisterCommand: any, origRejectCommand: any, origForwardMessage: any;
+    let origRegisterCommand: SdCommandRegister['registerCommand'];
+    let origRejectCommand: SdCommandRegister['rejectCommand'];
+    let origForwardMessage: SdStargateSdk['forwardMessage'];
 
     beforeAll(() => {
         origRegisterCommand = SdCommandRegister.prototype.registerCommand;
@@ -57,20 +59,17 @@ describe('sendCommand', function () {
     });
 
     beforeEach(() => {
-        SdCommandRegister.prototype.registerCommand = jest.fn(async () => {
-            throw new Error('SdCommandRegister.registerCommand should not be called!');
+        SdCommandRegister.prototype.registerCommand = jest.fn(() => {
+            return Promise.reject(new Error('SdCommandRegister.registerCommand should not be called!'));
         });
-        SdCommandRegister.prototype.rejectCommand = jest.fn(async () => {
-            throw new Error('SdCommandRegister.rejectCommand should not be called!');
-        });
-        SdStargateSdk.prototype.forwardMessage = jest.fn(async () => {
-            throw new Error('SdStargateSdk.forwardMessage should not be called!');
+        SdCommandRegister.prototype.rejectCommand = jest.fn(() => {});
+        SdStargateSdk.prototype.forwardMessage = jest.fn(() => {
+            return Promise.reject(new Error('SdStargateSdk.forwardMessage should not be called!'));
         });
     });
 
     test('no response expected, forwardMessage succeeds; should not register command and resolve', async () => {
-        // Re-mock
-        SdStargateSdk.prototype.forwardMessage = jest.fn(async () => Promise.resolve());
+        SdStargateSdk.prototype.forwardMessage = jest.fn(() => Promise.resolve());
 
         await command.testableSendCommand();
     });
@@ -78,12 +77,11 @@ describe('sendCommand', function () {
     test('response expected, forwardMessage succeeds; should register command and resolve', async () => {
         let spyRegisterCommand = false;
 
-        // Mock sub-calls
-        SdCommandRegister.prototype.registerCommand = jest.fn(async () => {
+        SdCommandRegister.prototype.registerCommand = jest.fn(() => {
             spyRegisterCommand = true;
             return Promise.resolve([]);
         });
-        SdStargateSdk.prototype.forwardMessage = jest.fn(async () => Promise.resolve());
+        SdStargateSdk.prototype.forwardMessage = jest.fn(() => Promise.resolve());
 
         await command.testableSendCommand('ACK');
 
@@ -91,28 +89,26 @@ describe('sendCommand', function () {
     });
 
     test('no response expected, forwardMessage throws; should not register or unregister command and reject', async () => {
-        // Mock sub-calls
-        SdStargateSdk.prototype.forwardMessage = jest.fn(async () => {
-            throw new Error('Intended error');
+        SdStargateSdk.prototype.forwardMessage = jest.fn(() => {
+            return Promise.reject(new Error('Intended error'));
         });
 
         await expect(command.testableSendCommand()).rejects.toThrow();
     });
 
     test('response expected, forwardMessage throws; should register command, unregister command and resolve', async () => {
-        let spyRegisterCommand = false,
-            spyRejectCommand = false;
+        let spyRegisterCommand = false;
+        let spyRejectCommand = false;
 
-        // Mock sub-calls
-        SdCommandRegister.prototype.registerCommand = jest.fn(async () => {
+        SdCommandRegister.prototype.registerCommand = jest.fn(() => {
             spyRegisterCommand = true;
             return Promise.resolve([]);
         });
-        SdCommandRegister.prototype.rejectCommand = jest.fn(async () => {
+        SdCommandRegister.prototype.rejectCommand = jest.fn(() => {
             spyRejectCommand = true;
         });
-        SdStargateSdk.prototype.forwardMessage = jest.fn(async () => {
-            throw new Error('Intended error');
+        SdStargateSdk.prototype.forwardMessage = jest.fn(() => {
+            return Promise.reject(new Error('Intended error'));
         });
 
         await expect(command.testableSendCommand('ACK')).rejects.toThrow();

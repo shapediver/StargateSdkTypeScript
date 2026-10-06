@@ -4,7 +4,7 @@
  * parameters are supported by the client's implementation of the "get data" command.
  * Corresponding reply DTO: ISdStargateGetSupportedDataReplyDto
  */
-export interface ISdStargateGetSupportedDataCommandDto {}
+export type ISdStargateGetSupportedDataCommandDto = Record<string, never>;
 
 /**
  * Reply DTO for "get supported data" command.

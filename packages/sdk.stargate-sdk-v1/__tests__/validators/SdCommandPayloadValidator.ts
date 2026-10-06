@@ -7,7 +7,7 @@ import { SdCommandPayloadValidator } from '../../src/validators/commands/SdComma
 
 describe('command request payload', function () {
     test('minimal', () => {
-        let data: ISdCommandRequestPayload = {
+        const data: ISdCommandRequestPayload = {
             sender: '123',
             command: 'cmd',
             data: { foo: 'bar' },
@@ -18,7 +18,7 @@ describe('command request payload', function () {
     });
 
     test('full - acknowledge type', () => {
-        let data: Required<ISdCommandRequestPayload> = {
+        const data: Required<ISdCommandRequestPayload> = {
             sender: '123',
             response: {
                 type: 'ACK',
@@ -33,7 +33,7 @@ describe('command request payload', function () {
     });
 
     test('full - batch type', () => {
-        let data: Required<ISdCommandRequestPayload> = {
+        const data: Required<ISdCommandRequestPayload> = {
             sender: '123',
             response: {
                 type: 'BATCH',
@@ -50,7 +50,7 @@ describe('command request payload', function () {
 
 describe('command reply payload', function () {
     test('ok', () => {
-        let data: Omit<Required<ISdCommandOkReplyPayload>, 'error'> = {
+        const data: Omit<Required<ISdCommandOkReplyPayload>, 'error'> = {
             sender: '123',
             response: {
                 type: 'REPLY',
@@ -65,7 +65,7 @@ describe('command reply payload', function () {
     });
 
     test('error', () => {
-        let data: Omit<Required<ISdCommandErrorReplyPayload>, 'data'> = {
+        const data: Omit<Required<ISdCommandErrorReplyPayload>, 'data'> = {
             sender: '123',
             response: {
                 type: 'REPLY',

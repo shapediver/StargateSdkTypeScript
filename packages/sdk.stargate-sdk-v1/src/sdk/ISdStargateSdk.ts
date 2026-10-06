@@ -55,9 +55,10 @@ export interface ISdStargateSdk {
      * @param clients The clients that should be disconnected.
      * @throws {@link SdStargateError}
      */
-    forwardMessage(payload: Record<string, any>, clients: ISdStargateClientModel[]): Promise<void>;
-
-    forwardMessage(payload: Record<string, any>, clients: string[]): Promise<void>;
+    forwardMessage(
+        payload: Record<string, unknown>,
+        clients: ISdStargateClientModel[] | string[]
+    ): Promise<void>;
 
     /**
      * De-registers the specified clients and disconnects them from the Stargate service.

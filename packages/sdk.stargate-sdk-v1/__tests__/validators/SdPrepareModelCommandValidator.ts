@@ -12,7 +12,7 @@ describe('validate get data command', function () {
          * Has model in command dto, which holds property id. Must be true, since those are schema requirments.
          */
         test('full', () => {
-            let data: Required<ISdStargatePrepareModelCommandDto> = {
+            const data: Required<ISdStargatePrepareModelCommandDto> = {
                 model: { id: '123' },
             };
             SdPrepareModelCommandValidator.assertCommandDto(data);
@@ -23,7 +23,7 @@ describe('validate get data command', function () {
          */
         test('model id missing', () => {
             try {
-                let data = {
+                const data = {
                     model: { foo: '123' },
                 };
                 SdPrepareModelCommandValidator.assertCommandDto(data);
@@ -38,7 +38,7 @@ describe('validate get data command', function () {
          */
         test('model missing', () => {
             try {
-                let data = {};
+                const data = {};
                 SdPrepareModelCommandValidator.assertCommandDto(data);
                 expect(true).toBeFalsy();
             } catch (e) {
@@ -52,7 +52,7 @@ describe('validate get data command', function () {
          * Both result and optional message are present, must be true.
          */
         test('full', () => {
-            let data: Required<ISdStargatePrepareModelReplyDto> = {
+            const data: Required<ISdStargatePrepareModelReplyDto> = {
                 info: {
                     message: 'foo',
                     result: ISdStargatePrepareModelResultEnum.SUCCESS,
@@ -65,7 +65,7 @@ describe('validate get data command', function () {
          * Validate if it passes without message (message is optional)
          */
         test('message missing', () => {
-            let data: Required<ISdStargatePrepareModelReplyDto> = {
+            const data: Required<ISdStargatePrepareModelReplyDto> = {
                 info: {
                     result: ISdStargatePrepareModelResultEnum.SUCCESS,
                 },
@@ -78,7 +78,7 @@ describe('validate get data command', function () {
          */
         test('info missing', () => {
             try {
-                let data = {};
+                const data = {};
                 SdPrepareModelCommandValidator.assertReplyDto(data);
                 expect(true).toBeFalsy();
             } catch (e) {
@@ -91,7 +91,7 @@ describe('validate get data command', function () {
          */
         test('info missing', () => {
             try {
-                let data = {
+                const data = {
                     info: {
                         message: 'foo',
                     },
