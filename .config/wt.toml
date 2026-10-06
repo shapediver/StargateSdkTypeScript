@@ -1,0 +1,2 @@
+[pre-start]
+setup = "ROOT_WORKTREE_PATH='{{ primary_worktree_path }}' bash ./scripts/setup-worktree-unix.sh"
