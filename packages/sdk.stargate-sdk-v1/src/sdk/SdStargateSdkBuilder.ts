@@ -10,9 +10,15 @@ export class SdStargateSdkBuilder implements ISdStargateSdkBuilder {
 
     constructor() {
         this.baseUrl = '';
-        this.msgHandler = (payload: unknown) => { console.log('Received command from Stargate:', payload); };
-        this.errHandler = (msg: string) => { console.error(msg); };
-        this.dcnHandler = (msg: string) => { console.warn(msg); };
+        this.msgHandler = (payload: unknown) => {
+            console.log('Received command from Stargate:', payload);
+        };
+        this.errHandler = (msg: string) => {
+            console.error(msg);
+        };
+        this.dcnHandler = (msg: string) => {
+            console.warn(msg);
+        };
     }
 
     setBaseUrl(baseUrl: string): this {

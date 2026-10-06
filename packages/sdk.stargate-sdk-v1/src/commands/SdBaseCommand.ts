@@ -154,10 +154,7 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
      * it via Stargate to the {@link payload.sender} client.
      * @private
      */
-    private async sendReply(
-        request: ISdCommandRequestPayload,
-        result: unknown
-    ): Promise<void> {
+    private async sendReply(request: ISdCommandRequestPayload, result: unknown): Promise<void> {
         const requestResponse = request.response;
         if (!requestResponse) {
             throw new SdStargateError(
@@ -179,8 +176,7 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
 
         // Set result
         let ackPayload:
-            | Omit<ISdCommandOkReplyPayload, 'sender'>
-            | Omit<ISdCommandErrorReplyPayload, 'sender'>;
+            Omit<ISdCommandOkReplyPayload, 'sender'> | Omit<ISdCommandErrorReplyPayload, 'sender'>;
         if (typeof result === 'object' && result !== null) {
             ackPayload = { ...template, data: result as Record<string, unknown> };
         } else {

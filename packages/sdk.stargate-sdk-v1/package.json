@@ -1,70 +1,70 @@
 {
-  "name": "@shapediver/sdk.stargate-sdk-v1",
-  "version": "1.6.4",
-  "description": "",
-  "keywords": [],
-  "author": "Matthias Reisacher <matt@shapediver.com>",
-  "license": "ISC",
-  "main": "dist/index.js",
-  "directories": {
-    "test": "__tests__"
-  },
-  "files": [
-    "dist",
-    "src"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shapediver/StargateSdkTypeScript.git"
-  },
-  "scripts": {
-    "test": "bash ../../scripts/test.sh",
-    "check": "tsc --noEmit",
-    "check:test": "tsc --noEmit -p tsconfig.test.json",
-    "build": "bash ../../scripts/build.sh",
-    "build-dep": "bash ../../scripts/build-dep.sh",
-    "build-dev": "bash ../../scripts/build-dev.sh",
-    "build-prod": "bash ../../scripts/build-prod.sh",
-    "pre-publish": "bash ../../scripts/pre-publish.sh",
-    "post-publish": "bash ../../scripts/post-publish.sh"
-  },
-  "bugs": {
-    "url": "https://github.com/shapediver/StargateSdkTypeScript/issues"
-  },
-  "homepage": "https://github.com/shapediver/StargateSdkTypeScript#readme",
-  "typings": "dist/index.d.ts",
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "transform": {
-      "^.+\\.[tj]sx?$": [
-        "ts-jest",
-        {
-          "tsconfig": {
-            "allowJs": true,
-            "module": "commonjs"
-          }
-        }
-      ]
+    "name": "@shapediver/sdk.stargate-sdk-v1",
+    "version": "1.6.4",
+    "description": "",
+    "keywords": [],
+    "author": "Matthias Reisacher <matt@shapediver.com>",
+    "license": "ISC",
+    "main": "dist/index.js",
+    "directories": {
+        "test": "__tests__"
     },
-    "transformIgnorePatterns": [
-      "/node_modules/.pnpm/(?!(uuid)@)",
-      "node_modules/(?!.pnpm|uuid)"
-    ]
-  },
-  "devDependencies": {
-    "jest": "30.5.2",
-    "lerna": "9.0.7",
-    "typescript": "5.9.3",
-    "webpack": "5.111.1",
-    "webpack-cli": "5.1.4",
-    "webpack-dev-server": "4.15.2"
-  },
-  "dependencies": {
-    "@shapediver/sdk.stargate-sdk-core": "workspace:*",
-    "@types/node": "24.19.1",
-    "ajv": "8.20.0",
-    "jsonschema": "1.5.0",
-    "uuid": "14.0.2"
-  }
+    "files": [
+        "dist",
+        "src"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/shapediver/StargateSdkTypeScript.git"
+    },
+    "scripts": {
+        "test": "bash ../../scripts/test.sh",
+        "check": "tsc --noEmit",
+        "check:test": "tsc --noEmit -p tsconfig.test.json",
+        "build": "bash ../../scripts/build.sh",
+        "build-dep": "bash ../../scripts/build-dep.sh",
+        "build-dev": "bash ../../scripts/build-dev.sh",
+        "build-prod": "bash ../../scripts/build-prod.sh",
+        "pre-publish": "bash ../../scripts/pre-publish.sh",
+        "post-publish": "bash ../../scripts/post-publish.sh"
+    },
+    "bugs": {
+        "url": "https://github.com/shapediver/StargateSdkTypeScript/issues"
+    },
+    "homepage": "https://github.com/shapediver/StargateSdkTypeScript#readme",
+    "typings": "dist/index.d.ts",
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "transform": {
+            "^.+\\.[tj]sx?$": [
+                "ts-jest",
+                {
+                    "tsconfig": {
+                        "allowJs": true,
+                        "module": "commonjs"
+                    }
+                }
+            ]
+        },
+        "transformIgnorePatterns": [
+            "/node_modules/.pnpm/(?!(uuid)@)",
+            "node_modules/(?!.pnpm|uuid)"
+        ]
+    },
+    "devDependencies": {
+        "jest": "30.5.2",
+        "lerna": "9.0.7",
+        "typescript": "5.9.3",
+        "webpack": "5.111.1",
+        "webpack-cli": "5.1.4",
+        "webpack-dev-server": "4.15.2"
+    },
+    "dependencies": {
+        "@shapediver/sdk.stargate-sdk-core": "workspace:*",
+        "@types/node": "24.19.1",
+        "ajv": "8.20.0",
+        "jsonschema": "1.5.0",
+        "uuid": "14.0.2"
+    }
 }

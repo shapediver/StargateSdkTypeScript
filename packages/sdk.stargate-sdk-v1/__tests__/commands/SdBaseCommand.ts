@@ -60,7 +60,9 @@ describe('sendCommand', function () {
 
     beforeEach(() => {
         SdCommandRegister.prototype.registerCommand = jest.fn(() => {
-            return Promise.reject(new Error('SdCommandRegister.registerCommand should not be called!'));
+            return Promise.reject(
+                new Error('SdCommandRegister.registerCommand should not be called!')
+            );
         });
         SdCommandRegister.prototype.rejectCommand = jest.fn(() => {});
         SdStargateSdk.prototype.forwardMessage = jest.fn(() => {

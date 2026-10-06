@@ -22,8 +22,9 @@ describe('validate get supported data command', function () {
         };
 
         test('full - latest version', () => {
-            expect(() => { SdGetSupportedDataCommandValidator.assertReplyDto(validReplyDto); }
-            ).not.toThrow();
+            expect(() => {
+                SdGetSupportedDataCommandValidator.assertReplyDto(validReplyDto);
+            }).not.toThrow();
         });
 
         test('legacy (v1.5.0) missing newer properties', () => {
@@ -33,8 +34,9 @@ describe('validate get supported data command', function () {
                 typeHints: validReplyDto.typeHints,
             };
 
-            expect(() => { SdGetSupportedDataCommandValidator.assertReplyDto(legacyReplyDto); }
-            ).not.toThrow();
+            expect(() => {
+                SdGetSupportedDataCommandValidator.assertReplyDto(legacyReplyDto);
+            }).not.toThrow();
         });
 
         test.each([
@@ -42,9 +44,9 @@ describe('validate get supported data command', function () {
             ['typeHints', { ...validReplyDto, typeHints: undefined }],
             // Properties added later are optional and set later.
         ])('%s missing', (_, data) => {
-            expect(() => { SdGetSupportedDataCommandValidator.assertReplyDto(data); }).toThrow(
-                SdStargateError
-            );
+            expect(() => {
+                SdGetSupportedDataCommandValidator.assertReplyDto(data);
+            }).toThrow(SdStargateError);
         });
 
         test.each([
@@ -53,9 +55,9 @@ describe('validate get supported data command', function () {
             ['contentTypes', { ...validReplyDto, contentTypes: [1] }],
             ['fileExtensions', { ...validReplyDto, fileExtensions: [1] }],
         ])('%s wrong type', (_, data) => {
-            expect(() => { SdGetSupportedDataCommandValidator.assertReplyDto(data); }).toThrow(
-                SdStargateError
-            );
+            expect(() => {
+                SdGetSupportedDataCommandValidator.assertReplyDto(data);
+            }).toThrow(SdStargateError);
         });
     });
 });

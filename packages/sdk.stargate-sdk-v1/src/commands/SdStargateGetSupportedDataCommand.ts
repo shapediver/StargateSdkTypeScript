@@ -36,7 +36,9 @@ export class SdStargateGetSupportedDataCommand
         await this.invokeHandler(
             payload,
             data,
-            userHandler ? (msg: ISdStargateGetSupportedDataCommandDto) => userHandler(msg) : undefined
+            userHandler
+                ? (msg: ISdStargateGetSupportedDataCommandDto) => userHandler(msg)
+                : undefined
         );
     }
 

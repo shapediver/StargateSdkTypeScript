@@ -1,8 +1,6 @@
 // Helper type that contains all possible command payloads
 export type ISdCommandPayload =
-    | ISdCommandRequestPayload
-    | ISdCommandOkReplyPayload
-    | ISdCommandErrorReplyPayload;
+    ISdCommandRequestPayload | ISdCommandOkReplyPayload | ISdCommandErrorReplyPayload;
 
 /**
  * The payload of a command that a client application like the ShapeDiver Platform Frontend sends to

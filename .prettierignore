@@ -1,0 +1,9 @@
+node_modules
+dist
+dist-dev
+dist-prod
+coverage
+.venv
+.nx
+pnpm-lock.yaml
+package-lock.json

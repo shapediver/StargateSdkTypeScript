@@ -22,22 +22,19 @@ npm install @shapediver/sdk.stargate-sdk-core
 ## Basic usage
 
 ```ts
-import {
-  createStargateClient,
-  ISdStargateCommandDto,
-} from '@shapediver/sdk.stargate-sdk-core';
+import { createStargateClient, ISdStargateCommandDto } from '@shapediver/sdk.stargate-sdk-core';
 
 const client = createStargateClient(
-  (payload) => console.log('message', payload),
-  (message) => console.error('error', message),
-  (message) => console.warn('disconnected', message)
+    (payload) => console.log('message', payload),
+    (message) => console.error('error', message),
+    (message) => console.warn('disconnected', message)
 );
 
 await client.connect('prod-sg.eu-central-1.shapediver.com');
 
 const request: ISdStargateCommandDto = {
-  header: { command: 'PING' },
-  payload: undefined,
+    header: { command: 'PING' },
+    payload: undefined,
 };
 
 const response = await client.send(request);
@@ -54,11 +51,11 @@ You can configure automatic keep-alive messages via `ISdStargateClientOptionKeep
 
 ```ts
 const client = createStargateClient(msgHandler, errHandler, dcnHandler, {
-  interval: 60_000,
-  reqCreator: () => ({
-    header: { command: 'PING' },
-    payload: undefined,
-  }),
+    interval: 60_000,
+    reqCreator: () => ({
+        header: { command: 'PING' },
+        payload: undefined,
+    }),
 });
 ```
 

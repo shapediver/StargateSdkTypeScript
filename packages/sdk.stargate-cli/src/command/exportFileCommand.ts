@@ -119,7 +119,9 @@ export async function exportFileCommand(sdk: ISdStargateSdk): Promise<void> {
 
 function printResults(cmd: string, nClients: number, res?: unknown): void {
     console.log(
-        chalk.green(`[${nowTime()}] Successfully sent command '${cmd}' to ${String(nClients)} clients!`)
+        chalk.green(
+            `[${nowTime()}] Successfully sent command '${cmd}' to ${String(nClients)} clients!`
+        )
     );
     if (res) console.log(chalk.green('Result:\n', prettifyMsg(res)));
 }

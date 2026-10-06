@@ -14,8 +14,7 @@ import { SdBaseCommand } from './SdBaseCommand';
 
 export class SdStargateGetDataCommand extends SdBaseCommand implements ISdStargateGetDataCommand {
     private handler:
-        | undefined
-        | ((msg: ISdStargateGetDataCommandDto) => Promise<ISdStargateGetDataReplyDto>);
+        undefined | ((msg: ISdStargateGetDataCommandDto) => Promise<ISdStargateGetDataReplyDto>);
 
     protected identifier: string = 'GET_DATA';
 

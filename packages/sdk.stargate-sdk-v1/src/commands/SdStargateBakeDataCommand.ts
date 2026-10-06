@@ -17,8 +17,7 @@ export class SdStargateBakeDataCommand
     implements ISdStargateBakeDataCommand
 {
     private handler:
-        | undefined
-        | ((msg: ISdStargateBakeDataCommandDto) => Promise<ISdStargateBakeDataReplyDto>);
+        undefined | ((msg: ISdStargateBakeDataCommandDto) => Promise<ISdStargateBakeDataReplyDto>);
 
     protected identifier: string = 'BAKE_DATA';
 

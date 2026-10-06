@@ -112,7 +112,9 @@ export class SdWebSocketClient implements ISdStargateClient {
                 this.updateKeepAlive(); // Start keep alive process
                 resolve();
             };
-            ws.onerror = (event: ErrorEvent) => { reject([SdStargateCoreErrorTypes.GenericClientError, event.message]); };
+            ws.onerror = (event: ErrorEvent) => {
+                reject([SdStargateCoreErrorTypes.GenericClientError, event.message]);
+            };
         });
     }
 
@@ -124,8 +126,12 @@ export class SdWebSocketClient implements ISdStargateClient {
 
         return new Promise((resolve, reject) => {
             this._ws = undefined;
-            ws.onclose = () => { resolve(); };
-            ws.onerror = (event: ErrorEvent) => { reject([SdStargateCoreErrorTypes.GenericClientError, event.message]); };
+            ws.onclose = () => {
+                resolve();
+            };
+            ws.onerror = (event: ErrorEvent) => {
+                reject([SdStargateCoreErrorTypes.GenericClientError, event.message]);
+            };
             ws.close(); // close connection
         });
     }

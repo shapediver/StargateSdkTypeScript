@@ -40,25 +40,25 @@ This SDK does **not** create JWTs for you. In a typical setup, the JWT is issued
 import { createSdk } from '@shapediver/sdk.stargate-sdk-v1';
 
 const sdk = await createSdk()
-  .setBaseUrl('prod-sg.eu-central-1.shapediver.com')
-  .setServerCommandHandler((payload) => {
-    console.log('server message', payload);
-  })
-  .setConnectionErrorHandler((message) => {
-    console.error('connection error', message);
-  })
-  .setDisconnectHandler((message) => {
-    console.warn('disconnected', message);
-  })
-  .build();
+    .setBaseUrl('prod-sg.eu-central-1.shapediver.com')
+    .setServerCommandHandler((payload) => {
+        console.log('server message', payload);
+    })
+    .setConnectionErrorHandler((message) => {
+        console.error('connection error', message);
+    })
+    .setDisconnectHandler((message) => {
+        console.warn('disconnected', message);
+    })
+    .build();
 
 const registration = await sdk.register(
-  process.env.STARGATE_JWT!,
-  'My App',
-  '1.0.0',
-  'macOS 15',
-  'my-machine',
-  'my-user'
+    process.env.STARGATE_JWT!,
+    'My App',
+    '1.0.0',
+    'macOS 15',
+    'my-machine',
+    'my-user'
 );
 
 console.log('backend version', registration.version);
@@ -120,18 +120,15 @@ Each listed client includes:
 ```ts
 const frontendClients = await sdk.listFrontendClients();
 
-await sdk.forwardMessage(
-  { type: 'CUSTOM_EVENT', payload: { hello: 'world' } },
-  frontendClients
-);
+await sdk.forwardMessage({ type: 'CUSTOM_EVENT', payload: { hello: 'world' } }, frontendClients);
 ```
 
 You can also pass client IDs instead of full client objects:
 
 ```ts
 await sdk.forwardMessage(
-  { type: 'CUSTOM_EVENT', payload: { hello: 'world' } },
-  frontendClients.map((client) => client.id)
+    { type: 'CUSTOM_EVENT', payload: { hello: 'world' } },
+    frontendClients.map((client) => client.id)
 );
 ```
 
@@ -168,20 +165,20 @@ Registered Stargate command payloads are intercepted and routed to matching comm
 
 ```ts
 import {
-  SdStargateStatusCommand,
-  ISdStargateStatusCommandDto,
-  ISdStargateStatusReplyDto,
+    SdStargateStatusCommand,
+    ISdStargateStatusCommandDto,
+    ISdStargateStatusReplyDto,
 } from '@shapediver/sdk.stargate-sdk-v1';
 
 const statusCommand = new SdStargateStatusCommand(sdk);
 
 statusCommand.registerHandler(
-  async (_msg: ISdStargateStatusCommandDto): Promise<ISdStargateStatusReplyDto> => {
-    return {
-      firstActivity: Math.floor(Date.now() / 1000),
-      latestActivity: Math.floor(Date.now() / 1000),
-    };
-  }
+    async (_msg: ISdStargateStatusCommandDto): Promise<ISdStargateStatusReplyDto> => {
+        return {
+            firstActivity: Math.floor(Date.now() / 1000),
+            latestActivity: Math.floor(Date.now() / 1000),
+        };
+    }
 );
 
 const frontendClients = await sdk.listFrontendClients();
@@ -222,7 +219,7 @@ const replies = await statusCommand.send({}, frontendClients, 5_000);
 
 ```ts
 const dto = {
-  model: { id: 'MODEL_ID' },
+    model: { id: 'MODEL_ID' },
 };
 ```
 
@@ -236,8 +233,8 @@ const dto = {};
 
 ```ts
 const dto = {
-  model: { id: 'MODEL_ID' },
-  parameter: { id: 'PARAMETER_ID' },
+    model: { id: 'MODEL_ID' },
+    parameter: { id: 'PARAMETER_ID' },
 };
 ```
 
@@ -245,14 +242,14 @@ const dto = {
 
 ```ts
 const dto = {
-  model: { id: 'MODEL_ID' },
-  parameters: {
-    PARAM_ID: 'PARAM_VALUE',
-  },
-  output: {
-    id: 'OUTPUT_ID',
-    chunk: { id: 'CHUNK_ID' },
-  },
+    model: { id: 'MODEL_ID' },
+    parameters: {
+        PARAM_ID: 'PARAM_VALUE',
+    },
+    output: {
+        id: 'OUTPUT_ID',
+        chunk: { id: 'CHUNK_ID' },
+    },
 };
 ```
 
@@ -260,14 +257,14 @@ const dto = {
 
 ```ts
 const dto = {
-  model: { id: 'MODEL_ID' },
-  parameters: {
-    PARAM_ID: 'PARAM_VALUE',
-  },
-  export: {
-    id: 'EXPORT_ID',
-    index: 0,
-  },
+    model: { id: 'MODEL_ID' },
+    parameters: {
+        PARAM_ID: 'PARAM_VALUE',
+    },
+    export: {
+        id: 'EXPORT_ID',
+        index: 0,
+    },
 };
 ```
 
@@ -279,13 +276,13 @@ SDK errors are exposed as `SdStargateError` instances.
 import { isSgError } from '@shapediver/sdk.stargate-sdk-v1';
 
 try {
-  await sdk.listFrontendClients();
+    await sdk.listFrontendClients();
 } catch (e) {
-  if (isSgError(e)) {
-    console.error(e.type, e.message);
-  } else {
-    console.error(e);
-  }
+    if (isSgError(e)) {
+        console.error(e.type, e.message);
+    } else {
+        console.error(e);
+    }
 }
 ```
 

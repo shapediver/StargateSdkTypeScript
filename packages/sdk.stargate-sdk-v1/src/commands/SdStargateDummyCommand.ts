@@ -73,7 +73,8 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
                 SdDummyCommandValidator.assertBatchReplyExampleCommandDto(data);
                 const batchReplyHandlerFn = this.userBatchReplyExampleHandler;
                 const batchReplyHandler = batchReplyHandlerFn
-                    ? (msg: ISdStargateDummyBatchReplyExampleCommandDto) => batchReplyHandlerFn(msg)
+                    ? (msg: ISdStargateDummyBatchReplyExampleCommandDto) =>
+                          batchReplyHandlerFn(msg)
                     : undefined;
                 await this.invokeHandler(payload, data, batchReplyHandler);
                 break;
@@ -133,12 +134,7 @@ export class SdStargateDummyCommand extends SdBaseCommand implements ISdStargate
         data: ISdStargateDummyAckReplyExampleCommandDto,
         clients: ISdStargateClientModel[]
     ): Promise<void> {
-        await this.sendCommand(
-            data,
-            clients,
-            DummyPayloadCommand.DUMMY_ACK_REPLY_EXAMPLE,
-            'ACK'
-        );
+        await this.sendCommand(data, clients, DummyPayloadCommand.DUMMY_ACK_REPLY_EXAMPLE, 'ACK');
     }
 
     registerAckReplyExampleHandler(

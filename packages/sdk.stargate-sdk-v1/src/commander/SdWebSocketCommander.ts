@@ -27,7 +27,8 @@ export class SdWebSocketCommander implements ISdStargateCommander {
 
     async connect(url: string): Promise<void> {
         try {
-            await this.client.connect(url); return;
+            await this.client.connect(url);
+            return;
         } catch (e) {
             throw SdWebSocketCommander.mapRejectToError(
                 e,
@@ -38,7 +39,8 @@ export class SdWebSocketCommander implements ISdStargateCommander {
 
     async disconnect(): Promise<void> {
         try {
-            await this.client.disconnect(); return;
+            await this.client.disconnect();
+            return;
         } catch (e) {
             throw SdWebSocketCommander.mapRejectToError(e, 'Error when disconnecting client:');
         }

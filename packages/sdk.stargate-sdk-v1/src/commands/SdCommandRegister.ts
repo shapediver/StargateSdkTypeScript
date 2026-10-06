@@ -24,17 +24,14 @@ export class SdCommandRegister implements ISdCommandRegister {
         const commands: OpenClientCommand[] = [];
         const promises = clientIds.map((clientId) => {
             return new Promise<unknown>((resolve, reject) => {
-                setTimeout(
-                    () => {
-                        reject(
-                            new SdStargateError(
-                                SdStargateErrorTypes.CommandTimeoutError,
-                                'Command timed out.'
-                            )
-                        );
-                    },
-                    timeout
-                );
+                setTimeout(() => {
+                    reject(
+                        new SdStargateError(
+                            SdStargateErrorTypes.CommandTimeoutError,
+                            'Command timed out.'
+                        )
+                    );
+                }, timeout);
 
                 commands.push({
                     clientId,

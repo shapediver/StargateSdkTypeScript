@@ -14,8 +14,7 @@ import { SdBaseCommand } from './SdBaseCommand';
 
 export class SdStargateStatusCommand extends SdBaseCommand implements ISdStargateStatusCommand {
     private handler:
-        | undefined
-        | ((msg: ISdStargateStatusCommandDto) => Promise<ISdStargateStatusReplyDto>);
+        undefined | ((msg: ISdStargateStatusCommandDto) => Promise<ISdStargateStatusReplyDto>);
 
     protected identifier: string = 'STATUS';
 
