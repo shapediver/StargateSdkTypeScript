@@ -1,0 +1,26 @@
+{
+    "$schema": "https://unpkg.com/knip@6/schema.json",
+    "webpack": {
+        "config": ["webpack.common.js", "webpack.dev.js", "webpack.prod.js"]
+    },
+    "nx": false,
+    "workspaces": {
+        ".": {
+            "ignoreDependencies": ["json", "npm-check-updates", "webpack-dev-server"]
+        },
+        "libs/*": {
+            "entry": ["__tests__/**/*.ts"],
+            "project": ["src/**/*.ts", "__tests__/**/*.ts"],
+            "ignoreDependencies": ["lerna"]
+        },
+        "packages/*": {
+            "entry": ["__tests__/**/*.ts"],
+            "project": ["src/**/*.ts", "__tests__/**/*.ts"],
+            "ignoreDependencies": ["lerna", "webpack", "webpack-cli", "webpack-dev-server"]
+        },
+        "packages/sdk.stargate-cli": {
+            "project": ["src/**/*.ts"],
+            "ignoreDependencies": ["webpack", "webpack-cli", "webpack-dev-server"]
+        }
+    }
+}

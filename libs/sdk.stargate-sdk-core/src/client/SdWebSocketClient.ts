@@ -11,7 +11,7 @@ import { SdStargateCoreErrorTypes } from '../SdStargateCoreErrorTypes';
 import { ISdStargateClient, ISdStargateClientOptionKeepAlive } from './ISdStargateClient';
 
 /** Tuple passed to promise reject handlers in this client. */
-export type SdWebSocketRejectReason = [string | undefined, string | undefined] | string;
+type SdWebSocketRejectReason = [string | undefined, string | undefined] | string;
 
 /** Holds the promise functions of a single open request */
 type OpenRequest = {

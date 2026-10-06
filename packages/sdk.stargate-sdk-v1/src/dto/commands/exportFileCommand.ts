@@ -14,13 +14,13 @@ export interface ISdStargateExportFileCommandDto {
 }
 
 /** Model specification for ISdStargateExportFileCommandDto. */
-export interface ISdStargateExportFileModelCommandDto {
+interface ISdStargateExportFileModelCommandDto {
     /** The platform id of the model. */
     id: string;
 }
 
 /** Export specification for ISdStargateExportFileCommandDto. */
-export interface ISdStargateExportFileExportCommandDto {
+interface ISdStargateExportFileExportCommandDto {
     /** The export id of the model. */
     id: string;
     /** The index of the exported file in the content array. */
@@ -54,7 +54,7 @@ export enum ISdStargateExportFileResultEnum {
 }
 
 /** Info specification for ISdStargateExportFileReplyDto. */
-export interface ISdStargateExportFileInfoReplyDto {
+interface ISdStargateExportFileInfoReplyDto {
     /** Result of the file export. */
     result: ISdStargateExportFileResultEnum;
     /**

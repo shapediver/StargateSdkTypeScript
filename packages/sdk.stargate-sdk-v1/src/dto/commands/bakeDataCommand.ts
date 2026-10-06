@@ -20,13 +20,13 @@ export interface ISdStargateBakeDataCommandDto {
 }
 
 /** Model specification for ISdStargateBakeDataCommandDto. */
-export interface ISdStargateBakeDataModelCommandDto {
+interface ISdStargateBakeDataModelCommandDto {
     /** The platform id of the model. */
     id: string;
 }
 
 /** Output specification for ISdStargateBakeDataCommandDto. */
-export interface ISdStargateBakeDataOutputCommandDto {
+interface ISdStargateBakeDataOutputCommandDto {
     /** The output id of the model. */
     id: string;
     /** The chunk specification.
@@ -41,7 +41,7 @@ export interface ISdStargateBakeDataOutputCommandDto {
  * Corresponds to advanced case described here:
  * https://help.shapediver.com/doc/sdtf-structured-data-transfer-format#sdTF-Structureddatatransferformat-Advancedcase
  */
-export interface ISdStargateBakeDataOutputChunkCommandDto {
+interface ISdStargateBakeDataOutputChunkCommandDto {
     /** Id of the chunk which should be used. */
     id?: string;
     /** Name of the chunk which should be used. */
@@ -72,7 +72,7 @@ export enum ISdStargateBakeDataResultEnum {
 /**
  * Info specification for ISdStargateBakeDataReplyDto
  */
-export interface ISdStargateBakeDataInfoReplyDto {
+interface ISdStargateBakeDataInfoReplyDto {
     /**
      * Total number of objects returned as part of the asset.
      */

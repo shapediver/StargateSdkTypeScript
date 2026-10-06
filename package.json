@@ -20,7 +20,8 @@
         "typecheck": "lerna run check --stream && lerna run check:test --stream",
         "lint": "eslint . --max-warnings=0",
         "format": "prettier --write .",
-        "format:check": "prettier --check ."
+        "format:check": "prettier --check .",
+        "knip": "knip --treat-config-hints-as-errors"
     },
     "devDependencies": {
         "@eslint/js": "10.0.1",
@@ -31,6 +32,7 @@
         "globals": "16.5.0",
         "jest": "30.5.2",
         "json": "11.0.0",
+        "knip": "6.39.0",
         "lerna": "9.0.7",
         "npm-check-updates": "22.2.9",
         "prettier": "3.9.9",

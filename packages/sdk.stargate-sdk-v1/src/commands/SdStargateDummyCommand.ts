@@ -18,7 +18,7 @@ import { SdDummyCommandValidator } from '../validators/commands/SdDummyCommandVa
 import { ISdStargateDummyCommand } from './ISdStargateDummyCommand';
 import { SdBaseCommand } from './SdBaseCommand';
 
-export enum DummyPayloadCommand {
+enum DummyPayloadCommand {
     DUMMY_NO_REPLY_EXAMPLE = 'DUMMY_NO_REPLY_EXAMPLE',
     DUMMY_ACK_REPLY_EXAMPLE = 'DUMMY_ACK_REPLY_EXAMPLE',
     DUMMY_BATCH_REPLY_EXAMPLE = 'DUMMY_BATCH_REPLY_EXAMPLE',

@@ -10,7 +10,7 @@ export interface ISdStargatePrepareModelCommandDto {
 }
 
 /** Model specification for ISdStargatePrepareModelCommandDto. */
-export interface ISdStargatePrepareModelModelCommandDto {
+interface ISdStargatePrepareModelModelCommandDto {
     /** The platform id of the model. */
     id: string;
 }
@@ -27,7 +27,7 @@ export interface ISdStargatePrepareModelReplyDto {
 /**
  * Info specification for ISdStargatePrepareModelReplyDto
  */
-export interface ISdStargatePrepareModelInfoReplyDto {
+interface ISdStargatePrepareModelInfoReplyDto {
     /** Optional message to display on the frontend. */
     message?: string;
 

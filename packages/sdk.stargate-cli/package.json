@@ -45,7 +45,6 @@
     },
     "devDependencies": {
         "@types/node": "24.19.1",
-        "@types/inquirer": "9.0.10",
         "typescript": "5.9.3",
         "webpack": "5.111.1",
         "webpack-cli": "5.1.4",

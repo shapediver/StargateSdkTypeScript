@@ -12,13 +12,13 @@ export interface ISdStargateGetDataCommandDto {
 }
 
 /** Model specification for ISdStargateGetDataCommandDto. */
-export interface ISdStargateGetDataModelCommandDto {
+interface ISdStargateGetDataModelCommandDto {
     /** The platform id of the model. */
     id: string;
 }
 
 /** Parameter specification for ISdStargateGetDataCommandDto. */
-export interface ISdStargateGetDataParameterCommandDto {
+interface ISdStargateGetDataParameterCommandDto {
     /** The parameter id of the model. */
     id: string;
 }
@@ -39,7 +39,7 @@ export interface ISdStargateGetDataReplyDto {
  * Corresponds to advanced case described here:
  * https://help.shapediver.com/doc/sdtf-structured-data-transfer-format#sdTF-Structureddatatransferformat-Advancedcase
  */
-export interface ISdStargateGetDataAssetReplyDto {
+interface ISdStargateGetDataAssetReplyDto {
     /**
      * Id of the sdTF asset, including namespace.
      * Example: NAMESPACE/ID
@@ -54,7 +54,7 @@ export interface ISdStargateGetDataAssetReplyDto {
  * Corresponds to advanced case described here:
  * https://help.shapediver.com/doc/sdtf-structured-data-transfer-format#sdTF-Structureddatatransferformat-Advancedcase.
  */
-export interface ISdStargateGetDataAssetChunkReplyDto {
+interface ISdStargateGetDataAssetChunkReplyDto {
     /** Id of the chunk which should be used. */
     id?: string;
     /** Name of the chunk which should be used. */
@@ -76,7 +76,7 @@ export enum ISdStargateGetDataResultEnum {
 /**
  * Info specification for ISdStargateGetDataReplyDto
  */
-export interface ISdStargateGetDataInfoReplyDto {
+interface ISdStargateGetDataInfoReplyDto {
     /**
      * Total number of objects returned as part of the asset.
      */
