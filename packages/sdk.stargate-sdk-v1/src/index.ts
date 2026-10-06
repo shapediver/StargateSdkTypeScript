@@ -1,11 +1,13 @@
 import { ISdCommandRegister } from './commands/ISdCommandRegister';
 import { ISdStargateBakeDataCommand } from './commands/ISdStargateBakeDataCommand';
+import { ISdStargateDummyCommand } from './commands/ISdStargateDummyCommand';
 import { ISdStargateExportFileCommand } from './commands/ISdStargateExportFileCommand';
 import { ISdStargateGetDataCommand } from './commands/ISdStargateGetDataCommand';
 import { ISdStargateGetSupportedDataCommand } from './commands/ISdStargateGetSupportedDataCommand';
 import { ISdStargatePrepareModelCommand } from './commands/ISdStargatePrepareModelCommand';
 import { ISdStargateStatusCommand } from './commands/ISdStargateStatusCommand';
 import { SdStargateBakeDataCommand } from './commands/SdStargateBakeDataCommand';
+import { SdStargateDummyCommand } from './commands/SdStargateDummyCommand';
 import { SdStargateExportFileCommand } from './commands/SdStargateExportFileCommand';
 import { SdStargateGetDataCommand } from './commands/SdStargateGetDataCommand';
 import { SdStargateGetSupportedDataCommand } from './commands/SdStargateGetSupportedDataCommand';
@@ -56,27 +58,25 @@ import { ISdStargateSdkBuilder } from './sdk/ISdStargateSdkBuilder';
 import { SdStargateError, SdStargateErrorTypes } from './SdStargateError';
 import { isSgError } from './utils';
 
-export {
+export type {
     ISdCommandRegister,
     ISdStargateBakeDataCommand,
-    ISdStargateExportFileCommand,
     ISdStargateBakeDataCommandDto,
     ISdStargateBakeDataReplyDto,
-    ISdStargateBakeDataResultEnum,
     ISdStargateClientModel,
     ISdStargateDummyAckReplyExampleCommandDto,
     ISdStargateDummyAckReplyExampleReplyDto,
     ISdStargateDummyBatchReplyExampleCommandDto,
     ISdStargateDummyBatchReplyExampleReplyDto,
+    ISdStargateDummyCommand,
     ISdStargateDummyNoReplyExampleCommandDto,
     ISdStargateDummyNoReplyExampleReplyDto,
+    ISdStargateExportFileCommand,
     ISdStargateExportFileCommandDto,
     ISdStargateExportFileReplyDto,
-    ISdStargateExportFileResultEnum,
     ISdStargateGetDataCommand,
     ISdStargateGetDataCommandDto,
     ISdStargateGetDataReplyDto,
-    ISdStargateGetDataResultEnum,
     ISdStargateGetSupportedDataCommand,
     ISdStargateGetSupportedDataCommandDto,
     ISdStargateGetSupportedDataReplyDto,
@@ -84,14 +84,21 @@ export {
     ISdStargatePrepareModelCommand,
     ISdStargatePrepareModelCommandDto,
     ISdStargatePrepareModelReplyDto,
-    ISdStargatePrepareModelResultEnum,
     ISdStargateRegisterResponseDto,
     ISdStargateSdk,
     ISdStargateSdkBuilder,
     ISdStargateStatusCommand,
     ISdStargateStatusCommandDto,
     ISdStargateStatusReplyDto,
+};
+
+export {
+    ISdStargateBakeDataResultEnum,
+    ISdStargateExportFileResultEnum,
+    ISdStargateGetDataResultEnum,
+    ISdStargatePrepareModelResultEnum,
     SdStargateBakeDataCommand,
+    SdStargateDummyCommand,
     SdStargateExportFileCommand,
     SdStargateError,
     SdStargateErrorTypes,

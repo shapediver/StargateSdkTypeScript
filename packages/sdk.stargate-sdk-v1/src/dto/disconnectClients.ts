@@ -5,6 +5,4 @@ export interface ISdStargateDisconnectClientsRequestDto extends ISdStargateComma
         command: 'DISCONNECT_CLIENTS';
         targets: string[];
     };
-
-    payload: undefined;
 }

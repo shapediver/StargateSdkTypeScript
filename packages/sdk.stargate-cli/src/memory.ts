@@ -28,7 +28,7 @@ export async function readCliMemory(): Promise<CliMemory> {
                     chalk.red(
                         `${chalk.bold(
                             `Could not read and parse to file ${CLI_MEMORY_PATH}.`
-                        )}\n${e.message}`
+                        )}\n${e instanceof Error ? e.message : String(e)}`
                     )
                 );
             }
@@ -51,7 +51,11 @@ export async function updateCliMemory(newMemory: CliMemory): Promise<void> {
         await fs.writeFileSync(CLI_MEMORY_PATH, JSON.stringify(memory, null, 2));
     } catch (e) {
         console.error(
-            chalk.red(`${chalk.bold(`Could not write to file ${CLI_MEMORY_PATH}.`)}\n${e.message}`)
+            chalk.red(
+                `${chalk.bold(`Could not write to file ${CLI_MEMORY_PATH}.`)}\n${
+                    e instanceof Error ? e.message : String(e)
+                }`
+            )
         );
     }
 }

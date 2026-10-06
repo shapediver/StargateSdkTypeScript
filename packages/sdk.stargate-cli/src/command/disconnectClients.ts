@@ -1,4 +1,8 @@
-import { ISdStargateClientModel, ISdStargateSdk } from '@shapediver/sdk.stargate-sdk-v1';
+import {
+    ISdStargateClientModel,
+    ISdStargateSdk,
+    isSgError,
+} from '@shapediver/sdk.stargate-sdk-v1';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 
@@ -35,11 +39,11 @@ export async function disconnectClients(sdk: ISdStargateSdk): Promise<void> {
         await sdk.disconnectClients(selectedClients);
         printResults(selectedClients.length);
     } catch (e) {
+        const errType = isSgError(e) ? e.type : 'JS-Error';
+        const errMsg = e instanceof Error ? e.message : String(e);
         console.error(
             chalk.red(
-                `${chalk.bold('Could not disconnect all clients from Stargate.')}\n${
-                    e.type
-                }: ${e.message}`
+                `${chalk.bold('Could not disconnect all clients from Stargate.')}\n${errType}: ${errMsg}`
             )
         );
     }

@@ -85,11 +85,15 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
 
             return res || Promise.resolve([]);
         } catch (e) {
-            if (responseType) {
+            const response = payload.response;
+            if (responseType && response) {
                 // Unregister command again since the clients never received the command request
                 this.register.rejectCommand(
-                    payload.response!.topic,
-                    new SdStargateError(SdStargateErrorTypes.GenericClientError, e.message)
+                    response.topic,
+                    new SdStargateError(
+                        SdStargateErrorTypes.GenericClientError,
+                        e instanceof Error ? e.message : String(e)
+                    )
                 );
 
                 // We do not want to propagate uncaught promise errors, so we wait here
@@ -131,7 +135,7 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
         try {
             res = await handler(data);
         } catch (e) {
-            res = `Error in handler-function: ${e.message}`;
+            res = `Error in handler-function: ${e instanceof Error ? e.message : String(e)}`;
         }
 
         // Send BATCH-reply if requested
@@ -149,13 +153,21 @@ export abstract class SdBaseCommand implements ISdBaseCommand {
         request: ISdCommandRequestPayload,
         result: Record<string, any> | string
     ): Promise<void> {
+        const requestResponse = request.response;
+        if (!requestResponse) {
+            throw new SdStargateError(
+                SdStargateErrorTypes.InvalidCommandPayload,
+                'Command reply is missing response metadata.'
+            );
+        }
+
         const template: Omit<
             ISdCommandOkReplyPayload | ISdCommandErrorReplyPayload,
             'sender' | 'data' | 'error'
         > = {
             command: request.command,
             response: {
-                topic: request.response!.topic,
+                topic: requestResponse.topic,
                 type: 'REPLY',
             },
         };

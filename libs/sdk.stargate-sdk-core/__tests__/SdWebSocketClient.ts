@@ -98,7 +98,6 @@ describe('ok message', function () {
 
         ws.onmessage!({
             data: JSON.stringify({
-                requestId: undefined,
                 payload: {},
             } as ISdOkResponseDto),
             type: 'some type',
@@ -194,7 +193,6 @@ describe('error message', function () {
 
         ws.onmessage!({
             data: JSON.stringify({
-                requestId: undefined,
                 errorType: 'some type',
                 errorMessage: 'some message',
             } as ISdErrorResponseDto),

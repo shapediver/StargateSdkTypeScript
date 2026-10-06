@@ -1,4 +1,8 @@
-import { ISdStargateClientModel, ISdStargateSdk } from '@shapediver/sdk.stargate-sdk-v1';
+import {
+    ISdStargateClientModel,
+    ISdStargateSdk,
+    isSgError,
+} from '@shapediver/sdk.stargate-sdk-v1';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 
@@ -38,7 +42,9 @@ export async function forwardMessage(sdk: ISdStargateSdk): Promise<void> {
         try {
             json = JSON.parse(message);
         } catch (e) {
-            throw new Error('Invalid input message: ' + e.message);
+            throw new Error(
+                'Invalid input message: ' + (e instanceof Error ? e.message : String(e))
+            );
         }
         const selectedClients = clients.filter((c) => (<string[]>clientIds).includes(c.id));
 
@@ -46,11 +52,11 @@ export async function forwardMessage(sdk: ISdStargateSdk): Promise<void> {
         await sdk.forwardMessage(json, selectedClients);
         printResults(selectedClients.length);
     } catch (e) {
+        const errType = isSgError(e) ? e.type : 'JS-Error';
+        const errMsg = e instanceof Error ? e.message : String(e);
         console.error(
             chalk.red(
-                `${chalk.bold('Could not send message to clients via Stargate.')}\n${
-                    e.type ?? 'JS-Error'
-                }: ${e.message}`
+                `${chalk.bold('Could not send message to clients via Stargate.')}\n${errType}: ${errMsg}`
             )
         );
     }

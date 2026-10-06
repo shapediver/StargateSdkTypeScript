@@ -142,7 +142,6 @@ export class SdStargateSdk implements ISdStargateSdk {
     async listBackendClients(): Promise<ISdStargateListClientsResponseDto> {
         const req: ISdStargateListClientsRequestDto = {
             header: { command: 'LIST_BACKEND_CLIENTS' },
-            payload: undefined,
         };
 
         const res = await this.commander!.send(req);
@@ -152,7 +151,6 @@ export class SdStargateSdk implements ISdStargateSdk {
     async listFrontendClients(): Promise<ISdStargateListClientsResponseDto> {
         const req: ISdStargateListClientsRequestDto = {
             header: { command: 'LIST_FRONTEND_CLIENTS' },
-            payload: undefined,
         };
 
         const res = await this.commander!.send(req);
@@ -190,7 +188,6 @@ export class SdStargateSdk implements ISdStargateSdk {
                 command: 'DISCONNECT_CLIENTS',
                 targets: clients.map((c) => c.id),
             },
-            payload: undefined,
         };
 
         await this.commander!.send(req);

@@ -2,6 +2,7 @@ import {
     createSdk,
     ISdStargateRegisterResponseDto,
     ISdStargateSdk,
+    isSgError,
 } from '@shapediver/sdk.stargate-sdk-v1';
 import { createWithAwsProfile } from '@shapediver/sdk.token-generator-sdk-v1';
 import chalk from 'chalk';
@@ -9,7 +10,7 @@ import inquirer from 'inquirer';
 import { createSpinner } from 'nanospinner';
 import { v4 as uuidv4 } from 'uuid';
 import { readCliMemory, updateCliMemory } from '../memory';
-import { assertUnreachable, sleep } from '../utils';
+import { sleep } from '../utils';
 
 const os = require('os');
 
@@ -116,15 +117,10 @@ function askQuestions(defaultUserId: string = uuidv4(), defaultAwsProfile: strin
             type: 'select',
             name: 'envName',
             message: 'To which Stargate system do you want to connect?',
-            choices: Object.keys(ENVIRONMENTS).map(
-                (key) => `${ENVIRONMENTS[key].stargate.region}: \
-${ENVIRONMENTS[key].stargate.type}`
-            ),
-            filter: (selection: string) => {
-                // We have to remove the region again from the selection
-                const parts = selection.split(': ');
-                return `${parts[0]}_${parts[1]}`;
-            },
+            choices: Object.entries(ENVIRONMENTS).map(([key, environment]) => ({
+                name: `${environment.stargate.region}: ${environment.stargate.type}`,
+                value: key,
+            })),
             loop: false,
         },
         {
@@ -197,6 +193,10 @@ export async function register(
 
     // Get environment for envName
     const env = ENVIRONMENTS[envName];
+    if (!env) {
+        console.error(chalk.red(`${chalk.bold('Unknown Stargate environment - stopping CLI!')}`));
+        process.exit(1);
+    }
 
     // Ask user for client info
     const { appId, name } = getAppIdFromClientType(customClientType ?? clientType);
@@ -212,7 +212,11 @@ export async function register(
     } catch (e) {
         jwtSpinner.error();
         console.error(
-            chalk.red(`${chalk.bold('Could not create a JWT - stopping CLI!')}\n${e.message}`)
+            chalk.red(
+                `${chalk.bold('Could not create a JWT - stopping CLI!')}\n${
+                    e instanceof Error ? e.message : String(e)
+                }`
+            )
         );
         process.exit(1);
     }
@@ -231,11 +235,13 @@ export async function register(
         sgSpinner.success();
     } catch (e) {
         sgSpinner.error();
+        const errType = isSgError(e) ? e.type : 'JS-Error';
+        const errMsg = e instanceof Error ? e.message : String(e);
         console.error(
             chalk.red(
                 `${chalk.bold(
                     'Could not instantiate Stargate client - stopping CLI!'
-                )}\n${e.type}: ${e.message}`
+                )}\n${errType}: ${errMsg}`
             )
         );
         process.exit(1);
@@ -257,11 +263,11 @@ export async function register(
         registerSpinner.success();
     } catch (e) {
         registerSpinner.error();
+        const errType = isSgError(e) ? e.type : 'JS-Error';
+        const errMsg = e instanceof Error ? e.message : String(e);
         console.error(
             chalk.red(
-                `${chalk.bold('Could not register client - stopping CLI!')}\n${
-                    e.type
-                }: ${e.message}`
+                `${chalk.bold('Could not register client - stopping CLI!')}\n${errType}: ${errMsg}`
             )
         );
         process.exit(1);
@@ -273,7 +279,7 @@ export async function register(
 }
 
 /** Returns the application identifier and some dummy client information for the given type. */
-function getAppIdFromClientType(type: ClientType): {
+function getAppIdFromClientType(type: ClientType | string): {
     appId: string;
     name: string;
 } {
@@ -334,7 +340,7 @@ async function fetchAuthToken(
     return res.jwt;
 }
 
-function printResults(type: ClientType, uid: string, version: string): void {
+function printResults(type: ClientType | string, uid: string, version: string): void {
     console.log(
         '\n',
         chalk.green(

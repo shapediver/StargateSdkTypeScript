@@ -33,6 +33,7 @@ echo "" > "${pkg_path}/__tests__/${name}.test.js"
 
 # copy tsconfig and index.html
 cp "${__dir}/utils/tsconfig.json" "${pkg_path}"
+cp "${__dir}/utils/tsconfig.test.json" "${pkg_path}"
 cp "${__dir}/utils/index.html" "${pkg_path}"
 
 # adjust package.json
@@ -42,6 +43,7 @@ npx json -q -I -f "${pkg_path}package.json" -e 'this.main="dist/index.js"'
 npx json -q -I -f "${pkg_path}package.json" -e 'this.typings="dist/index.d.ts"'
 npx json -q -I -f "${pkg_path}package.json" -e 'this.files=["dist"]'
 npx json -q -I -f "${pkg_path}package.json" -e 'this.scripts.check="tsc --noEmit"'
+npx json -q -I -f "${pkg_path}package.json" -e 'this.scripts["check:test"]="tsc --noEmit -p tsconfig.test.json"'
 npx json -q -I -f "${pkg_path}package.json" -e 'this.scripts.build="bash ../../scripts/build.sh"'
 npx json -q -I -f "${pkg_path}package.json" -e 'this.scripts["build-dep"]="bash ../../scripts/build-dep.sh"'
 npx json -q -I -f "${pkg_path}package.json" -e 'this.scripts["build-dev"]="bash ../../scripts/build-dev.sh"'

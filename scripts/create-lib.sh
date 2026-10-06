@@ -33,6 +33,7 @@ echo "" > "${lib_path}/__tests__/${name}.test.js"
 
 # copy tsconfig
 cp "${__dir}/utils/tsconfig.json" "${lib_path}"
+cp "${__dir}/utils/tsconfig.test.json" "${lib_path}"
 
 # adjust package.json
 npx json -q -I -f "${lib_path}package.json" -e "this.name=\"@shapediver/${name}\""
@@ -41,6 +42,7 @@ npx json -q -I -f "${lib_path}package.json" -e 'this.main="dist/index.js"'
 npx json -q -I -f "${lib_path}package.json" -e 'this.typings="dist/index.d.ts"'
 npx json -q -I -f "${lib_path}package.json" -e 'this.files=["dist"]'
 npx json -q -I -f "${lib_path}package.json" -e 'this.scripts.check="tsc --noEmit"'
+npx json -q -I -f "${lib_path}package.json" -e 'this.scripts["check:test"]="tsc --noEmit -p tsconfig.test.json"'
 npx json -q -I -f "${lib_path}package.json" -e 'this.scripts.build="bash ../../scripts/build.sh"'
 npx json -q -I -f "${lib_path}package.json" -e 'this.scripts["build-dep"]="bash ../../scripts/build-dep.sh"'
 npx json -q -I -f "${lib_path}package.json" -e 'this.scripts.test="bash ../../scripts/test.sh"'

@@ -66,7 +66,9 @@ export class SdWebSocketClient implements ISdStargateClient {
         this.errHandler = errHandler;
         this.dcnHandler = dcnHandler;
 
-        this.keepAlive = keepAlive;
+        if (keepAlive !== undefined) {
+            this.keepAlive = keepAlive;
+        }
     }
 
     /**
@@ -230,7 +232,10 @@ export class SdWebSocketClient implements ISdStargateClient {
         // In this case, we want to reject all open requests.
         if (!res.requestId) {
             for (const id in this.openRequests) {
-                this.openRequests[id].reject(rejectReason);
+                const openRequest = this.openRequests[id];
+                if (openRequest) {
+                    openRequest.reject(rejectReason);
+                }
             }
             return;
         }
@@ -255,8 +260,8 @@ export class SdWebSocketClient implements ISdStargateClient {
      * @private
      */
     updateKeepAlive(): void {
-        // Stop when keep alive is not configured
-        if (!this.keepAlive) return;
+        const keepAlive = this.keepAlive;
+        if (!keepAlive) return;
 
         // Cancel the previous keep alive timeout
         if (this.keepAliveTimeout) clearTimeout(this.keepAliveTimeout);
@@ -265,11 +270,13 @@ export class SdWebSocketClient implements ISdStargateClient {
         this.keepAliveTimeout = setTimeout(async () => {
             try {
                 // `send` runs `updateKeepAlive` again
-                await this.send(this.keepAlive!.reqCreator());
+                await this.send(keepAlive.reqCreator());
             } catch (e) {
-                this.errHandler(`Failed to send keep alive message: ${e.message}`);
+                this.errHandler(
+                    `Failed to send keep alive message: ${e instanceof Error ? e.message : String(e)}`
+                );
             }
-        }, this.keepAlive.interval);
+        }, keepAlive.interval);
     }
 
     /** Helper function to create a new WebSocket instance on Browser or Node.js. */

@@ -4,11 +4,5 @@ import { ISdStargateCommandDto } from './dto/baseDto';
 import { SdStargateCoreErrorTypes } from './SdStargateCoreErrorTypes';
 import * as SdUtils from './utils';
 
-export {
-    createStargateClient,
-    ISdStargateClient,
-    ISdStargateClientOptionKeepAlive,
-    ISdStargateCommandDto,
-    SdStargateCoreErrorTypes,
-    SdUtils,
-};
+export { createStargateClient, SdStargateCoreErrorTypes, SdUtils };
+export type { ISdStargateClient, ISdStargateClientOptionKeepAlive, ISdStargateCommandDto };

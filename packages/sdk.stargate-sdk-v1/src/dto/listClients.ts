@@ -5,8 +5,6 @@ export interface ISdStargateListClientsRequestDto extends ISdStargateCommandDto 
     header: {
         command: 'LIST_BACKEND_CLIENTS' | 'LIST_FRONTEND_CLIENTS';
     };
-
-    payload: undefined;
 }
 
 export type ISdStargateListClientsResponseDto = ISdStargateClientModel[];

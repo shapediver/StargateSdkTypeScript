@@ -59,7 +59,6 @@ export class SdWebSocketCommander implements ISdStargateCommander {
     keepAliveReqBuilder(): ISdStargateCommandDto {
         const req: ISdStargatePingRequestDto = {
             header: { command: 'PING' },
-            payload: undefined,
         };
 
         return req;

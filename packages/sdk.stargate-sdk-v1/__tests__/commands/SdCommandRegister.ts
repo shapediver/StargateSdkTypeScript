@@ -9,8 +9,12 @@ test('command with single client times out; should reject', async () => {
 
     // New open command should be registered
     expect(Object.keys(register.openCommands)).toStrictEqual(['test']);
-    expect(register.openCommands['test'].length).toBe(1);
-    expect(register.openCommands['test'][0].clientId).toStrictEqual('foo');
+    const openCommand = register.openCommands['test'];
+    if (!openCommand) {
+        throw new Error('Expected open command to be registered.');
+    }
+    expect(openCommand.length).toBe(1);
+    expect(openCommand[0]?.clientId).toStrictEqual('foo');
 
     try {
         await promise;

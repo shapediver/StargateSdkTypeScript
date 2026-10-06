@@ -5,11 +5,12 @@ import {
     ISdStargateDummyBatchReplyExampleCommandDto,
     ISdStargateDummyBatchReplyExampleReplyDto,
     ISdStargateDummyNoReplyExampleCommandDto,
+    ISdStargateDummyCommand,
     ISdStargateDummyNoReplyExampleReplyDto,
     ISdStargateSdk,
+    SdStargateDummyCommand,
+    isSgError,
 } from '@shapediver/sdk.stargate-sdk-v1';
-import { ISdStargateDummyCommand } from '@shapediver/sdk.stargate-sdk-v1/dist/commands/ISdStargateDummyCommand';
-import { SdStargateDummyCommand } from '@shapediver/sdk.stargate-sdk-v1/dist/commands/SdStargateDummyCommand';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { assertUnreachable, nowTime, prettifyMsg, waitToSimulate } from '../utils';
@@ -136,8 +137,10 @@ export async function dummyCommands(sdk: ISdStargateSdk): Promise<void> {
                 assertUnreachable(cmd);
         }
     } catch (e) {
+        const errType = isSgError(e) ? e.type : 'JS-Error';
+        const errMsg = e instanceof Error ? e.message : String(e);
         console.error(
-            chalk.red(`${chalk.bold('Could not send dummy-command.')}\n${e.type}: ${e.message}`)
+            chalk.red(`${chalk.bold('Could not send dummy-command.')}\n${errType}: ${errMsg}`)
         );
     }
 }

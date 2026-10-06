@@ -21,17 +21,17 @@ beforeEach(() => {
 });
 
 class DummyCommand implements ISdBaseCommand {
-    isSupported(payload: ISdCommandPayload): boolean {
+    isSupported(_payload: ISdCommandPayload): boolean {
         return false;
     }
 
-    processCommandMessage(payload: ISdCommandRequestPayload): Promise<void> {
+    processCommandMessage(_payload: ISdCommandRequestPayload): Promise<void> {
         return Promise.resolve(undefined);
     }
 
-    processOkReplyMessage(payload: ISdCommandOkReplyPayload): void {}
+    processOkReplyMessage(_payload: ISdCommandOkReplyPayload): void {}
 
-    processErrorReplyMessage(payload: ISdCommandErrorReplyPayload): void {}
+    processErrorReplyMessage(_payload: ISdCommandErrorReplyPayload): void {}
 
     getIdentifier(): string {
         return 'DUMMY';

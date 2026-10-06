@@ -4,6 +4,4 @@ export interface ISdStargatePingRequestDto extends ISdStargateCommandDto {
     header: {
         command: 'PING';
     };
-
-    payload: undefined;
 }

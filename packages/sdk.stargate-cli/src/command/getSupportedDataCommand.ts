@@ -5,6 +5,7 @@ import {
     ISdStargateGetSupportedDataReplyDto,
     ISdStargateSdk,
     SdStargateGetSupportedDataCommand,
+    isSgError,
 } from '@shapediver/sdk.stargate-sdk-v1';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
@@ -80,9 +81,11 @@ export async function getSupportedDataCommand(sdk: ISdStargateSdk): Promise<void
         const res = await command.send(dto, selectedClients);
         printResults(identifier, selectedClients.length, res);
     } catch (e) {
+        const errType = isSgError(e) ? e.type : 'JS-Error';
+        const errMsg = e instanceof Error ? e.message : String(e);
         console.error(
             chalk.red(
-                `${chalk.bold(`Could not send command ${identifier}.`)}\n${e.type}: ${e.message}`
+                `${chalk.bold(`Could not send command ${identifier}.`)}\n${errType}: ${errMsg}`
             )
         );
     }
