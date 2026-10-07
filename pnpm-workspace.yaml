@@ -1,13 +1,19 @@
 packages:
     - 'packages/*'
     - 'libs/*'
+
 overrides:
     package-manager-detector: 1.8.0
     # inquirer 13.4.3 types fail under TypeScript 5.9 with @inquirer/type 4.1+.
     'inquirer@13>@inquirer/type': 4.0.5
+
 allowBuilds:
     '@parcel/watcher': true
     nx: true
     unrs-resolver: true
+
+# Minutes. Matches Aikido's 48-hour hold, so pnpm does not request a tarball Aikido rejects with 403.
+minimumReleaseAge: 2880
+
 minimumReleaseAgeExclude:
     - '@shapediver/*'
