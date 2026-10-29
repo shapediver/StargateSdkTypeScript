@@ -6,6 +6,7 @@ from utils import (
     LernaComponent,
     app_on_error,
     cmd_helper,
+    commit_index,
     copy,
     echo,
     fetch_globally_pinned_dependencies,
@@ -100,7 +101,7 @@ def run_apply():
 
     # Create a new commit.
     if len(repo.index.diff("HEAD")) > 0:
-        index.commit("Upgrade dependencies", skip_hooks=True)
+        commit_index(repo, "Upgrade dependencies")
         echo("\nCreated a new commit.")
     else:
         echo("\nNo upgrades found.")
